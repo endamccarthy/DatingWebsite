@@ -3,12 +3,22 @@
 require_once "../scripts/config.php";
  
 // Define variables and initialize with empty values
-$email = $password = $confirm_password = "";
-$email_err = $password_err = $confirm_password_err = "";
+$first_name = $last_name = $email = $password = $confirm_password = $t_and_c = "";
+$email_err = $password_err = $confirm_password_err = $t_and_c_err = $over_18_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
  
+    // Validate first name
+    if(trim($_POST["first_name"])) {
+        $first_name = trim($_POST["first_name"]);
+    }
+
+    // Validate last name
+    if(trim($_POST["last_name"])) {
+        $last_name = trim($_POST["last_name"]);
+    }
+
     // Validate email
     if(empty(trim($_POST["email"]))) {
         $email_err = "Please enter a email.";
@@ -62,14 +72,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
+    // Validate terms and conditions 
+    if(!isset($_POST["t_and_c"])) {
+        $t_and_c_err = "You must agree before submitting.";
+    }
+
+    // Validate over 18 
+    if(!isset($_POST["over_18"])) {
+        $over_18_err = "You must be over 18 to register";
+    }
+
     // Check input errors before inserting in database
-    if(empty($email_err) && empty($password_err) && empty($confirm_password_err)) {
+    if(empty($email_err) && empty($password_err) && empty($confirm_password_err) && empty($t_and_c_err) && empty($over_18_err)) {
         // Prepare an insert statement
-        $sql = "INSERT INTO user (email, password) VALUES (?, ?)";
+        $sql = "INSERT INTO user (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
         if($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ss", $param_email, $param_password);
+            mysqli_stmt_bind_param($stmt, "ssss", $param_first_name, $param_last_name, $param_email, $param_password);
             // Set parameters
+            $param_first_name = $first_name;
+            $param_last_name = $last_name;
             $param_email = $email;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             // Attempt to execute the prepared statement
@@ -92,23 +114,52 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php $title = 'Register'; include("templates/top.html");?>
     <div class="wrapper">
-        <h2>Sign Up</h2>
-        <p>Please fill this form to create an account.</p>
+        <h2>Register</h2>
+        <p>Please fill in this form to create an account.</p>
+
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                <label>email</label>
-                <input type="text" name="email" class="form-control" value="<?php echo $email; ?>">
-                <span class="help-block"><?php echo $email_err; ?></span>
-            </div>    
-            <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
-                <span class="help-block"><?php echo $password_err; ?></span>
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <label>First name</label>
+                    <input type="text" name="first_name" class="form-control" value="<?php echo $first_name; ?>" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Last name</label>
+                    <input type="text" name="last_name" class="form-control" value="<?php echo $last_name; ?>" required>
+                </div>
             </div>
-            <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>" required>
+                <span class="invalid-feedback"><?php echo $email_err; ?></span>
+            </div>    
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
+                <span class="invalid-feedback"><?php echo $password_err; ?></span>
+            </div>
+            <div class="form-group">
                 <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
-                <span class="help-block"><?php echo $confirm_password_err; ?></span>
+                <input type="password" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>">
+                <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" name="t_and_c" class="form-check-input <?php echo (!empty($t_and_c_err)) ? 'is-invalid' : ''; ?>" value="">
+                    <label class="form-check-label">
+                        Agree to terms and conditions
+                    </label>
+                    <span class="invalid-feedback"><?php echo $t_and_c_err; ?></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" name="over_18" class="form-check-input <?php echo (!empty($over_18_err)) ? 'is-invalid' : ''; ?>" value="">
+                    <label class="form-check-label">
+                        I am over 18
+                    </label>
+                    <span class="invalid-feedback"><?php echo $over_18_err; ?></span>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Submit">
@@ -116,5 +167,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <p>Already have an account? <a href="login.php">Login here</a>.</p>
         </form>
+
     </div>    
 <?php include("templates/bottom.html");?>
