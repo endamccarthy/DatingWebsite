@@ -1,5 +1,25 @@
 <?php
 
+/********************************************************************/
+/*
+/* OPTION 1
+/* CONNECTION TO HIVE SERVER DB
+/*
+/********************************************************************/
+/*
+define('DB_SERVER', 'hive.csis.ul.ie');
+define('DB_USERNAME', 'group17');
+define('DB_PASSWORD', 'Ut5QsH4v@={uwa3d');
+define('DB_NAME', 'dbgroup17');
+*/
+
+/********************************************************************/
+/*
+/* OPTION 2
+/* CONNECTION TO LOCAL SERVER DB (FOR TESTING DURING DEVELOPMENT)
+/* (values for username and password may need to be changed or set to empty)
+/*
+/********************************************************************/
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', 'root');
