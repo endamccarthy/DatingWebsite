@@ -9,6 +9,7 @@
 7. Now navigate back out of the database folder and into the pages folder and click on **register.php** (or just click on the link that appears).
 9. Play around with the functionality.
 10. To look at the database go into phpMyAdmin from the MAMP/WAMP homepage (or http://localhost:8888/phpMyAdmin/?lang=en).
+11. Or, if you have switched the connection to the HIVE server use this link to view DB (http://hive.csis.ul.ie/phpmyadmin/)
 
 ### Notes:
 - I'm using Visual Studio Code to do all my coding. It has loads of extensions which make writing html, css, etc. much handier.
