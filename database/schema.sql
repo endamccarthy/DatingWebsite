@@ -1,5 +1,22 @@
 /********************************************************************/
 /*
+/* Delete all existing tables first to allow for overwriting
+/*
+/********************************************************************/
+
+SET FOREIGN_KEY_CHECKS = 0;
+drop table if exists user;
+drop table if exists interestList;
+drop table if exists interests;
+drop table if exists countyList;
+drop table if exists profile;
+drop table if exists preferences;
+drop table if exists connections;
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+/********************************************************************/
+/*
 /* CREATE Tables
 /*
 /********************************************************************/
