@@ -1,7 +1,6 @@
 ## Instructions:
 
 
-0. Hello Enda
 1. Under **Clone or download**, click Download ZIP.
 2. Save the contents of the ZIP file to the **htdocs** folder in your MAMP/WAMP application folder.
 3. Open your MAMP/WAMP server.
