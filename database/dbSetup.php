@@ -23,10 +23,9 @@ define('DB_NAME', 'dbgroup17');
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', 'root');
-define('DB_NAME', 'dating_website');
+define('DB_NAME', 'dbgroup17');
 
-// Attempt to connect to MySQL database 
-// General access to hive server
+// Attempt to connect to MySQL database - General access to hive server (or localhost)
 $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
  
 // Check connection
@@ -43,8 +42,7 @@ else {
     echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
 }
 
-// Add DB_NAME to link
-// Specific access to dbgroup17 DB on hive server
+// Add DB_NAME to link - Specific access to dbgroup17 DB on hive server (or localhost)
 $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
 $query = '';
@@ -57,7 +55,7 @@ foreach ($sqlScript as $line) {
 	}	
 	$query = $query . $line;
 	if ($endWith == ';') {
-		mysqli_query($link,$query) or die('<div class="error-response sql-import-response">Problem in executing the SQL query <b>' . $query. '</b></div>');
+		mysqli_query($link,$query) or die('<div class="error-response sql-import-response">Problem in executing the SQL query <b>'.$query.'</b></div>');
 		$query= '';		
 	}
 }

@@ -23,11 +23,11 @@ define('DB_NAME', 'dbgroup17');
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', 'root');
-define('DB_NAME', 'dating_website');
-define('DB_PORT', 8889);
+define('DB_NAME', 'dbgroup17');
+//define('DB_PORT', 8889); // not needed??
 
 // Attempt to connect to MySQL database 
-$link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_PORT);
+$link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
  
 // Check connection
 if($link === false) {
