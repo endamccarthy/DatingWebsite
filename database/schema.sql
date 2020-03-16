@@ -29,7 +29,7 @@ CREATE TABLE user (
   firstName VARCHAR(128) NOT NULL,
   lastName VARCHAR(128) NOT NULL,
   email VARCHAR(128) NOT NULL UNIQUE,
-  password VARCHAR(128) NOT NULL,
+  password VARCHAR(256) NOT NULL,
   dateJoined DATETIME NULL DEFAULT CURRENT_TIMESTAMP, 
   accessLevel ENUM("regular", "premium", "admin") NULL DEFAULT "regular",
   status ENUM("active", "banned", "suspended") NULL DEFAULT "active",
@@ -65,11 +65,13 @@ CREATE TABLE profile (
 CREATE TABLE preferences (
   userID INT NOT NULL,
   prefGender ENUM("male", "female") NOT NULL,
-  prefAgeRange ENUM("<30", "30-40", "41-50", ">50") NULL,
+  prefAgeMin INT NULL DEFAULT 18,
+  prefAgeMax INT NULL DEFAULT 100,
   prefCountyID INT NULL,
   prefInterestID INT NULL,
   prefSmokes ENUM("smoker", "non-smoker") NULL,
-  prefHeightRange ENUM("<170", "170-180", "<181-190", ">190") NULL
+  prefHeightMin INT NULL DEFAULT 100,
+  prefHeightMax INT NULL DEFAULT 250
 );
 
 CREATE TABLE pending (
@@ -196,13 +198,15 @@ INSERT INTO countyList(countyName) VALUES
   ('Cavan'),
   ('Clare');
 
+/* the unhashed password for the test user is 'password' */
 INSERT INTO user(firstName, lastName, email, password) VALUES
+  ('test', 'user', 'test@email.com', '$2y$10$Pbnnd7yvpbt/FDWpLSirVuEW9rgq7VlpULrNCN44G/LsJWzkGdQr2'),
   ('John', 'Smith', 'john@email.com', 'password'),
   ('Una', 'Maher', 'una@email.com', 'password'),
   ('Sean', 'Breen', 'sean@email.com', 'password'),
   ('Kate', 'Dunne', 'kate@email.com', 'password'),
   ('Jack', 'Murphy', 'jack@email.com', 'password'),
-  ('Mary', 'Treacy', 'mary@email.com', 'password');
+  ('Mary', 'Carey', 'mary@email.com', 'password');
 
 INSERT INTO interests(userID, interestID) VALUES
   (1, 1),
@@ -216,35 +220,42 @@ INSERT INTO interests(userID, interestID) VALUES
   (5, 2),
   (5, 5),
   (6, 3),
-  (6, 4);
+  (6, 4),
+  (7, 1),
+  (7, 2);
 
 INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, smokes, height) VALUES
-  (1, NULL, 'male', '1990-04-12', 2, 'images/photo1.jpg', 'non-smoker', 176),
-  (2, "My name is Una and I'm from Armagh!", 'female', '1980-06-20', 2, 'images/photo2.jpg', 'smoker', 160),
-  (3, NULL, 'male', '1975-01-15', 3, 'images/photo3.jpg', 'non-smoker', 181),
-  (4, NULL, 'female', '1994-11-07', 1, 'images/photo4.jpg', 'non-smoker', 167),
-  (5, NULL, 'male', '1985-04-15', 4, 'images/photo5.jpg', 'non-smoker', 184),
-  (6, NULL, 'female', '1982-12-07', 5, 'images/photo6.jpg', 'non-smoker', 169);
+  (1, NULL, 'male', '1990-01-02', 2, 'images/photo1.jpg', 'non-smoker', 176),
+  (2, NULL, 'male', '1990-04-12', 2, 'images/photo2.jpg', 'non-smoker', 176),
+  (3, "My name is Una and I'm from Armagh!", 'female', '1980-06-20', 2, 'images/photo3.jpg', 'smoker', 160),
+  (4, NULL, 'male', '1975-01-15', 3, 'images/photo4.jpg', 'non-smoker', 181),
+  (5, NULL, 'female', '1994-11-07', 2, 'images/photo5.jpg', 'non-smoker', 167),
+  (6, NULL, 'male', '1985-04-15', 4, 'images/photo6.jpg', 'non-smoker', 184),
+  (7, NULL, 'female', '1982-12-07', 2, 'images/photo7.jpg', 'non-smoker', 169);
 
-INSERT INTO preferences(userID, prefGender, prefAgeRange, prefCountyID, prefInterestID, prefSmokes, prefHeightRange) VALUES
-  (1, 'female', '<30', NULL, 2, 'non-smoker', NULL),
-  (2, 'male', '30-40', 4, NULL, 'smoker', '170-180'),
-  (3, 'female', '41-50', NULL, 1, 'non-smoker', NULL),
-  (4, 'male', '<30', 3, 5, 'non-smoker', NULL),
-  (5, 'female', '41-50', NULL, 1, 'non-smoker', NULL),
-  (6, 'male', '<30', 3, 5, 'non-smoker', NULL);
+/* should show Una and Mary for suggestions */
+INSERT INTO preferences(userID, prefGender, prefAgeMin, prefCountyID) VALUES
+  (1, 'female', 30, 2);
+
+INSERT INTO preferences(userID, prefGender) VALUES
+  (2, 'female'),
+  (3, 'male'),
+  (4, 'female'),
+  (5, 'male'),
+  (6, 'female'),
+  (7, 'male');
 
 INSERT INTO pending(pendingUserOne, pendingUserTwo) VALUES
-  (1, 2),
-  (2, 5);
+  (2, 3),
+  (3, 6);
 
 INSERT INTO matches(matchesUserOne, matchesUserTwo) VALUES
-  (3, 4),
-  (5, 6);
+  (4, 5),
+  (6, 7);
 
 INSERT INTO rejections(rejectionsUserOne, rejectionsUserTwo) VALUES
-  (6, 1),
-  (5, 4);
+  (7, 2),
+  (6, 5);
 
 INSERT INTO events(eventCountyID, eventName, eventDate) VALUES
   (3, 'An Event', '2020-04-10');

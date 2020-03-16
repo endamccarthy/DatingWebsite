@@ -45,7 +45,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         // Prepare an update statement
         $sql = "UPDATE user SET password = ? WHERE userID = ?";
         if($stmt = mysqli_prepare($link, $sql)) {
-            echo "test5";
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "si", $param_password, $param_userID);
             // Set parameters

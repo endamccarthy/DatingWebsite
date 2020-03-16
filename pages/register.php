@@ -85,7 +85,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check input errors before inserting in database
     if(empty($email_err) && empty($password_err) && empty($confirm_password_err) && empty($t_and_c_err) && empty($over_18_err)) {
         // Prepare an insert statement
-        $sql = "INSERT INTO user (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO user (firstName, lastName, email, password) VALUES (?, ?, ?, ?);";
         if($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "ssss", $param_first_name, $param_last_name, $param_email, $param_password);
