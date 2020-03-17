@@ -206,7 +206,11 @@ INSERT INTO user(firstName, lastName, email, password) VALUES
   ('Sean', 'Breen', 'sean@email.com', 'password'),
   ('Kate', 'Dunne', 'kate@email.com', 'password'),
   ('Jack', 'Murphy', 'jack@email.com', 'password'),
-  ('Mary', 'Carey', 'mary@email.com', 'password');
+  ('Mary', 'Carey', 'mary@email.com', 'password'),
+  ('Aine', 'Ryan', 'aine@email.com', 'password'),
+  ('Shauna', 'Fitzgerald', 'shauna@email.com', 'password'),
+  ('Sinead', 'Crowe', 'sinead@email.com', 'password'),
+  ('Trisha', 'Duggan', 'trisha@email.com', 'password');
 
 INSERT INTO interests(userID, interestID) VALUES
   (1, 1),
@@ -222,20 +226,31 @@ INSERT INTO interests(userID, interestID) VALUES
   (6, 3),
   (6, 4),
   (7, 1),
-  (7, 2);
+  (7, 5),
+  (8, 2),
+  (8, 5),
+  (9, 1),
+  (9, 3),
+  (10, 5),
+  (10, 4),
+  (11, 2),
+  (11, 5);
 
 INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, smokes, height) VALUES
   (1, NULL, 'male', '1990-01-02', 2, 'images/photo1.jpg', 'non-smoker', 176),
   (2, NULL, 'male', '1990-04-12', 2, 'images/photo2.jpg', 'non-smoker', 176),
-  (3, "My name is Una and I'm from Armagh!", 'female', '1980-06-20', 2, 'images/photo3.jpg', 'smoker', 160),
-  (4, NULL, 'male', '1975-01-15', 3, 'images/photo4.jpg', 'non-smoker', 181),
+  (3, "My name is Una and I'm from Armagh!", 'female', '1980-06-20', 2, 'images/photo3.jpg', 'non-smoker', 160),
   (5, NULL, 'female', '1994-11-07', 2, 'images/photo5.jpg', 'non-smoker', 167),
-  (6, NULL, 'male', '1985-04-15', 4, 'images/photo6.jpg', 'non-smoker', 184),
-  (7, NULL, 'female', '1982-12-07', 2, 'images/photo7.jpg', 'non-smoker', 169);
+  (6, NULL, 'male', '1985-04-15', 4, 'images/photo6.jpg', 'smoker', 184),
+  (7, NULL, 'female', '1982-12-07', 2, 'images/photo7.jpg', 'non-smoker', 169),
+  (8, NULL, 'female', '1995-04-15', 4, 'images/photo8.jpg', 'non-smoker', 154),
+  (9, NULL, 'female', '1983-06-12', 3, 'images/photo9.jpg', 'smoker', 170),
+  (10, NULL, 'female', '1978-07-05', 2, 'images/photo10.jpg', 'non-smoker', 149),
+  (11, NULL, 'female', '1996-09-10', 2, 'images/photo11.jpg', 'non-smoker', 163);
 
-/* should show Una and Mary for suggestions */
-INSERT INTO preferences(userID, prefGender, prefAgeMin, prefCountyID) VALUES
-  (1, 'female', 30, 2);
+/* should show ??? for suggestions */
+INSERT INTO preferences(userID, prefGender, prefAgeMin, prefSmokes, prefHeightMax) VALUES
+  (1, 'female', 21, 'non-smoker', 168);
 
 INSERT INTO preferences(userID, prefGender) VALUES
   (2, 'female'),
@@ -243,17 +258,24 @@ INSERT INTO preferences(userID, prefGender) VALUES
   (4, 'female'),
   (5, 'male'),
   (6, 'female'),
-  (7, 'male');
+  (7, 'male'),
+  (8, 'male'),
+  (9, 'male'),
+  (10, 'male'),
+  (11, 'male');
 
 INSERT INTO pending(pendingUserOne, pendingUserTwo) VALUES
+  (1, 3),
   (2, 3),
   (3, 6);
 
 INSERT INTO matches(matchesUserOne, matchesUserTwo) VALUES
+  (5, 1),
   (4, 5),
   (6, 7);
 
 INSERT INTO rejections(rejectionsUserOne, rejectionsUserTwo) VALUES
+  (1, 10),
   (7, 2),
   (6, 5);
 

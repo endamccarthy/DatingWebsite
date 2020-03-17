@@ -10,23 +10,67 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 // Include config file
 require_once "../scripts/config.php";
- 
-// Prepare a select statement
-$sql = "SELECT firstName, lastName FROM user WHERE userID IN 
-            (SELECT userID FROM profile WHERE userID  != ? AND 
-                gender = (SELECT prefGender FROM preferences WHERE userID = ?) AND 
-                TIMESTAMPDIFF(YEAR, dateOfBirth, NOW()) BETWEEN 
-                    (SELECT prefAgeMin FROM preferences WHERE userID = ?) AND 
-                    (SELECT prefAgeMax FROM preferences WHERE userID = ?) AND 
-                countyID IN 
-                    (SELECT prefCountyID FROM preferences WHERE userID = ? UNION ALL 
-                        SELECT countyID FROM countyList WHERE NOT EXISTS (
-                            SELECT prefCountyID FROM preferences WHERE userID = ? AND prefCountyID IS NOT NULL)))";
 
+// Prepare a select statement
+$sql = "SELECT firstName, lastName FROM user WHERE userID IN (
+            SELECT userID FROM profile WHERE userID  != ?
+            AND
+            userID NOT IN (
+                SELECT pendingUserTwo FROM pending WHERE pendingUserOne = ?
+                UNION ALL
+                SELECT matchesUserTwo FROM matches WHERE matchesUserOne = ?
+                UNION ALL
+                SELECT matchesUserOne FROM matches WHERE matchesUserTwo = ?
+                UNION ALL
+                SELECT rejectionsUserTwo FROM rejections WHERE rejectionsUserOne = ?
+                UNION ALL
+                SELECT rejectionsUserOne FROM rejections WHERE rejectionsUserTwo = ?
+            )
+            AND
+            gender = (
+                SELECT prefGender FROM preferences WHERE userID = ?
+            ) 
+            AND 
+            TIMESTAMPDIFF(YEAR, dateOfBirth, NOW()) BETWEEN 
+                (SELECT prefAgeMin FROM preferences WHERE userID = ?) AND 
+                (SELECT prefAgeMax FROM preferences WHERE userID = ?) 
+            AND 
+            countyID IN (
+                SELECT prefCountyID FROM preferences WHERE userID = ? 
+                UNION ALL 
+                SELECT countyID FROM countyList WHERE NOT EXISTS (
+                    SELECT prefCountyID FROM preferences WHERE userID = ? AND prefCountyID IS NOT NULL
+                )
+            )
+            AND
+            userID IN (
+                SELECT userID FROM interests WHERE interestID IN (
+                    SELECT prefInterestID FROM preferences WHERE userID = ?
+                )
+                UNION ALL
+                SELECT userID FROM user WHERE NOT EXISTS (
+                    SELECT prefInterestID FROM preferences WHERE userID = ? AND prefInterestID IS NOT NULL
+                )
+            )
+            AND
+            smokes IN (
+                SELECT prefSmokes FROM preferences WHERE userID = ?
+                UNION ALL
+                SELECT smokes FROM profile WHERE NOT EXISTS (
+                    SELECT prefSmokes FROM preferences WHERE userID = ? AND prefSmokes IS NOT NULL
+                )
+            )
+            AND
+            height BETWEEN
+    	        (SELECT prefHeightMin FROM preferences WHERE userID = ?) AND 
+                (SELECT prefHeightMax FROM preferences WHERE userID = ?)
+        );";
 
 if($stmt = mysqli_prepare($link, $sql)) {
     // Bind variables to the prepared statement as parameters
-    mysqli_stmt_bind_param($stmt, "iiiiii", $param_userID, $param_userID, $param_userID, $param_userID, $param_userID, $param_userID);
+    mysqli_stmt_bind_param($stmt, "iiiiiiiiiiiiiiiii", $param_userID, $param_userID, $param_userID, $param_userID, $param_userID, 
+        $param_userID, $param_userID, $param_userID, $param_userID, $param_userID, $param_userID, $param_userID, $param_userID, 
+        $param_userID, $param_userID, $param_userID, $param_userID);
     // Set parameters
     $param_userID = $_SESSION["userID"];
     // Attempt to execute the prepared statement
