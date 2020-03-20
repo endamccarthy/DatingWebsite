@@ -9,10 +9,8 @@ if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
 }
 ?>
  
-<?php $title = 'Welcome'; include("templates/top.html");?>
+<?php $title = 'Matches'; include("templates/top.html");?>
   <div style="text-align: center">
-    <div class="page-header">
-      <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["email"]); ?></b>. Welcome to our site.</h1>
-    </div>
+    <h2>Matches - To Do...</h2>
   </div>
 <?php include("templates/bottom.html");?>

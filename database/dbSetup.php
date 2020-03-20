@@ -30,16 +30,16 @@ $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
  
 // Check connection
 if($link === false){
-    die("ERROR: Could not connect. " . mysqli_connect_error());
+	die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 
 // Attempt create database query execution
 $sql = sprintf("CREATE DATABASE %s", DB_NAME);
 if(mysqli_query($link, $sql)) {
-    echo "Database created successfully";
+	echo "Database created successfully";
 } 
 else {
-    echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
+	echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
 }
 
 // Add DB_NAME to link - Specific access to dbgroup17 DB on hive server (or localhost)
@@ -68,6 +68,6 @@ mysqli_close($link);
 
 <?php $title = 'Welcome'; include("../pages/templates/top.html");?>
 	<p>
-			<a href="../pages/register.php" class="btn btn-warning">Go to Register Page</a>
+		<a href="../pages/register.php" class="btn btn-warning">Go to Register Page</a>
 	</p>
 <?php include("../pages/templates/bottom.html");?>
