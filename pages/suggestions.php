@@ -15,8 +15,9 @@ $suggestions = "";
 $userID = $_SESSION["userID"];
 
 // Prepare a select statement
-$sql = "SELECT firstName, lastName FROM user WHERE userID IN (
-  SELECT userID FROM profile WHERE userID  != $userID
+$sql = "SELECT DISTINCT firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
+user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
+  SELECT userID FROM profile WHERE userID != $userID
   AND
   userID NOT IN (
     SELECT pendingUserTwo FROM pending WHERE pendingUserOne = $userID
@@ -76,9 +77,9 @@ if($stmt = mysqli_prepare($link, $sql)) {
     mysqli_stmt_store_result($stmt);
     // Check if suggestions are found
     if(mysqli_stmt_num_rows($stmt) >= 1) {
-      mysqli_stmt_bind_result($stmt, $firstName, $lastName);
+      mysqli_stmt_bind_result($stmt, $firstName, $lastName, $countyName);
       while (mysqli_stmt_fetch($stmt)) {
-        $suggestions .= '<p><a href="#">'.$firstName.' '.$lastName.'</a></p>';
+        $suggestions .= '<p><a href="#">'.$firstName.' '.$lastName.'</a><br>'.$countyName.'</p>';
       } 
     }
     else {

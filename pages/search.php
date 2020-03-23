@@ -12,8 +12,8 @@ if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
 require_once "../scripts/config.php";
  
 // Define variables
-$county = $interest = $searchResults = $searchCriteria = "";
-$dropdownDefault = "Choose...";
+$county = $interest = $searchResults = "";
+$countyFilters = $interestFilters = "''";
 
 // Get list of counties for dropdown menu
 $sql = "SELECT countyName FROM countyList";
@@ -59,23 +59,35 @@ if($stmt = mysqli_prepare($link, $sql)) {
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
+  
   // Validate county
-  if($_POST["county"] && $_POST["county"] != $dropdownDefault) {
-    $county = $_POST["county"];
-    $searchCriteria .= "<p>County: ".$county."</p>";
+  if(isset($_POST["countyFilters"])) {
+    $prefix = $countyFilters = "";
+    foreach ($_POST["countyFilters"] as $filter)
+    {
+      $countyFilters .= $prefix."'".$filter."'";
+      $prefix = ', ';
+    }
+    $countyFilters = rtrim($countyFilters, ', ');
   }
 
   // Validate interest
-  if($_POST["interest"] && $_POST["interest"] != $dropdownDefault) {
-    $interest = $_POST["interest"];
-    $searchCriteria .= "<p>Interest: ".$interest."</p>";
+  if(isset($_POST["interestFilters"])) {
+    $prefix = $interestFilters = "";
+    foreach ($_POST["interestFilters"] as $filter)
+    {
+      $interestFilters .= $prefix."'".$filter."'";
+      $prefix = ', ';
+    }
+    $interestFilters = rtrim($interestFilters, ', ');
   }
 
   $userID = $_SESSION["userID"];
 
   // Prepare a select statement
-  $sql = "SELECT firstName, lastName FROM user WHERE userID IN (
-    SELECT userID FROM profile WHERE userID  != $userID
+  $sql = "SELECT DISTINCT firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
+  user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
+    SELECT userID FROM profile WHERE userID != $userID
     AND
     userID NOT IN (
       SELECT pendingUserTwo FROM pending WHERE pendingUserOne = $userID
@@ -94,20 +106,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     ) 
     AND 
     countyID IN (
-      SELECT countyID FROM countyList WHERE countyName = '$county'
+      SELECT countyID FROM countyList WHERE countyName IN ($countyFilters)
       UNION ALL 
       SELECT countyID FROM countyList WHERE NOT EXISTS (
-        SELECT countyID FROM countyList WHERE countyName = '$county' AND countyID IS NOT NULL
+        SELECT countyID FROM countyList WHERE countyName IN ($countyFilters) AND countyID IS NOT NULL
       )
     )
     AND
     userID IN (
       SELECT userID FROM interests WHERE interestID IN (
-        SELECT interestID FROM interestList WHERE interestName = '$interest'
+        SELECT interestID FROM interestList WHERE interestName IN ($interestFilters)
       )
       UNION ALL
       SELECT userID FROM user WHERE NOT EXISTS (
-        SELECT interestID FROM interestList WHERE interestName = '$interest' AND interestID IS NOT NULL
+        SELECT interestID FROM interestList WHERE interestName IN ($interestFilters) AND interestID IS NOT NULL
       )
     )
   );";
@@ -119,9 +131,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       mysqli_stmt_store_result($stmt);
       // Check if search results are found
       if(mysqli_stmt_num_rows($stmt) >= 1) { 
-        mysqli_stmt_bind_result($stmt, $firstName, $lastName);
+        mysqli_stmt_bind_result($stmt, $firstName, $lastName, $countyName);
         while (mysqli_stmt_fetch($stmt)) {
-          $searchResults .= '<p><a href="#">'.$firstName.' '.$lastName.'</a></p>';
+          $searchResults .= '<p><a href="#">'.$firstName.' '.$lastName.'</a><br>'.$countyName.'</p>';
         } 
       } 
       else {
@@ -150,39 +162,67 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
       <div class="form-group">
-        <label>County</label>
-        <select name="county" class="form-control">
-          <option selected><?php echo $dropdownDefault?></option>
+        <select name="countyFilters[]" class="form-control" id="countyFilters" multiple>
           <?php 
             if(isset($counties)) {
+              $tempCounties = explode("'", $countyFilters);
               foreach($counties as $row){
-                echo '<option>'.$row['countyName'].'</option>';
+                echo (in_array($row['countyName'], $tempCounties)) ? '<option selected>' : '<option>';
+                echo $row['countyName'].'</option>';
               }
             }
           ?>
         </select>
       </div>
       <div class="form-group">
-        <label>Interest</label>
-        <select name="interest" class="form-control">
-          <option selected><?php echo $dropdownDefault?></option>
+        <select name="interestFilters[]" class="form-control" id="interestFilters" multiple>
           <?php 
             if(isset($interests)) {
+              $tempInterests = explode("'", $interestFilters);
               foreach($interests as $row){
-                echo '<option>'.$row['interestName'].'</option>';
+                echo (in_array($row['interestName'], $tempInterests)) ? '<option selected>' : '<option>';
+                echo $row['interestName'].'</option>';
               }
             }
           ?>
         </select>
       </div>
       <div class="form-group">
-        <input name="search" type="submit" class="btn btn-primary" value="Search">
+        <input name="search" type="submit" class="btn btn-secondary" value="Search">
       </div>
     </form>
-    <?php if($searchCriteria) echo "<p><b>Search Criteria</b></p>".$searchCriteria; ?>
     <h2>Search Results</h2>
     <div>
       <?php echo $searchResults; ?>
     </div>
   </div>
 <?php include("templates/bottom.html");?>
+
+
+<script>
+$(document).ready(function(){
+ $('#countyFilters').multiselect({
+  nonSelectedText: 'Filter County',
+  enableFiltering: true,
+  enableCaseInsensitiveFiltering: true,
+  buttonWidth:'100%',
+  buttonClass: 'btn btn-light',
+  enableHTML: false,
+  maxHeight: 200,
+  includeSelectAllOption: true
+ });
+});
+
+$(document).ready(function(){
+ $('#interestFilters').multiselect({
+  nonSelectedText: 'Filter Interest',
+  enableFiltering: true,
+  enableCaseInsensitiveFiltering: true,
+  buttonWidth:'100%',
+  buttonClass: 'btn btn-light',
+  enableHTML: false,
+  maxHeight: 200,
+  includeSelectAllOption: true
+ });
+});
+</script>
