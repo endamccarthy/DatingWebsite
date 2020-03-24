@@ -4,12 +4,12 @@ session_start();
  
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-  header("location: login.php");
+  header("location: ../login/login.php");
   exit;
 }
 
 // Include config file
-require_once "../scripts/config.php";
+require_once "../../scripts/config.php";
  
 // Define variables
 $county = $interest = $searchResults = "";
@@ -153,7 +153,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 ?>
  
-<?php $title = 'Search'; include("templates/top.html");?>
+<?php $title = 'Search'; include("../templates/top.html");?>
   <div style="text-align: center">
     <h2>Search - To Do...</h2>
   </div>
@@ -196,7 +196,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       <?php echo $searchResults; ?>
     </div>
   </div>
-<?php include("templates/bottom.html");?>
+<?php include("../templates/bottom.html");?>
 
 
 <script>

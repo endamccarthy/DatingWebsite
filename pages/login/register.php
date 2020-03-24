@@ -1,6 +1,6 @@
 <?php
 // Include config file
-require_once "../scripts/config.php";
+require_once "../../scripts/config.php";
  
 // Define variables and initialize with empty values
 $firstName = $lastName = $email = $password = $confirmPassword = $tAndC = "";
@@ -105,7 +105,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 
-<?php $title = 'Register'; include("templates/top.html");?>
+<?php $title = 'Register'; include("../templates/top.html");?>
   <div class="wrapper">
     <h2>Register</h2>
     <p>Please fill in this form to create an account.</p>
@@ -158,4 +158,4 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 
   </div>    
-<?php include("templates/bottom.html");?>
+<?php include("../templates/bottom.html");?>

@@ -4,12 +4,12 @@ session_start();
  
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
-  header("location: welcome.php");
+  header("location: ../main/welcome.php");
   exit;
 }
  
 // Include config file
-require_once "../scripts/config.php";
+require_once "../../scripts/config.php";
  
 // Define variables and initialize with empty values
 $email = $password = "";
@@ -56,7 +56,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
               $_SESSION["userID"] = $userID;
               $_SESSION["email"] = $email;                            
               // Redirect user to welcome page
-              header("location: welcome.php");
+              header("location: ../main/welcome.php");
             } 
             else {
               // Display an error message if password is not valid
@@ -81,7 +81,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
  
-<?php $title = 'Login'; include("templates/top.html");?>
+<?php $title = 'Login'; include("../templates/top.html");?>
   <div class="wrapper">
     <h2>Login</h2>
     <p>Please fill in your credentials to login.</p>
@@ -104,4 +104,4 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 
   </div>    
-<?php include("templates/bottom.html");?>
+<?php include("../templates/bottom.html");?>

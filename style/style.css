@@ -13,4 +13,21 @@ body {
 .wrapper { 
   width: 350px; 
   padding: 20px; 
+  margin: 0 auto;
+}
+
+.wrapper-admin-narrow { 
+  width: 500px;
+}
+
+.wrapper-admin-wide { 
+  width: 700px;
+}
+
+.page-header h2 {
+  margin-top: 0;
+}
+
+table tr td:last-child a {
+  margin-right: 15px;
 }

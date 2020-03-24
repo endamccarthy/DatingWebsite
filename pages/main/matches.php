@@ -4,20 +4,22 @@ session_start();
  
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-  header("location: login.php");
+  header("location: ../login/login.php");
   exit;
 }
 
 // Include config file
-require_once "../scripts/config.php";
+require_once "../../scripts/config.php";
 
-$pending = "";
+$matches = "";
 $userID = $_SESSION["userID"];
 
 // Prepare a select statement
 $sql = "SELECT DISTINCT firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
 user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
-  SELECT pendingUserOne FROM pending WHERE pendingUserTwo = $userID
+  SELECT matchesUserTwo FROM matches WHERE matchesUserOne = $userID
+  UNION ALL
+  SELECT matchesUserOne FROM matches WHERE matchesUserTwo = $userID
 );";
 
 if($stmt = mysqli_prepare($link, $sql)) {
@@ -25,15 +27,15 @@ if($stmt = mysqli_prepare($link, $sql)) {
   if(mysqli_stmt_execute($stmt)) {
     // Store result
     mysqli_stmt_store_result($stmt);
-    // Check if pending are found
+    // Check if matches are found
     if(mysqli_stmt_num_rows($stmt) >= 1) {
       mysqli_stmt_bind_result($stmt, $firstName, $lastName, $countyName);
       while (mysqli_stmt_fetch($stmt)) {
-        $pending .= '<p><a href="#">'.$firstName.' '.$lastName.'</a><br>'.$countyName.'</p>';
+        $matches .= '<p><a href="#">'.$firstName.' '.$lastName.'</a><br>'.$countyName.'</p>';
       } 
     }
     else {
-      $pending = "<p>Sorry, no matches yet!</p>";
+      $matches = "<p>Sorry, no matches yet!</p>";
     }
   } 
   else {
@@ -46,11 +48,13 @@ if($stmt = mysqli_prepare($link, $sql)) {
 mysqli_close($link);
 ?>
  
-<?php $title = 'Waiting For You'; include("templates/top.html");?>
+<?php $title = 'Matches'; include("../templates/top.html");?>
   <div style="text-align: center">
-    <h2>Waiting For You - To Do...</h2>
-    <div>
-      <?php echo $pending; ?>
+    <div class="wrapper">
+      <h2>Matches - To Do...</h2>
+      <div>
+        <?php echo $matches; ?>
+      </div>
     </div>
   </div>
-<?php include("templates/bottom.html");?>
+<?php include("../templates/bottom.html");?>

@@ -9,7 +9,7 @@ if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
 }
  
 // Include config file
-require_once "../scripts/config.php";
+require_once "../../scripts/config.php";
  
 // Define variables and initialize with empty values
 $newPassword = $confirmPassword = "";
@@ -69,7 +69,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
  
-<?php $title = 'Reset Password'; include("templates/top.html");?>
+<?php $title = 'Reset Password'; include("../templates/top.html");?>
   <div class="wrapper">
     <h2>Reset Password</h2>
     <p>Please fill out this form to reset your password.</p>
@@ -87,9 +87,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
       <div class="form-group">
         <input type="submit" class="btn btn-primary" value="Submit">
-        <a class="btn btn-link" href="welcome.php">Cancel</a>
+        <a class="btn btn-link" href="../main/welcome.php">Cancel</a>
       </div>
     </form>
 
   </div>    
-<?php include("templates/bottom.html");?>
+<?php include("../templates/bottom.html");?>

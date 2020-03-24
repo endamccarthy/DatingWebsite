@@ -4,12 +4,12 @@ session_start();
  
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-  header("location: login.php");
+  header("location: ../login/login.php");
   exit;
 }
 
 // Include config file
-require_once "../scripts/config.php";
+require_once "../../scripts/config.php";
 
 $suggestions = "";
 $userID = $_SESSION["userID"];
@@ -96,11 +96,13 @@ if($stmt = mysqli_prepare($link, $sql)) {
 mysqli_close($link);
 ?>
  
-<?php $title = 'Suggestions'; include("templates/top.html");?>
+<?php $title = 'Suggestions'; include("../templates/top.html");?>
   <div style="text-align: center">
-    <h2>Suggestions</h2>
-    <div>
-      <?php echo $suggestions; ?>
+    <div class="wrapper">
+      <h2>Suggestions</h2>
+      <div>
+        <?php echo $suggestions; ?>
+      </div>
     </div>
   </div>
-<?php include("templates/bottom.html");?>
+<?php include("../templates/bottom.html");?>
