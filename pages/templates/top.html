@@ -32,13 +32,14 @@
     <?php
       if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == true && isset($_SESSION["profileComplete"]) && $_SESSION["profileComplete"] == true) {
         echo '<div style="text-align: center"><p>';
-          echo '<a href="../admin/admin-home.php" class="btn btn-info">Admin Page</a> ';
-          echo '<a href="../login/reset-password.php" class="btn btn-warning">Reset Your Password</a> ';
-          echo '<a href="../../scripts/logout.php" class="btn btn-danger">Sign Out of Your Account</a> ';
+          echo '<a href="../admin/admin-home.php" class="btn btn-info">Admin</a> ';
+          echo '<a href="../login/reset-password.php" class="btn btn-warning">Reset Password</a> ';
+          echo '<a href="../../scripts/logout.php" class="btn btn-danger">Sign Out</a> ';
           echo '<a href="../main/matches.php" class="btn btn-info">Matches</a> ';
           echo '<a href="../main/suggestions.php" class="btn btn-info">Suggestions</a> ';
           echo '<a href="../main/waiting.php" class="btn btn-info">Waiting For You</a> ';
-          echo '<a href="../main/search.php" class="btn btn-info">Search</a>';
+          echo '<a href="../main/search.php" class="btn btn-info">Search</a> ';
+          echo '<a href="../main/edit-profile.php" class="btn btn-info">Edit Profile</a> ';
         echo '</p></div>';
       }
     ?>
