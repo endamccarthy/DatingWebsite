@@ -56,7 +56,7 @@ CREATE TABLE profile (
   userID INT NOT NULL,
   description TEXT(1000) NULL,
   gender ENUM("male", "female") NOT NULL,
-  dateOfBirth DATETIME NOT NULL,
+  dateOfBirth DATE NOT NULL,
   countyID INT NOT NULL,
   photo VARCHAR(128) NOT NULL,
   smokes ENUM("smoker", "non-smoker") NOT NULL,

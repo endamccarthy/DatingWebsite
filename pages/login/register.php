@@ -1,11 +1,22 @@
 <?php
+
+// Initialize the session
+session_start();
+ 
+// Check if the user is already logged in, if yes then redirect to welcome page
+if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
+  header("location: ../main/welcome.php");
+  exit;
+}
+
 // Include config file
 require_once "../../scripts/config.php";
  
 // Define variables and initialize with empty values
-$firstName = $lastName = $email = $password = $confirmPassword = $tAndC = "";
+$firstName = $lastName = $email = $password = $confirmPassword = "";
 $emailErr = $passwordErr = $confirmPasswordErr = $tAndCErr = $over18Err = "";
- 
+$userID; 
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
  
@@ -21,11 +32,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Validate email
   if(empty(trim($_POST["email"]))) {
-    $emailErr = "Please enter a email.";
+    $emailErr = "Please enter an email address.";
   }
   else {
-    // Prepare a select statement
-    $sql = "SELECT userID FROM user WHERE email = '$email'";
+    // Check user table for email address
+    $sql = "SELECT userID FROM user WHERE email = '$email';";
     if($stmt = mysqli_prepare($link, $sql)) {
       // Attempt to execute the prepared statement
       if(mysqli_stmt_execute($stmt)) {
@@ -80,7 +91,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Check input errors before inserting in database
   if(empty($emailErr) && empty($passwordErr) && empty($confirmPasswordErr) && empty($tAndCErr) && empty($over18Err)) {
-    // Prepare an insert statement
+    // Add entry to user table
     $sql = "INSERT INTO user (firstName, lastName, email, password) VALUES ('$firstName', '$lastName', '$email', ?);";
     if($stmt = mysqli_prepare($link, $sql)) {
       // Bind variables to the prepared statement as parameters
@@ -88,19 +99,43 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       // Set parameters
       $paramPassword = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
       // Attempt to execute the prepared statement
-      if(mysqli_stmt_execute($stmt)) {
-        // Redirect to login page
-        header("location: login.php");
-      } 
-      else {
+      if(!mysqli_stmt_execute($stmt)) {
         echo "Something went wrong. Please try again later.";
       }
       // Close statement
       mysqli_stmt_close($stmt);
     }
   }
+
+  // Retrieve the new users ID
+  $sql = "SELECT userID FROM user WHERE email = '$email';";
+  if($stmt = mysqli_prepare($link, $sql)) {
+    // Attempt to execute the prepared statement
+    if(mysqli_stmt_execute($stmt)) {
+      /* store result */
+      mysqli_stmt_store_result($stmt);
+      if(mysqli_stmt_num_rows($stmt) == 1) {
+        mysqli_stmt_bind_result($stmt, $userID);
+        while (mysqli_stmt_fetch($stmt)) {
+          // Store data in session variables
+          $_SESSION["loggedIn"] = true;
+          $_SESSION["userID"] = $userID;
+          $_SESSION["email"] = $email;
+          $_SESSION["profileComplete"] = false;
+          header("location: ../main/edit-profile.php");
+        }
+      }
+    } 
+    else {
+      echo "Oops! Something went wrong. Please try again later.";
+    }
+    // Close statement
+    mysqli_stmt_close($stmt);
+  }
+
   // Close connection
   mysqli_close($link);
+
 }
 ?>
 
@@ -128,12 +163,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>    
       <div class="form-group">
         <label>Password</label>
-        <input type="password" name="password" class="form-control <?php echo (!empty($passwordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
+        <input type="password" name="password" class="form-control <?php echo (!empty($passwordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>" required>
         <span class="invalid-feedback"><?php echo $passwordErr; ?></span>
       </div>
       <div class="form-group">
         <label>Confirm Password</label>
-        <input type="password" name="confirmPassword" class="form-control <?php echo (!empty($confirmPasswordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirmPassword; ?>">
+        <input type="password" name="confirmPassword" class="form-control <?php echo (!empty($confirmPasswordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirmPassword; ?>" required>
         <span class="invalid-feedback"><?php echo $confirmPasswordErr; ?></span>
       </div>
       <div class="form-group">

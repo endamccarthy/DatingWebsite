@@ -43,7 +43,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   // Check input errors before updating the database
   if(empty($newPasswordErr) && empty($confirmPasswordErr)) {
     // Prepare an update statement
-    $sql = "UPDATE user SET password = ? WHERE userID = ?";
+    $sql = "UPDATE user SET password = ? WHERE userID = ?;";
     if($stmt = mysqli_prepare($link, $sql)) {
       // Bind variables to the prepared statement as parameters
       mysqli_stmt_bind_param($stmt, "si", $paramPassword, $paramUserID);

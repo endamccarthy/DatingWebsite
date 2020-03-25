@@ -68,6 +68,6 @@ mysqli_close($link);
 
 <?php $title = 'Welcome'; include("../pages/templates/top.html");?>
 	<p>
-		<a href="../pages/main/register.php" class="btn btn-warning">Go to Register Page</a>
+		<a href="../pages/login/register.php" class="btn btn-warning">Go to Register Page</a>
 	</p>
 <?php include("../pages/templates/bottom.html");?>

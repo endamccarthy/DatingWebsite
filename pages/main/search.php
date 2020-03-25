@@ -2,9 +2,15 @@
 // Initialize the session
 session_start();
  
-// Check if the user is logged in, if not then redirect him to login page
+// Check if the user is logged in, if not then redirect to login page
 if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
   header("location: ../login/login.php");
+  exit;
+}
+
+// check if user has completed their profile, redirect them to edit profile page if not
+if($_SESSION["profileComplete"] !== true) {
+  header("location: edit-profile.php");
   exit;
 }
 
@@ -16,7 +22,7 @@ $county = $interest = $searchResults = "";
 $countyFilters = $interestFilters = "''";
 
 // Get list of counties for dropdown menu
-$sql = "SELECT countyName FROM countyList";
+$sql = "SELECT countyName FROM countyList;";
 if($stmt = mysqli_prepare($link, $sql)) {
   // Attempt to execute the prepared statement
   if(mysqli_stmt_execute($stmt)) {
@@ -37,7 +43,7 @@ if($stmt = mysqli_prepare($link, $sql)) {
 }
 
 // Get list of interests for dropdown menu
-$sql = "SELECT interestName FROM interestList";
+$sql = "SELECT interestName FROM interestList;";
 if($stmt = mysqli_prepare($link, $sql)) {
   // Attempt to execute the prepared statement
   if(mysqli_stmt_execute($stmt)) {

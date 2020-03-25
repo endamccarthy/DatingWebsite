@@ -22,14 +22,17 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css">
+
     <title><?php echo htmlspecialchars($title);?></title>
 
   </head>
   <body>
     <?php
-      if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == true) {
+      if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == true && isset($_SESSION["profileComplete"]) && $_SESSION["profileComplete"] == true) {
         echo '<div style="text-align: center"><p>';
-          echo '<a href="../admin/index.php" class="btn btn-info">Admin Page</a> ';
+          echo '<a href="../admin/admin-home.php" class="btn btn-info">Admin Page</a> ';
           echo '<a href="../login/reset-password.php" class="btn btn-warning">Reset Your Password</a> ';
           echo '<a href="../../scripts/logout.php" class="btn btn-danger">Sign Out of Your Account</a> ';
           echo '<a href="../main/matches.php" class="btn btn-info">Matches</a> ';

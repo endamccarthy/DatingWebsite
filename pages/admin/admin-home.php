@@ -16,7 +16,7 @@ if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
                 <div class="col-md-12">
                     <div class="pb-2 mt-4 mb-4 border-bottom clearfix">  
                         <h2 class="float-left">Employees Details</h2>
-                        <a href="create.php" class="btn btn-success float-right">Add New Employee</a>
+                        <a href="admin-create.php" class="btn btn-success float-right">Add New Employee</a>
                     </div>
                     <?php
                     // Include config file
@@ -44,9 +44,9 @@ if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
                                         echo "<td>" . $row['address'] . "</td>";
                                         echo "<td>" . $row['salary'] . "</td>";
                                         echo "<td>";
-                                            echo "<a href='read.php?id=". $row['id'] ."' title='View Record' data-toggle='tooltip'><i class='fa fa-eye' aria-hidden='true'></i></a>";
-                                            echo "<a href='update.php?id=". $row['id'] ."' title='Update Record' data-toggle='tooltip'><i class='fa fa-pencil' aria-hidden='true'></i></a>";
-                                            echo "<a href='delete.php?id=". $row['id'] ."' title='Delete Record' data-toggle='tooltip'><i class='fa fa-trash-o' aria-hidden='true'></i></a>";
+                                            echo "<a href='admin-read.php?id=". $row['id'] ."' title='View Record' data-toggle='tooltip'><i class='fa fa-eye' aria-hidden='true'></i></a>";
+                                            echo "<a href='admin-update.php?id=". $row['id'] ."' title='Update Record' data-toggle='tooltip'><i class='fa fa-pencil' aria-hidden='true'></i></a>";
+                                            echo "<a href='admin-delete.php?id=". $row['id'] ."' title='Delete Record' data-toggle='tooltip'><i class='fa fa-trash-o' aria-hidden='true'></i></a>";
                                         echo "</td>";
                                     echo "</tr>";
                                 }

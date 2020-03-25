@@ -2,7 +2,7 @@
 // Initialize the session
 session_start();
  
-// Check if the user is already logged in, if yes then redirect him to welcome page
+// Check if the user is already logged in, if yes then redirect to welcome page
 if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
   header("location: ../main/welcome.php");
   exit;
@@ -37,7 +37,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   // Validate credentials
   if(empty($emailErr) && empty($passwordErr)) {
     // Prepare a select statement
-    $sql = "SELECT userID, email, password FROM user WHERE email = '$email'";
+    $sql = "SELECT userID, email, password FROM user WHERE email = '$email';";
     if($stmt = mysqli_prepare($link, $sql)) {
       // Attempt to execute the prepared statement
       if(mysqli_stmt_execute($stmt)) {
@@ -54,9 +54,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
               // Store data in session variables
               $_SESSION["loggedIn"] = true;
               $_SESSION["userID"] = $userID;
-              $_SESSION["email"] = $email;                            
-              // Redirect user to welcome page
-              header("location: ../main/welcome.php");
+              $_SESSION["email"] = $email;
             } 
             else {
               // Display an error message if password is not valid
@@ -74,6 +72,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       }
       // Close statement
       mysqli_stmt_close($stmt);
+    }
+
+    // check if user has completed their profile, redirect them to edit profile page if not
+    if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
+      $userID = $_SESSION["userID"];
+      // check if user has entry in profile table
+      $sql = "SELECT userID FROM profile WHERE userID = $userID;";
+      if($stmt = mysqli_prepare($link, $sql)) {
+        if(mysqli_stmt_execute($stmt)) {
+          mysqli_stmt_store_result($stmt);
+          if(mysqli_stmt_num_rows($stmt) !== 1) {
+            $_SESSION["profileComplete"] = false;
+            header("location: ../main/edit-profile.php");
+          } 
+          else {
+            $_SESSION["profileComplete"] = true;
+            header("location: ../main/welcome.php");
+          }
+        } 
+        else {
+          echo "Oops! Something went wrong. Please try again later.";
+        }
+        // Close statement
+        mysqli_stmt_close($stmt);
+      }
     }
   }
   // Close connection
