@@ -33,7 +33,7 @@ define('DB_NAME', 'dbgroup17');
 $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
  
 // Check connection
-if($link === false){
+if($link === false) {
 	die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 

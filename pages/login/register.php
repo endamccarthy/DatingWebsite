@@ -12,7 +12,7 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
 // Include config file
 require_once "../../scripts/config.php";
  
-// Define variables and initialize with empty values
+// Define variables
 $firstName = $lastName = $email = $password = $confirmPassword = "";
 $emailErr = $passwordErr = $confirmPasswordErr = $tAndCErr = $over18Err = "";
 $userID; 
@@ -38,9 +38,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check user table for email address
     $sql = "SELECT userID FROM user WHERE email = '$email';";
     if($stmt = mysqli_prepare($link, $sql)) {
-      // Attempt to execute the prepared statement
       if(mysqli_stmt_execute($stmt)) {
-        /* store result */
         mysqli_stmt_store_result($stmt);
         if(mysqli_stmt_num_rows($stmt) == 1) {
           $emailErr = "This email is already taken.";
@@ -91,14 +89,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Check input errors before inserting in database
   if(empty($emailErr) && empty($passwordErr) && empty($confirmPasswordErr) && empty($tAndCErr) && empty($over18Err)) {
-    // Add entry to user table
     $sql = "INSERT INTO user (firstName, lastName, email, password) VALUES ('$firstName', '$lastName', '$email', ?);";
     if($stmt = mysqli_prepare($link, $sql)) {
-      // Bind variables to the prepared statement as parameters
       mysqli_stmt_bind_param($stmt, "s", $paramPassword);
-      // Set parameters
-      $paramPassword = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
-      // Attempt to execute the prepared statement
+      // Create a password hash
+      $paramPassword = password_hash($password, PASSWORD_DEFAULT);
       if(!mysqli_stmt_execute($stmt)) {
         echo "Something went wrong. Please try again later.";
       }
@@ -110,16 +105,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve the new users ID
   $sql = "SELECT userID FROM user WHERE email = '$email';";
   if($stmt = mysqli_prepare($link, $sql)) {
-    // Attempt to execute the prepared statement
     if(mysqli_stmt_execute($stmt)) {
-      /* store result */
       mysqli_stmt_store_result($stmt);
       if(mysqli_stmt_num_rows($stmt) == 1) {
-        mysqli_stmt_bind_result($stmt, $userID);
+        mysqli_stmt_bind_result($stmt, $userIDTemp);
         while (mysqli_stmt_fetch($stmt)) {
           // Store data in session variables
           $_SESSION["loggedIn"] = true;
-          $_SESSION["userID"] = $userID;
+          $_SESSION["userID"] = $userIDTemp;
           $_SESSION["email"] = $email;
           $_SESSION["profileComplete"] = false;
           header("location: ../main/edit-profile.php");

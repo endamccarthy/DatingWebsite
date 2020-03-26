@@ -11,7 +11,7 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
 // Include config file
 require_once "../../scripts/config.php";
  
-// Define variables and initialize with empty values
+// Define variables
 $email = $password = "";
 $emailErr = $passwordErr = "";
  
@@ -39,31 +39,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     // Prepare a select statement
     $sql = "SELECT userID, email, password FROM user WHERE email = '$email';";
     if($stmt = mysqli_prepare($link, $sql)) {
-      // Attempt to execute the prepared statement
       if(mysqli_stmt_execute($stmt)) {
-        // Store result
         mysqli_stmt_store_result($stmt);
         // Check if email exists, if yes then verify password
-        if(mysqli_stmt_num_rows($stmt) == 1) {                    
-          // Bind result variables
-          mysqli_stmt_bind_result($stmt, $userID, $email, $hashedPassword);
+        if(mysqli_stmt_num_rows($stmt) == 1) {
+          mysqli_stmt_bind_result($stmt, $userIDTemp, $emailTemp, $hashedPasswordTemp);
           if(mysqli_stmt_fetch($stmt)) {
-            if(password_verify($password, $hashedPassword)) {
+            if(password_verify($password, $hashedPasswordTemp)) {
               // Password is correct, so start a new session
               session_start();
               // Store data in session variables
               $_SESSION["loggedIn"] = true;
-              $_SESSION["userID"] = $userID;
-              $_SESSION["email"] = $email;
+              $_SESSION["userID"] = $userIDTemp;
+              $_SESSION["email"] = $emailTemp;
             } 
             else {
-              // Display an error message if password is not valid
               $passwordErr = "The password you entered was not valid.";
             }
           }
         } 
         else {
-          // Display an error message if email doesn't exist
           $emailErr = "No account found with that email.";
         }
       } 

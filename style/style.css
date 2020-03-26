@@ -11,23 +11,32 @@ body {
 }
 
 .wrapper { 
-  width: 350px; 
+  width: 375px; 
   padding: 20px; 
   margin: 0 auto;
 }
 
+/* ********************** */
+/* FORM REQUIREMENTS */
+.form-group.required .control-label:after, .form-row.required .control-label:after { 
+  content:"*";
+  color:red;
+}
+/* ********************** */
+
+
+/* ********************** */
+/* ADMIN PAGES */
 .wrapper-admin-narrow { 
   width: 500px;
 }
-
 .wrapper-admin-wide { 
   width: 700px;
 }
-
 .page-header h2 {
   margin-top: 0;
 }
-
 table tr td:last-child a {
   margin-right: 15px;
 }
+/* ********************** */

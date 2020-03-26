@@ -2,71 +2,58 @@
 // Initialize the session
 session_start();
  
-// Check if the user is logged in, if not then redirect to login page
-if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-  header("location: ../login/login.php");
-  exit;
-}
-
-// check if user has completed their profile, redirect them to edit profile page if not
-if($_SESSION["profileComplete"] !== true) {
-  header("location: edit-profile.php");
-  exit;
-}
-
+// Include script to check if user is logged in and profile is complete
+require_once "../../scripts/logged-in.php";
 // Include config file
 require_once "../../scripts/config.php";
  
 // Define variables
 $county = $interest = $searchResults = "";
 $countyFilters = $interestFilters = "''";
+$userID = $_SESSION["userID"];
 
 // Get list of counties for dropdown menu
-$sql = "SELECT countyName FROM countyList;";
+$sql = "SELECT countyID, countyName FROM countyList;";
 if($stmt = mysqli_prepare($link, $sql)) {
-  // Attempt to execute the prepared statement
   if(mysqli_stmt_execute($stmt)) {
-    // Store result
     mysqli_stmt_store_result($stmt);
-    // Check if counties are found
     if(mysqli_stmt_num_rows($stmt) >= 1) { 
       $counties = array();
-      mysqli_stmt_bind_result($stmt, $countyName);
+      mysqli_stmt_bind_result($stmt, $countyIDTemp, $countyNameTemp);
       while (mysqli_stmt_fetch($stmt)) {
-        $counties[] = ['countyName' => $countyName];
+        $counties[$countyIDTemp] = $countyNameTemp;
       } 
     } 
   } 
   else {
     echo "Oops! Something went wrong. Please try again later.";
   }
+  mysqli_stmt_close($stmt);
 }
 
 // Get list of interests for dropdown menu
-$sql = "SELECT interestName FROM interestList;";
+$sql = "SELECT interestID, interestName FROM interestList;";
 if($stmt = mysqli_prepare($link, $sql)) {
-  // Attempt to execute the prepared statement
   if(mysqli_stmt_execute($stmt)) {
-    // Store result
     mysqli_stmt_store_result($stmt);
-    // Check if interests are found
     if(mysqli_stmt_num_rows($stmt) >= 1) { 
       $interests = array();
-      mysqli_stmt_bind_result($stmt, $interestName);
+      mysqli_stmt_bind_result($stmt, $interestIDTemp, $interestNameTemp);
       while (mysqli_stmt_fetch($stmt)) {
-        $interests[] = ['interestName' => $interestName];
+        $interests[$interestIDTemp] = $interestNameTemp;
       } 
     } 
   } 
   else {
     echo "Oops! Something went wrong. Please try again later.";
   }
+  mysqli_stmt_close($stmt);
 }
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
   
-  // Validate county
+  // If multiple county IDs are included in filters, save as comma separated string list e.g.('1', '2')
   if(isset($_POST["countyFilters"])) {
     $prefix = $countyFilters = "";
     foreach ($_POST["countyFilters"] as $filter)
@@ -77,7 +64,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $countyFilters = rtrim($countyFilters, ', ');
   }
 
-  // Validate interest
+  // If multiple interest IDs are included in filters, save as comma separated string list e.g.('1', '2')
   if(isset($_POST["interestFilters"])) {
     $prefix = $interestFilters = "";
     foreach ($_POST["interestFilters"] as $filter)
@@ -87,8 +74,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $interestFilters = rtrim($interestFilters, ', ');
   }
-
-  $userID = $_SESSION["userID"];
 
   // Prepare a select statement
   $sql = "SELECT DISTINCT firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
@@ -112,34 +97,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     ) 
     AND 
     countyID IN (
-      SELECT countyID FROM countyList WHERE countyName IN ($countyFilters)
+      SELECT countyID FROM countyList WHERE countyID IN ($countyFilters)
       UNION ALL 
       SELECT countyID FROM countyList WHERE NOT EXISTS (
-        SELECT countyID FROM countyList WHERE countyName IN ($countyFilters) AND countyID IS NOT NULL
+        SELECT countyID FROM countyList WHERE countyID IN ($countyFilters) AND countyID IS NOT NULL
       )
     )
     AND
     userID IN (
       SELECT userID FROM interests WHERE interestID IN (
-        SELECT interestID FROM interestList WHERE interestName IN ($interestFilters)
+        SELECT interestID FROM interestList WHERE interestID IN ($interestFilters)
       )
       UNION ALL
       SELECT userID FROM user WHERE NOT EXISTS (
-        SELECT interestID FROM interestList WHERE interestName IN ($interestFilters) AND interestID IS NOT NULL
+        SELECT interestID FROM interestList WHERE interestID IN ($interestFilters) AND interestID IS NOT NULL
       )
     )
   );";
 
+  // Execute sql statement and save results to a string
   if($stmt = mysqli_prepare($link, $sql)) {
-    // Attempt to execute the prepared statement
     if(mysqli_stmt_execute($stmt)) {
-      // Store result
       mysqli_stmt_store_result($stmt);
-      // Check if search results are found
       if(mysqli_stmt_num_rows($stmt) >= 1) { 
-        mysqli_stmt_bind_result($stmt, $firstName, $lastName, $countyName);
+        mysqli_stmt_bind_result($stmt, $firstNameTemp, $lastNameTemp, $countyNameTemp);
         while (mysqli_stmt_fetch($stmt)) {
-          $searchResults .= '<p><a href="#">'.$firstName.' '.$lastName.'</a><br>'.$countyName.'</p>';
+          $searchResults .= '<p><a href="#">'.$firstNameTemp.' '.$lastNameTemp.'</a><br>'.$countyNameTemp.'</p>';
         } 
       } 
       else {
@@ -152,50 +135,52 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     // Close statement
     mysqli_stmt_close($stmt);
   }
-
   // Close connection
   mysqli_close($link);
 }
 
 ?>
- 
+
 <?php $title = 'Search'; include("../templates/top.html");?>
   <div style="text-align: center">
     <h2>Search - To Do...</h2>
   </div>
   <div class="wrapper">
     <h3>Enter Search Criteria</h3>
-    
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+
       <div class="form-group">
         <select name="countyFilters[]" class="form-control" id="countyFilters" multiple>
           <?php 
             if(isset($counties)) {
               $tempCounties = explode("'", $countyFilters);
-              foreach($counties as $row){
-                echo (in_array($row['countyName'], $tempCounties)) ? '<option selected>' : '<option>';
-                echo $row['countyName'].'</option>';
+              foreach($counties as $id => $name){
+                echo (in_array($id, $tempCounties)) ? '<option selected' : '<option';
+                echo ' value='.$id.'>'.$name.'</option>';
               }
             }
           ?>
         </select>
       </div>
+
       <div class="form-group">
         <select name="interestFilters[]" class="form-control" id="interestFilters" multiple>
           <?php 
             if(isset($interests)) {
               $tempInterests = explode("'", $interestFilters);
-              foreach($interests as $row){
-                echo (in_array($row['interestName'], $tempInterests)) ? '<option selected>' : '<option>';
-                echo $row['interestName'].'</option>';
+              foreach($interests as $id => $name){
+                echo (in_array($id, $tempInterests)) ? '<option selected' : '<option';
+                echo ' value='.$id.'>'.$name.'</option>';
               }
             }
           ?>
         </select>
       </div>
+
       <div class="form-group">
         <input name="search" type="submit" class="btn btn-secondary" value="Search">
       </div>
+
     </form>
     <h2>Search Results</h2>
     <div>
@@ -204,31 +189,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 <?php include("../templates/bottom.html");?>
 
-
 <script>
+// Allow for multiple county selections
 $(document).ready(function(){
- $('#countyFilters').multiselect({
-  nonSelectedText: 'Filter County',
-  enableFiltering: true,
-  enableCaseInsensitiveFiltering: true,
-  buttonWidth:'100%',
-  buttonClass: 'btn btn-light',
-  enableHTML: false,
-  maxHeight: 200,
-  includeSelectAllOption: true
- });
+  $('#countyFilters').multiselect({
+    nonSelectedText: 'Filter County',
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true,
+    buttonWidth:'100%',
+    buttonClass: 'btn btn-light',
+    enableHTML: false,
+    maxHeight: 200,
+    includeSelectAllOption: true
+  });
 });
 
+// Allow for multiple interest selections
 $(document).ready(function(){
- $('#interestFilters').multiselect({
-  nonSelectedText: 'Filter Interest',
-  enableFiltering: true,
-  enableCaseInsensitiveFiltering: true,
-  buttonWidth:'100%',
-  buttonClass: 'btn btn-light',
-  enableHTML: false,
-  maxHeight: 200,
-  includeSelectAllOption: true
- });
+  $('#interestFilters').multiselect({
+    nonSelectedText: 'Filter Interest',
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true,
+    buttonWidth:'100%',
+    buttonClass: 'btn btn-light',
+    enableHTML: false,
+    maxHeight: 200,
+    includeSelectAllOption: true
+  });
 });
 </script>

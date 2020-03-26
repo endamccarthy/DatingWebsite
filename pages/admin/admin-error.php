@@ -2,11 +2,8 @@
 // Initialize the session
 session_start();
  
-// Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-  header("location: ../login/login.php");
-  exit;
-}
+// Include config file
+require_once "../../scripts/config.php";
 ?>
 
 <?php $title = 'Admin | Error'; include("../templates/top.html");?>

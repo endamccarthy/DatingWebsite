@@ -2,16 +2,12 @@
 // Initialize the session
 session_start();
  
-// Check if the user is logged in, otherwise redirect to login page
-if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-  header("location: login.php");
-  exit;
-}
- 
+// Include script to check if user is logged in and profile is complete
+require_once "../../scripts/logged-in.php";
 // Include config file
 require_once "../../scripts/config.php";
  
-// Define variables and initialize with empty values
+// Define variables
 $newPassword = $confirmPassword = "";
 $newPasswordErr = $confirmPasswordErr = "";
  
@@ -42,15 +38,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Check input errors before updating the database
   if(empty($newPasswordErr) && empty($confirmPasswordErr)) {
-    // Prepare an update statement
     $sql = "UPDATE user SET password = ? WHERE userID = ?;";
     if($stmt = mysqli_prepare($link, $sql)) {
-      // Bind variables to the prepared statement as parameters
       mysqli_stmt_bind_param($stmt, "si", $paramPassword, $paramUserID);
-      // Set parameters
       $paramPassword = password_hash($newPassword, PASSWORD_DEFAULT);
       $paramUserID = $_SESSION["userID"];
-      // Attempt to execute the prepared statement
       if(mysqli_stmt_execute($stmt)) {
         // Password updated successfully. Destroy the session, and redirect to login page
         session_destroy();

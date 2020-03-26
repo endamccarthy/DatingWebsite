@@ -2,11 +2,8 @@
 // Initialize the session
 session_start();
  
-// Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-  header("location: ../login/login.php");
-  exit;
-}
+// Include config file
+require_once "../../scripts/config.php";
 ?>
 
 <?php $title = 'Admin | Home'; include("../templates/top.html");?>
@@ -24,8 +21,8 @@ if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
 
                     // Attempt select query execution
                     $sql = "SELECT * FROM employees";
-                    if($result = mysqli_query($link, $sql)){
-                        if(mysqli_num_rows($result) > 0){
+                    if($result = mysqli_query($link, $sql)) {
+                        if(mysqli_num_rows($result) > 0) {
                             echo "<table class='table table-bordered table-striped table-sm'>";
                                 echo "<thead>";
                                     echo "<tr>";
@@ -54,10 +51,12 @@ if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
                             echo "</table>";
                             // Free result set
                             mysqli_free_result($result);
-                        } else{
+                        } 
+                        else {
                             echo "<p class='lead'><em>No records were found.</em></p>";
                         }
-                    } else{
+                    } 
+                    else {
                         echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
                     }
  

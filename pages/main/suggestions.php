@@ -1,22 +1,13 @@
 <?php
 // Initialize the session
 session_start();
- 
-// Check if the user is logged in, if not then redirect to login page
-if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-  header("location: ../login/login.php");
-  exit;
-}
 
-// check if user has completed their profile, redirect them to edit profile page if not
-if($_SESSION["profileComplete"] !== true) {
-  header("location: edit-profile.php");
-  exit;
-}
-
+// Include script to check if user is logged in and profile is complete
+require_once "../../scripts/logged-in.php";
 // Include config file
 require_once "../../scripts/config.php";
 
+// Define variables
 $suggestions = "";
 $userID = $_SESSION["userID"];
 
@@ -76,16 +67,14 @@ user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE us
     (SELECT prefHeightMax FROM preferences WHERE userID = $userID)
 );";
 
+// Execute sql statement and save results to a string
 if($stmt = mysqli_prepare($link, $sql)) {
-  // Attempt to execute the prepared statement
   if(mysqli_stmt_execute($stmt)) {
-    // Store result
     mysqli_stmt_store_result($stmt);
-    // Check if suggestions are found
     if(mysqli_stmt_num_rows($stmt) >= 1) {
-      mysqli_stmt_bind_result($stmt, $firstName, $lastName, $countyName);
+      mysqli_stmt_bind_result($stmt, $firstNameTemp, $lastNameTemp, $countyNameTemp);
       while (mysqli_stmt_fetch($stmt)) {
-        $suggestions .= '<p><a href="#">'.$firstName.' '.$lastName.'</a><br>'.$countyName.'</p>';
+        $suggestions .= '<p><a href="#">'.$firstNameTemp.' '.$lastNameTemp.'</a><br>'.$countyNameTemp.'</p>';
       } 
     }
     else {
