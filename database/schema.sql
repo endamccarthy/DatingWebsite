@@ -244,7 +244,7 @@ INSERT INTO user(firstName, lastName, email, password) VALUES
   ('Mary', 'Carey', 'mary@email.com', 'password'),
   ('Aine', 'Ryan', 'aine@email.com', 'password'),
   ('Shauna', 'Fitzgerald', 'shauna@email.com', 'password'),
-  ('Sinead', 'Crowe', 'sinead@email.com', 'password'),
+  ('Michelle', 'Crowe', 'michelle@email.com', 'password'),
   ('Trisha', 'Duggan', 'trisha@email.com', 'password');
 
 INSERT INTO interests(userID, interestID) VALUES

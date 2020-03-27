@@ -36,8 +36,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   }
   else {
     // Check user table for email address
-    $sql = "SELECT userID FROM user WHERE email = '$email';";
+    $sql = "SELECT userID FROM user WHERE email = ?;";
     if($stmt = mysqli_prepare($link, $sql)) {
+      mysqli_stmt_bind_param($stmt, "s", $paramEmail);
+      $paramEmail = trim($_POST["email"]);
       if(mysqli_stmt_execute($stmt)) {
         mysqli_stmt_store_result($stmt);
         if(mysqli_stmt_num_rows($stmt) == 1) {
@@ -95,40 +97,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       // Create a password hash
       $paramPassword = password_hash($password, PASSWORD_DEFAULT);
       if(!mysqli_stmt_execute($stmt)) {
-        echo "Something went wrong. Please try again later.";
+        echo "Oops! Something went wrong. Please try again later.";
+      }
+      // Close statement
+      mysqli_stmt_close($stmt);
+    }
+    // Retrieve the new users ID
+    $sql = "SELECT userID FROM user WHERE email = '$email';";
+    if($stmt = mysqli_prepare($link, $sql)) {
+      if(mysqli_stmt_execute($stmt)) {
+        mysqli_stmt_store_result($stmt);
+        if(mysqli_stmt_num_rows($stmt) == 1) {
+          mysqli_stmt_bind_result($stmt, $userIDTemp);
+          while (mysqli_stmt_fetch($stmt)) {
+            // Store data in session variables
+            $_SESSION["loggedIn"] = true;
+            $_SESSION["userID"] = $userIDTemp;
+            $_SESSION["email"] = $email;
+            $_SESSION["profileComplete"] = false;
+            header("location: ../main/edit-profile.php");
+          }
+        }
+      } 
+      else {
+        echo "Oops! Something went wrong. Please try again later.";
       }
       // Close statement
       mysqli_stmt_close($stmt);
     }
   }
-
-  // Retrieve the new users ID
-  $sql = "SELECT userID FROM user WHERE email = '$email';";
-  if($stmt = mysqli_prepare($link, $sql)) {
-    if(mysqli_stmt_execute($stmt)) {
-      mysqli_stmt_store_result($stmt);
-      if(mysqli_stmt_num_rows($stmt) == 1) {
-        mysqli_stmt_bind_result($stmt, $userIDTemp);
-        while (mysqli_stmt_fetch($stmt)) {
-          // Store data in session variables
-          $_SESSION["loggedIn"] = true;
-          $_SESSION["userID"] = $userIDTemp;
-          $_SESSION["email"] = $email;
-          $_SESSION["profileComplete"] = false;
-          header("location: ../main/edit-profile.php");
-        }
-      }
-    } 
-    else {
-      echo "Oops! Something went wrong. Please try again later.";
-    }
-    // Close statement
-    mysqli_stmt_close($stmt);
-  }
-
   // Close connection
   mysqli_close($link);
-
 }
 ?>
 

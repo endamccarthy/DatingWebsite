@@ -8,7 +8,7 @@ require_once "../../scripts/logged-in.php";
 require_once "../../scripts/config.php";
  
 // Define variables
-$county = $interest = $searchResults = "";
+$searchText = $county = $interest = $searchResults = "";
 $countyFilters = $interestFilters = "''";
 $userID = $_SESSION["userID"];
 
@@ -52,6 +52,11 @@ if($stmt = mysqli_prepare($link, $sql)) {
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  // Save search text to variable if entered
+  if(isset($_POST["searchText"])) {
+    $searchText = trim($_POST["searchText"]);
+  }
   
   // If multiple county IDs are included in filters, save as comma separated string list e.g.('1', '2')
   if(isset($_POST["countyFilters"])) {
@@ -90,6 +95,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       SELECT rejectionsUserTwo FROM rejections WHERE rejectionsUserOne = $userID
       UNION ALL
       SELECT rejectionsUserOne FROM rejections WHERE rejectionsUserTwo = $userID
+    )
+    AND
+    userID IN (
+      SELECT userID FROM user WHERE CONCAT(firstName, ' ', lastName) LIKE '%$searchText%'
+      UNION ALL
+      SELECT userID FROM user WHERE '$searchText' = ''
     )
     AND
     gender = (
@@ -150,6 +161,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 
       <div class="form-group">
+        <label>Search Users by Name</label>
+        <input type="text" name="searchText" class="form-control" value="<?php echo $searchText; ?>">
+      </div> 
+
+      <div class="form-group">
         <select name="countyFilters[]" class="form-control" id="countyFilters" multiple>
           <?php 
             if(isset($counties)) {
@@ -187,6 +203,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       <?php echo $searchResults; ?>
     </div>
   </div>
+
 <?php include("../templates/bottom.html");?>
 
 <script>
@@ -218,3 +235,4 @@ $(document).ready(function(){
   });
 });
 </script>
+
