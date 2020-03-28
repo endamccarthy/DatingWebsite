@@ -6,5 +6,7 @@
     "htmlspecialchars",
     "isset",
     "multiselect"
-  ]
+  ],
+  "editor.tabSize": 2
 }
+
