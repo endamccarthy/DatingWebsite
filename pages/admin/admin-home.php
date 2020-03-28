@@ -2,8 +2,10 @@
 // Initialize the session
 session_start();
  
+// Include utility script to check if user is logged in and profile is complete
+require_once "../../utilities/utility.php";
 // Include config file
-require_once "../../scripts/config.php";
+require_once "../../utilities/config.php";
 ?>
 
 <?php $title = 'Admin | Home'; include("../templates/top.html");?>
@@ -16,9 +18,6 @@ require_once "../../scripts/config.php";
                         <a href="admin-create.php" class="btn btn-success float-right">Add New Employee</a>
                     </div>
                     <?php
-                    // Include config file
-                    require_once "../../scripts/config.php";
-
                     // Attempt select query execution
                     $sql = "SELECT * FROM employees";
                     if($result = mysqli_query($link, $sql)) {

@@ -3,52 +3,20 @@
 // Initialize the session
 session_start();
 
-// Include script to check if user is logged in and profile is complete
-require_once "../../scripts/logged-in.php";
+// Include utility script to check if user is logged in and profile is complete
+require_once "../../utilities/utility.php";
 // Include config file
-require_once "../../scripts/config.php";
+require_once "../../utilities/config.php";
 
+// Define variables
 $prefGender = $prefSmokes = "";
 $prefInterestsID = $prefAgeMin = $prefAgeMax = $prefHeightMin = $prefHeightMax = $prefCountyID = 0;
 $userID = $_SESSION["userID"];
 
 // Get list of counties for dropdown menu
-$sql = "SELECT countyID, countyName FROM countyList;";
-if($stmt = mysqli_prepare($link, $sql)) {
-  if(mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_store_result($stmt);
-    if(mysqli_stmt_num_rows($stmt) >= 1) { 
-      $counties = array();
-      mysqli_stmt_bind_result($stmt, $countyIDTemp, $countyNameTemp);
-      while (mysqli_stmt_fetch($stmt)) {
-        $counties[$countyIDTemp] = $countyNameTemp;
-      } 
-    } 
-  } 
-  else {
-    echo "Oops! Something went wrong. Please try again later.";
-  }
-  mysqli_stmt_close($stmt);
-}
-
+$counties = getCountiesList($link);
 // Get list of interests for dropdown menu
-$sql = "SELECT interestID, interestName FROM interestList;";
-if($stmt = mysqli_prepare($link, $sql)) {
-  if(mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_store_result($stmt);
-    if(mysqli_stmt_num_rows($stmt) >= 1) { 
-      $interests = array();
-      mysqli_stmt_bind_result($stmt, $interestIDTemp, $interestNameTemp);
-      while (mysqli_stmt_fetch($stmt)) {
-        $interests[$interestIDTemp] = $interestNameTemp;
-      } 
-    } 
-  } 
-  else {
-    echo "Oops! Something went wrong. Please try again later.";
-  }
-  mysqli_stmt_close($stmt);
-}
+$interests = getInterestsList($link);
 
 // get existing values from preferences table
 $sql = "SELECT prefGender, prefAgeMin, prefAgeMax, prefCountyID, prefInterestID, prefSmokes , prefHeightMin, prefHeightMax FROM preferences WHERE userID = $userID;";

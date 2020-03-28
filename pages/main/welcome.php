@@ -2,8 +2,8 @@
 // Initialize the session
 session_start();
  
-// Include script to check if user is logged in and profile is complete
-require_once "../../scripts/logged-in.php";
+// Include utility script to check if user is logged in and profile is complete
+require_once "../../utilities/utility.php";
 
 ?>
  

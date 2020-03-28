@@ -2,15 +2,11 @@
 
 // Initialize the session
 session_start();
- 
-// Check if the user is already logged in, if yes then redirect to welcome page
-if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
-  header("location: ../main/welcome.php");
-  exit;
-}
 
+// Include utility script to check if user is logged in and profile is complete
+require_once "../../utilities/utility.php";
 // Include config file
-require_once "../../scripts/config.php";
+require_once "../../utilities/config.php";
  
 // Define variables
 $firstName = $lastName = $email = $password = $confirmPassword = "";

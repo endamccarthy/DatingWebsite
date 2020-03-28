@@ -2,10 +2,10 @@
 // Initialize the session
 session_start();
 
-// Include script to check if user is logged in and profile is complete
-require_once "../../scripts/logged-in.php";
+// Include utility script to check if user is logged in and profile is complete
+require_once "../../utilities/utility.php";
 // Include config file
-require_once "../../scripts/config.php";
+require_once "../../utilities/config.php";
 
 // Define variables
 $matches = "";
@@ -45,6 +45,9 @@ mysqli_close($link);
  
 <?php $title = 'Matches'; include("../templates/top.html");?>
   <div style="text-align: center">
+    <a href="../main/suggestions.php" class="btn btn-info">Suggestions</a>
+    <a href="../main/matches.php" class="btn btn-info">Matches</a>
+    <a href="../main/waiting.php" class="btn btn-info">Waiting For You</a>
     <div class="wrapper">
       <h2>Matches - To Do...</h2>
       <div>

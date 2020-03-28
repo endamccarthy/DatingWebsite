@@ -2,10 +2,10 @@
 // Initialize the session
 session_start();
  
+// Include utility script to check if user is logged in and profile is complete
+require_once "../../utilities/utility.php";
 // Include config file
-require_once "../../scripts/config.php";
-// Include config file
-require_once "../../scripts/config.php";
+require_once "../../utilities/config.php";
 
 // Check existence of id parameter before processing further
 if(isset($_GET["id"]) && !empty(trim($_GET["id"]))) {

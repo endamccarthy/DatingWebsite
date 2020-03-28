@@ -3,10 +3,10 @@
 // Initialize the session
 session_start();
 
-// Include script to check if user is logged in and profile is complete
-require_once "../../scripts/logged-in.php";
+// Include utility script to check if user is logged in and profile is complete
+require_once "../../utilities/utility.php";
 // Include config file
-require_once "../../scripts/config.php";
+require_once "../../utilities/config.php";
 
 // Define variables
 $gender = $prefGender = $dateOfBirth = $smokes = $description = "";
@@ -15,23 +15,7 @@ $userID = $_SESSION["userID"];
 $profileComplete = $_SESSION["profileComplete"];
 
 // Get list of counties for dropdown menu
-$sql = "SELECT countyID, countyName FROM countyList;";
-if($stmt = mysqli_prepare($link, $sql)) {
-  if(mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_store_result($stmt);
-    if(mysqli_stmt_num_rows($stmt) >= 1) { 
-      $counties = array();
-      mysqli_stmt_bind_result($stmt, $countyIDTemp, $countyNameTemp);
-      while (mysqli_stmt_fetch($stmt)) {
-        $counties[$countyIDTemp] = $countyNameTemp;
-      } 
-    } 
-  } 
-  else {
-    echo "Oops! Something went wrong. Please try again later.";
-  }
-  mysqli_stmt_close($stmt);
-}
+$counties = getCountiesList($link);
 
 // check if user has completed their profile, show existing values if so
 if($profileComplete) {

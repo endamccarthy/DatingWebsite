@@ -2,10 +2,10 @@
 // Initialize the session
 session_start();
  
-// Include script to check if user is logged in and profile is complete
-require_once "../../scripts/logged-in.php";
+// Include utility script to check if user is logged in and profile is complete
+require_once "../../utilities/utility.php";
 // Include config file
-require_once "../../scripts/config.php";
+require_once "../../utilities/config.php";
  
 // Define variables
 $searchText = $county = $interest = $searchResults = "";
@@ -13,42 +13,9 @@ $countyFilters = $interestFilters = "''";
 $userID = $_SESSION["userID"];
 
 // Get list of counties for dropdown menu
-$sql = "SELECT countyID, countyName FROM countyList;";
-if($stmt = mysqli_prepare($link, $sql)) {
-  if(mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_store_result($stmt);
-    if(mysqli_stmt_num_rows($stmt) >= 1) { 
-      $counties = array();
-      mysqli_stmt_bind_result($stmt, $countyIDTemp, $countyNameTemp);
-      while (mysqli_stmt_fetch($stmt)) {
-        $counties[$countyIDTemp] = $countyNameTemp;
-      } 
-    } 
-  } 
-  else {
-    echo "Oops! Something went wrong. Please try again later.";
-  }
-  mysqli_stmt_close($stmt);
-}
-
+$counties = getCountiesList($link);
 // Get list of interests for dropdown menu
-$sql = "SELECT interestID, interestName FROM interestList;";
-if($stmt = mysqli_prepare($link, $sql)) {
-  if(mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_store_result($stmt);
-    if(mysqli_stmt_num_rows($stmt) >= 1) { 
-      $interests = array();
-      mysqli_stmt_bind_result($stmt, $interestIDTemp, $interestNameTemp);
-      while (mysqli_stmt_fetch($stmt)) {
-        $interests[$interestIDTemp] = $interestNameTemp;
-      } 
-    } 
-  } 
-  else {
-    echo "Oops! Something went wrong. Please try again later.";
-  }
-  mysqli_stmt_close($stmt);
-}
+$interests = getInterestsList($link);
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -98,9 +65,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     )
     AND
     userID IN (
-      SELECT userID FROM user WHERE CONCAT(firstName, ' ', lastName) LIKE '%$searchText%'
-      UNION ALL
-      SELECT userID FROM user WHERE '$searchText' = ''
+      SELECT userID FROM user WHERE CONCAT(firstName, ' ', lastName) LIKE '%$searchText%' AND '$searchText' != ''
     )
     AND
     gender = (
@@ -161,8 +126,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 
       <div class="form-group">
-        <label>Search Users by Name</label>
-        <input type="text" name="searchText" class="form-control" value="<?php echo $searchText; ?>">
+        <input type="text" name="searchText" class="form-control" placeholder="Search names..." value="<?php echo $searchText; ?>">
       </div> 
 
       <div class="form-group">
@@ -210,7 +174,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 // Allow for multiple county selections
 $(document).ready(function(){
   $('#countyFilters').multiselect({
-    nonSelectedText: 'Filter County',
+    nonSelectedText: 'Filter By County',
     enableFiltering: true,
     enableCaseInsensitiveFiltering: true,
     buttonWidth:'100%',
@@ -224,7 +188,7 @@ $(document).ready(function(){
 // Allow for multiple interest selections
 $(document).ready(function(){
   $('#interestFilters').multiselect({
-    nonSelectedText: 'Filter Interest',
+    nonSelectedText: 'Filter By Interest',
     enableFiltering: true,
     enableCaseInsensitiveFiltering: true,
     buttonWidth:'100%',
