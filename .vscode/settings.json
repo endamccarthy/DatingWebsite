@@ -1,7 +1,10 @@
 {
   "cSpell.ignoreWords": [
+    "crossorigin",
     "csis",
     "dbgroup",
+    "htmlspecialchars",
+    "isset",
     "multiselect"
   ]
 }
