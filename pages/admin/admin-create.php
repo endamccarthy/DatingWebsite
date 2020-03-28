@@ -67,13 +67,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         // Close statement
         mysqli_stmt_close($stmt);
     }
-    // Close connection
-    mysqli_close($link);
 }
+// Close connection
+mysqli_close($link);
 ?>
  
 <?php $title = 'Admin | Add New'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

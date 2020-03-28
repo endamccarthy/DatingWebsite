@@ -10,12 +10,15 @@ require_once "../../utilities/config.php";
 
 // Define variables
 $gender = $prefGender = $dateOfBirth = $smokes = $description = "";
-$height = $countyID = 0;
+$height = $countyID = $interestID = 0;
+$interestIDs;
 $userID = $_SESSION["userID"];
 $profileComplete = $_SESSION["profileComplete"];
 
 // Get list of counties for dropdown menu
 $counties = getCountiesList($link);
+// Get list of interests for dropdown menu
+$interests = getInterestsList($link);
 
 // check if user has completed their profile, show existing values if so
 if($profileComplete) {
@@ -40,6 +43,23 @@ if($profileComplete) {
     }
     mysqli_stmt_close($stmt);
   }
+
+  $sql = "SELECT interestID FROM interests WHERE userID = $userID;";
+  if($stmt = mysqli_prepare($link, $sql)) {
+    if(mysqli_stmt_execute($stmt)) {
+      mysqli_stmt_store_result($stmt);
+      if(mysqli_stmt_num_rows($stmt) >= 1) {
+        mysqli_stmt_bind_result($stmt, $interestIDTemp);
+        while (mysqli_stmt_fetch($stmt)) {
+          $interestIDs[] = $interestIDTemp;
+        }
+      }
+    } 
+    else {
+      echo "Oops! Something went wrong. Please try again later.";
+    }
+    mysqli_stmt_close($stmt);
+  }
 }
 
 // Processing form data when form is submitted
@@ -53,9 +73,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $countyID = $_POST["countyID"];
     $smokes = $_POST["smokes"];
     $height = $_POST["height"];
-    if($_POST["description"]) {
+    if(isset($_POST["description"])) {
       $description = trim($_POST["description"]);
     }
+    if(isset($_POST["interestIDs"])) {
+      $interestIDs[] = $_POST["interestIDs"];
+    }
+
     // Add new entry into profile table
     $sql = "INSERT INTO profile (userID, description, gender, dateOfBirth, countyID, photo, smokes, height) 
     VALUES ($userID, '$description', '$gender', '$dateOfBirth', $countyID, 'photoXX.jpg', '$smokes', $height);";
@@ -65,6 +89,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       }
       mysqli_stmt_close($stmt);
     }
+
     // Add new entry into preferences table
     $sql = "INSERT INTO preferences (userID, prefGender) 
     VALUES ('$userID', '$prefGender');";
@@ -74,6 +99,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       }
       mysqli_stmt_close($stmt);
     }
+
+    // Add new entries into interests table
+    $sql = "";
+    foreach ($interestIDs as $row) {
+      $sql .= "INSERT INTO interests (userID, interestID) VALUES ('$userID', '$row');";
+    }
+    if(mysqli_multi_query($link, $sql)) {
+      mysqli_stmt_close($stmt);
+    }
+
     $_SESSION["profileComplete"] = true;
     header("location: ../main/suggestions.php");
   }
@@ -110,14 +145,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       $height = $_POST["height"];
       $sql .= "UPDATE profile SET height = $height WHERE userID = $userID;";
     }
+    // Check if interests were changed
+    if($_POST["interestIDs"] != $interestIDs) {
+      $interestIDs = $_POST["interestIDs"];
+      $sql .= "DELETE FROM interests WHERE userID = $userID;";
+      foreach ($interestIDs as $row) {
+        $sql .= "INSERT INTO interests (userID, interestID) VALUES ($userID, $row);";
+      }
+    }
     // Execute multi query sql statement
     if(mysqli_multi_query($link, $sql)) {
+      mysqli_stmt_close($stmt);
       header("location: ../main/suggestions.php");
     }
   }
-  // Close connection
-  mysqli_close($link);
 }
+// Close connection
+mysqli_close($link);
 ?>
 
 
@@ -206,6 +250,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         </select>
       </div>
 
+      <div class="mb-4 form-group" onclick="checkMaxInterests()">
+        <label class="control-label">Interests</label>
+        <select name="interestIDs[]" class="form-control form-control-sm" id="interestIDs" multiple>
+          <?php 
+            if(isset($interests)) {
+              foreach($interests as $id => $name){
+                echo (in_array($id, $interestIDs)) ? '<option selected' : '<option';
+                echo ' value='.$id.'>'.$name.'</option>';
+              }
+            }
+          ?>
+        </select>
+      </div>
+
       <div class="mb-4 form-group">
         <label class="control-label">About me (max 100 characters):</label>
         <textarea name="description" class="form-control form-control-sm" rows="4" maxlength="100"><?php echo $description; ?></textarea>
@@ -220,3 +278,46 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>    
 <?php include("../templates/bottom.html");?>
 
+<script type="text/javascript">
+
+// Limit interests to 3
+function checkMaxInterests() {
+  var selectedOptions = $('#interestIDs option:selected');
+  if (selectedOptions.length >= 3) {
+    // Disable all other checkboxes.
+    var nonSelectedOptions = $('#interestIDs option').filter(function() {
+      return !$(this).is(':selected');
+    });
+    nonSelectedOptions.each(function() {
+      var input = $('input[value="' + $(this).val() + '"]');
+      input.prop('disabled', true);
+      input.parent('li').addClass('disabled');
+    });
+  }
+  else {
+    // Enable all checkboxes.
+    $('#interestIDs option').each(function() {
+      var input = $('input[value="' + $(this).val() + '"]');
+      input.prop('disabled', false);
+      input.parent('li').addClass('disabled');
+    });
+  }
+};
+
+// Allow for multiple interest selections
+$(document).ready(function(){
+  $('#interestIDs').multiselect({
+    nonSelectedText: 'Choose Interests (3 maximum)',
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true,
+    buttonWidth:'100%',
+    buttonClass: 'btn btn-light',
+    enableHTML: false,
+    maxHeight: 200,
+    includeSelectAllOption: false,
+    onChange: function(option, checked) {
+      checkMaxInterests();
+    }
+  });
+});
+</script>

@@ -111,10 +111,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     // Close statement
     mysqli_stmt_close($stmt);
   }
-  // Close connection
-  mysqli_close($link);
 }
-
+// Close connection
+mysqli_close($link);
 ?>
 
 <?php $title = 'Search'; include("../templates/top.html");?>

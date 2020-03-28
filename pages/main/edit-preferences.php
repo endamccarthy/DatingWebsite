@@ -110,9 +110,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   if(mysqli_multi_query($link, $sql)) {
     header("location: ../main/suggestions.php");
   }
-  // Close connection
-  mysqli_close($link);
 }
+// Close connection
+mysqli_close($link);
 ?>
 
 

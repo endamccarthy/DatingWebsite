@@ -47,7 +47,7 @@ else {
 ?>
 
 <?php $title = 'Admin | View'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

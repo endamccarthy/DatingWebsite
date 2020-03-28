@@ -11,10 +11,16 @@ body {
 }
 
 .wrapper { 
-  width: 375px; 
-  padding: 20px; 
-  margin: 0 auto;
+  width: 30%; 
+  padding: 1%; 
+  margin: 2% auto;
+  background-color: bisque;
 }
+
+.wrapper-wide { 
+  width: 55%;
+}
+
 
 /* ********************** */
 /* FORM REQUIREMENTS */
@@ -27,16 +33,10 @@ body {
 
 /* ********************** */
 /* ADMIN PAGES */
-.wrapper-admin-narrow { 
-  width: 500px;
-}
-.wrapper-admin-wide { 
-  width: 700px;
-}
 .page-header h2 {
   margin-top: 0;
 }
 table tr td:last-child a {
-  margin-right: 15px;
+  margin-right: 10%;
 }
 /* ********************** */

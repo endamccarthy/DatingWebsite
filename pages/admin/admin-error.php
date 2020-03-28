@@ -9,7 +9,7 @@ require_once "../../utilities/config.php";
 ?>
 
 <?php $title = 'Admin | Error'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-wide">
+    <div class="wrapper wrapper-wide">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

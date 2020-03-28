@@ -40,7 +40,7 @@ else {
 ?>
 
 <?php $title = 'Admin | Delete Record'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-wide">
+    <div class="wrapper wrapper-wide">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
