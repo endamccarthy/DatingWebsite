@@ -29,7 +29,7 @@ if($profileComplete) {
       if(mysqli_stmt_num_rows($stmt) == 1) {
         mysqli_stmt_bind_result($stmt, $descriptionTemp, $genderTemp, $dateOfBirthTemp, $countyIDTemp, $smokesTemp, $heightTemp);
         while (mysqli_stmt_fetch($stmt)) {
-          $description = $descriptionTemp;
+          if($descriptionTemp) {$description = $descriptionTemp;};
           $gender = $genderTemp;
           $dateOfBirth = $dateOfBirthTemp;
           $countyID = $countyIDTemp;
@@ -43,7 +43,6 @@ if($profileComplete) {
     }
     mysqli_stmt_close($stmt);
   }
-
   $sql = "SELECT interestID FROM interests WHERE userID = $userID;";
   if($stmt = mysqli_prepare($link, $sql)) {
     if(mysqli_stmt_execute($stmt)) {
@@ -156,7 +155,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     // Execute multi query sql statement
     if(mysqli_multi_query($link, $sql)) {
       mysqli_stmt_close($stmt);
-      header("location: ../main/suggestions.php");
+      header("location: ../main/profile.php");
     }
   }
 }
@@ -278,8 +277,8 @@ mysqli_close($link);
   </div>    
 <?php include("../templates/bottom.html");?>
 
-<script type="text/javascript">
 
+<script type="text/javascript">
 // Limit interests to 3
 function checkMaxInterests() {
   var selectedOptions = $('#interestIDs option:selected');

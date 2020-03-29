@@ -10,7 +10,7 @@ require_once "../../utilities/config.php";
 
 // Define variables
 $prefGender = $prefSmokes = "";
-$prefInterestsID = $prefAgeMin = $prefAgeMax = $prefHeightMin = $prefHeightMax = $prefCountyID = 0;
+$prefAgeMin = $prefAgeMax = $prefHeightMin = $prefHeightMax = $prefInterestID = $prefCountyID = 0;
 $userID = $_SESSION["userID"];
 
 // Get list of counties for dropdown menu
@@ -29,9 +29,9 @@ if($stmt = mysqli_prepare($link, $sql)) {
         $prefGender = $prefGenderTemp;
         $prefAgeMin = $prefAgeMinTemp;
         $prefAgeMax = $prefAgeMaxTemp;
-        $prefCountyID = $prefCountyIDTemp;
-        $prefInterestID = $prefInterestIDTemp;
-        $prefSmokes = $prefSmokesTemp;
+        if($prefCountyIDTemp) {$prefCountyID = $prefCountyIDTemp;};
+        if($prefInterestIDTemp) {$prefInterestID = $prefInterestIDTemp;};
+        if($prefSmokesTemp) {$prefSmokes = $prefSmokesTemp;};
         $prefHeightMin = $prefHeightMinTemp;
         $prefHeightMax = $prefHeightMaxTemp;
       }
@@ -73,18 +73,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   }
   // Check if preferred county was changed
   if($_POST["prefCountyID"] != $prefCountyID) {
-    $prefCountyID = $_POST["prefCountyID"];
-    $sql .= "UPDATE preferences SET prefCountyID = $prefCountyID WHERE userID = $userID;";
+    if($_POST["prefCountyID"] == 0) {
+      $sql .= "UPDATE preferences SET prefCountyID = NULL WHERE userID = $userID;";
+    }
+    else {
+      $prefCountyID = $_POST["prefCountyID"];
+      $sql .= "UPDATE preferences SET prefCountyID = $prefCountyID WHERE userID = $userID;";
+    }
   }
   // Check if preferred interest was changed
   if($_POST["prefInterestID"] != $prefInterestID) {
-    $prefInterestID = $_POST["prefInterestID"];
-    $sql .= "UPDATE preferences SET prefInterestID = $prefInterestID WHERE userID = $userID;";
+    if($_POST["prefInterestID"] == 0) {
+      $sql .= "UPDATE preferences SET prefInterestID = NULL WHERE userID = $userID;";
+    }
+    else {
+      $prefInterestID = $_POST["prefInterestID"];
+      $sql .= "UPDATE preferences SET prefInterestID = $prefInterestID WHERE userID = $userID;";
+    }
   }
   // Check if preferred smokes was changed
   if($_POST["prefSmokes"] != $prefSmokes) {
-    $prefSmokes = $_POST["prefSmokes"];
-    $sql .= "UPDATE preferences SET prefSmokes = '$prefSmokes' WHERE userID = $userID;";
+    if($_POST["prefSmokes"] == "") {
+      $sql .= "UPDATE preferences SET prefSmokes = NULL WHERE userID = $userID;";
+    }
+    else {
+      $prefSmokes = $_POST["prefSmokes"];
+      $sql .= "UPDATE preferences SET prefSmokes = '$prefSmokes' WHERE userID = $userID;";
+    }
   }
   // Check if preferred minimum height was changed
   if($_POST["prefHeightMin"] != $prefHeightMin) {
@@ -108,7 +123,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   }
   // Execute multi query sql statement
   if(mysqli_multi_query($link, $sql)) {
-    header("location: ../main/suggestions.php");
+    header("location: ../main/profile.php");
   }
 }
 // Close connection
@@ -138,7 +153,7 @@ mysqli_close($link);
       <div class="mb-4 form-group">
         <label class="control-label">Preferred County?</label>
         <select name="prefCountyID" class="form-control form-control-sm">
-          <option value=NULL>None</option>
+          <option value=0>None</option>
           <?php 
             if(isset($counties)) {
               foreach($counties as $id => $name){
@@ -153,7 +168,7 @@ mysqli_close($link);
       <div class="mb-4 form-group">
         <label class="control-label">Preferred Interest?</label>
         <select name="prefInterestID" class="form-control form-control-sm">
-          <option value=NULL>None</option>
+          <option value=0>None</option>
           <?php 
             if(isset($interests)) {
               foreach($interests as $id => $name){
@@ -204,8 +219,8 @@ mysqli_close($link);
           <label class="custom-control-label" for="prefSmokesYes">Yes</label>
         </div>
         <div class="col-md-3 custom-control custom-radio custom-control-inline">
-          <input type="radio" name="prefSmokes" class="form-control custom-control-input" id="prefSmokesNeither" value=NULL <?php echo ($prefSmokes == NULL) ? 'checked' : ''; ?>>
-          <label class="custom-control-label" for="prefSmokesYes">Don't Mind</label>
+          <input type="radio" name="prefSmokes" class="form-control custom-control-input" id="prefSmokesNeither" value="" <?php echo ($prefSmokes == NULL || $prefSmokes == "neither") ? 'checked' : ''; ?>>
+          <label class="custom-control-label" for="prefSmokesNeither">Don't Mind</label>
         </div>
       </div>
 
@@ -237,7 +252,6 @@ mysqli_close($link);
 
       <div class="mb-4 form-group">
         <input type="submit" class="btn btn-primary" value="Save">
-        <input type="reset" class="btn btn-default" value="Reset">
       </div>
 
     </form>
