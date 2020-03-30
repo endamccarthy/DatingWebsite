@@ -71,8 +71,8 @@ CREATE TABLE preferences (
   prefCountyID INT NULL,
   prefInterestID INT NULL,
   prefSmokes ENUM("smoker", "non-smoker") NULL,
-  prefHeightMin INT NULL DEFAULT 100,
-  prefHeightMax INT NULL DEFAULT 250
+  prefHeightMin INT NULL DEFAULT 120,
+  prefHeightMax INT NULL DEFAULT 230
 );
 
 CREATE TABLE pending (
@@ -259,8 +259,10 @@ INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, s
   (10, '', 'female', '1978-07-05', 28, 'images/photo10.jpg', 'non-smoker', 149),
   (11, '', 'female', '1996-09-10', 25, 'images/photo11.jpg', 'non-smoker', 163);
 
+INSERT INTO preferences(userID, prefGender, prefAgeMin, prefAgeMax, prefCountyID, prefInterestID, prefSmokes, prefHeightMin, prefHeightMax) VALUES
+  (1, 'female', 20, 35, 5, 3, 'non-smoker', 150, 180);
+
 INSERT INTO preferences(userID, prefGender) VALUES
-  (1, 'female'),
   (2, 'female'),
   (3, 'male'),
   (4, 'female'),
@@ -275,8 +277,8 @@ INSERT INTO preferences(userID, prefGender) VALUES
 INSERT INTO interests(userID, interestID) VALUES
   (1, 1),
   (1, 2),
+  (1, 4),
   (2, 1),
-  (2, 5),
   (3, 2),
   (3, 5),
   (4, 3),
