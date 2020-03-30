@@ -9,11 +9,16 @@ require_once "../../utilities/utility.php";
 require_once "../../utilities/config.php";
 
 // Define variables
-$gender = $prefGender = $dateOfBirth = $smokes = $description = "";
+$gender = $prefGender = $dateOfBirth = $smokes = $description = $dateOfBirthErr ="";
 $height = $countyID = $interestID = 0;
 $interestIDs;
 $userID = $_SESSION["userID"];
 $profileComplete = $_SESSION["profileComplete"];
+// YYYY-MM-DD
+$pattern = "/^((((19|[2-9]\d)\d{2})\-(0[13578]|1[02])\-(0[1-9]|[12]\d|3[01]))|".
+"(((19|[2-9]\d)\d{2})\-(0[13456789]|1[012])\-(0[1-9]|[12]\d|30))|(((19|[2-9]\d)".
+"\d{2})\-02\-(0[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])".
+"|((16|[2468][048]|[3579][26])00))\-02\-29))$/";
 
 // Get list of counties for dropdown menu
 $counties = getCountiesList($link);
@@ -63,99 +68,102 @@ if($profileComplete) {
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-  // If profile is being created...
-  if(!$profileComplete) {
-    // Save values passed from form to local variables 
-    $gender = $_POST["gender"];
-    $prefGender = $_POST["prefGender"];
-    $dateOfBirth = $_POST["dateOfBirth"];
-    $countyID = $_POST["countyID"];
-    $smokes = $_POST["smokes"];
-    $height = $_POST["height"];
-    if(isset($_POST["description"])) {
-      $description = trim($_POST["description"]);
-    }
-    if(isset($_POST["interestIDs"])) {
-      $interestIDs[] = $_POST["interestIDs"];
-    }
-
-    // Add new entry into profile table
-    $sql = "INSERT INTO profile (userID, description, gender, dateOfBirth, countyID, photo, smokes, height) 
-    VALUES ($userID, '$description', '$gender', '$dateOfBirth', $countyID, 'photoXX.jpg', '$smokes', $height);";
-    if($stmt = mysqli_prepare($link, $sql)) {
-      if(!mysqli_stmt_execute($stmt)) {
-        echo "Something went wrong. Please try again later.";
-      }
-      mysqli_stmt_close($stmt);
-    }
-
-    // Add new entry into preferences table
-    $sql = "INSERT INTO preferences (userID, prefGender) 
-    VALUES ('$userID', '$prefGender');";
-    if($stmt = mysqli_prepare($link, $sql)) {
-      if(!mysqli_stmt_execute($stmt)) {
-        echo "Something went wrong. Please try again later.";
-      }
-      mysqli_stmt_close($stmt);
-    }
-
-    // Add new entries into interests table
-    $sql = "";
-    foreach ($interestIDs as $row) {
-      $sql .= "INSERT INTO interests (userID, interestID) VALUES ('$userID', '$row');";
-    }
-    if(mysqli_multi_query($link, $sql)) {
-      mysqli_stmt_close($stmt);
-    }
-
-    $_SESSION["profileComplete"] = true;
-    header("location: ../main/suggestions.php");
+  if((!preg_match($pattern, $_POST["dateOfBirth"]))) {
+    $dateOfBirthErr = "Incorrect Date of Birth Format";
   }
-  // Else, if profile is being edited...
   else {
-    $sql = "";
-    // Check if description was changed
-    if($_POST["description"] != $description) {
-      $description = $_POST["description"];
-      $sql .= "UPDATE profile SET description = '$description' WHERE userID = $userID;";
-    }
-    // Check if gender was changed
-    if($_POST["gender"] != $gender) {
+    // If profile is being created...
+    if(!$profileComplete) {
+      // Save values passed from form to local variables 
       $gender = $_POST["gender"];
-      $sql .= "UPDATE profile SET gender = '$gender' WHERE userID = $userID;";
-    }
-    // Check if date of birth was changed
-    if($_POST["dateOfBirth"] != $dateOfBirth) {
+      $prefGender = $_POST["prefGender"];
       $dateOfBirth = $_POST["dateOfBirth"];
-      $sql .= "UPDATE profile SET dateOfBirth = '$dateOfBirth' WHERE userID = $userID;";
-    }
-    // Check if county ID was changed
-    if($_POST["countyID"] != $countyID) {
       $countyID = $_POST["countyID"];
-      $sql .= "UPDATE profile SET countyID = $countyID WHERE userID = $userID;";
-    }
-    // Check if smokes was changed
-    if($_POST["smokes"] != $smokes) {
       $smokes = $_POST["smokes"];
-      $sql .= "UPDATE profile SET smokes = '$smokes' WHERE userID = $userID;";
-    }
-    // Check if height was changed
-    if($_POST["height"] != $height) {
       $height = $_POST["height"];
-      $sql .= "UPDATE profile SET height = $height WHERE userID = $userID;";
-    }
-    // Check if interests were changed
-    if($_POST["interestIDs"] != $interestIDs) {
-      $interestIDs = $_POST["interestIDs"];
-      $sql .= "DELETE FROM interests WHERE userID = $userID;";
-      foreach ($interestIDs as $row) {
-        $sql .= "INSERT INTO interests (userID, interestID) VALUES ($userID, $row);";
+      if(isset($_POST["description"])) {
+        $description = trim($_POST["description"]);
       }
+      if(isset($_POST["interestIDs"])) {
+        $interestIDs = $_POST["interestIDs"];
+      }
+
+      // Add new entry into profile table
+      $sql = "INSERT INTO profile (userID, description, gender, dateOfBirth, countyID, photo, smokes, height) 
+      VALUES ($userID, '$description', '$gender', '$dateOfBirth', $countyID, 'photoXX.jpg', '$smokes', $height);";
+      if($stmt = mysqli_prepare($link, $sql)) {
+        if(!mysqli_stmt_execute($stmt)) {
+          echo "Something went wrong. Please try again later.";
+        }
+        mysqli_stmt_close($stmt);
+      }
+
+      // Add new entry into preferences table
+      $sql = "INSERT INTO preferences (userID, prefGender) VALUES ($userID, '$prefGender');";
+      if($stmt = mysqli_prepare($link, $sql)) {
+        if(!mysqli_stmt_execute($stmt)) {
+          echo "Something went wrong. Please try again later.";
+        }
+        mysqli_stmt_close($stmt);
+      }
+
+      // Add new entries into interests table
+      $sql = "";
+      foreach ($interestIDs as $key => $value) {
+        $sql .= "INSERT INTO interests (userID, interestID) VALUES ($userID, $value);";
+      }
+      if(!mysqli_multi_query($link, $sql)) {
+        echo "Something went wrong. Please try again later.";
+      }
+
+      $_SESSION["profileComplete"] = true;
+      header("location: ../main/suggestions.php");
     }
-    // Execute multi query sql statement
-    if(mysqli_multi_query($link, $sql)) {
-      mysqli_stmt_close($stmt);
-      header("location: ../main/profile.php");
+    // Else, if profile is being edited...
+    else {
+      $sql = "";
+      // Check if description was changed
+      if($_POST["description"] != $description) {
+        $description = $_POST["description"];
+        $sql .= "UPDATE profile SET description = '$description' WHERE userID = $userID;";
+      }
+      // Check if gender was changed
+      if($_POST["gender"] != $gender) {
+        $gender = $_POST["gender"];
+        $sql .= "UPDATE profile SET gender = '$gender' WHERE userID = $userID;";
+      }
+      // Check if date of birth was changed
+      if($_POST["dateOfBirth"] != $dateOfBirth) {
+        $dateOfBirth = $_POST["dateOfBirth"];
+        $sql .= "UPDATE profile SET dateOfBirth = '$dateOfBirth' WHERE userID = $userID;";
+      }
+      // Check if county ID was changed
+      if($_POST["countyID"] != $countyID) {
+        $countyID = $_POST["countyID"];
+        $sql .= "UPDATE profile SET countyID = $countyID WHERE userID = $userID;";
+      }
+      // Check if smokes was changed
+      if($_POST["smokes"] != $smokes) {
+        $smokes = $_POST["smokes"];
+        $sql .= "UPDATE profile SET smokes = '$smokes' WHERE userID = $userID;";
+      }
+      // Check if height was changed
+      if($_POST["height"] != $height) {
+        $height = $_POST["height"];
+        $sql .= "UPDATE profile SET height = $height WHERE userID = $userID;";
+      }
+      // Check if interests were changed
+      if($_POST["interestIDs"] != $interestIDs) {
+        $interestIDs = $_POST["interestIDs"];
+        $sql .= "DELETE FROM interests WHERE userID = $userID;";
+        foreach ($interestIDs as $row) {
+          $sql .= "INSERT INTO interests (userID, interestID) VALUES ($userID, $row);";
+        }
+      }
+      // Execute multi query sql statement
+      if(mysqli_multi_query($link, $sql)) {
+        header("location: ../main/profile.php");
+      }
     }
   }
 }
@@ -184,18 +192,22 @@ mysqli_close($link);
       </div>
 
       <?php
-      // Only show preferred gender if new profile is being created, it will be in the edit PREFERENCES form otherwise
+      // Only show preferred gender option if new profile is being created, it will be in the edit PREFERENCES form otherwise
       if(!$profileComplete) {
         echo '<div class="mb-4 form-row required">';
         echo '<div class="col-md-6">';
         echo '<label class="control-label">I am seeking...</label>';
         echo '</div>';
         echo '<div class="col-md-2 custom-control custom-radio custom-control-inline">';
-        echo '<input type="radio" name="prefGender" class="form-control custom-control-input" id="prefGenderMale" value="male" required>';
+        echo '<input type="radio" name="prefGender" class="form-control custom-control-input" id="prefGenderMale" value="male" ';
+        echo ($prefGender == 'male') ? 'checked ' : '';
+        echo 'required>';
         echo '<label class="custom-control-label" for="prefGenderMale">Male</label>';
         echo '</div>';
         echo '<div class="col-md-2 custom-control custom-radio custom-control-inline">';
-        echo '<input type="radio" name="prefGender" class="form-control custom-control-input" id="prefGenderFemale" value="female" required>';
+        echo '<input type="radio" name="prefGender" class="form-control custom-control-input" id="prefGenderFemale" value="female" ';
+        echo ($prefGender == 'female') ? 'checked ' : '';
+        echo 'required>';
         echo '<label class="custom-control-label" for="prefGenderFemale">Female</label>';
         echo '</div>';
         echo '</div>';
@@ -203,8 +215,9 @@ mysqli_close($link);
       ?>
 
       <div class="mb-4 form-group required">
-        <label class="control-label">Date of Birth (YYYY-MM-DD)</label>
-        <input type="date" name="dateOfBirth" class="form-control form-control-sm" value="<?php echo $dateOfBirth; ?>" required>
+        <label class="control-label">Date of Birth</label>
+        <input type="date" name="dateOfBirth" class="form-control form-control-sm <?php echo (!empty($dateOfBirthErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $dateOfBirth; ?>" placeholder="YYYY-MM-DD" required>
+        <span class="invalid-feedback"><?php echo $dateOfBirthErr; ?></span>
       </div>
 
       <div class="mb-4 form-group required">
@@ -241,7 +254,7 @@ mysqli_close($link);
         <select name="height" class="form-control form-control-sm" required>
           <option selected disabled>Choose Height...</option>
           <?php 
-            for ($cm = 100; $cm <= 250; $cm++) {
+            for ($cm = 120; $cm <= 230; $cm++) {
               echo ($cm == $height) ? '<option selected' : '<option';
               echo ' value='.$cm.'>'.$cm.'</option>';
             }

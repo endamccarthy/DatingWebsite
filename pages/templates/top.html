@@ -7,9 +7,7 @@
 
     <!-- Code to ensure un-styled content does not briefly flash up -->
     <!-- (taken from https://stackoverflow.com/questions/3221561/eliminate-flash-of-unstyled-content) -->
-    <style type="text/css">
-      .hidden {display:none;}
-    </style>
+    <style type="text/css">.hidden {display:none;}</style>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
@@ -55,7 +53,7 @@
         echo '<div style="text-align: center"><p>';
           echo '<a href="../admin/admin-home.php" class="btn btn-info">Admin</a> ';
           echo '<a href="../login/reset-password.php" class="btn btn-warning">Reset Password</a> ';
-          echo '<a href="../../scripts/logout.php" class="btn btn-danger">Sign Out</a> ';
+          echo '<a href="../../utilities/logout.php" class="btn btn-danger">Sign Out</a> ';
           echo '<a href="../main/suggestions.php" class="btn btn-info">Home</a> ';
           echo '<a href="../main/search.php" class="btn btn-info">Search</a> ';
           echo '<a href="../main/profile.php" class="btn btn-info">My Profile</a> ';

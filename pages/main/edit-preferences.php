@@ -9,39 +9,22 @@ require_once "../../utilities/utility.php";
 require_once "../../utilities/config.php";
 
 // Define variables
-$prefGender = $prefSmokes = "";
-$prefAgeMin = $prefAgeMax = $prefHeightMin = $prefHeightMax = $prefInterestID = $prefCountyID = 0;
 $userID = $_SESSION["userID"];
 
 // Get list of counties for dropdown menu
 $counties = getCountiesList($link);
 // Get list of interests for dropdown menu
 $interests = getInterestsList($link);
-
-// get existing values from preferences table
-$sql = "SELECT prefGender, prefAgeMin, prefAgeMax, prefCountyID, prefInterestID, prefSmokes , prefHeightMin, prefHeightMax FROM preferences WHERE userID = $userID;";
-if($stmt = mysqli_prepare($link, $sql)) {
-  if(mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_store_result($stmt);
-    if(mysqli_stmt_num_rows($stmt) == 1) {
-      mysqli_stmt_bind_result($stmt, $prefGenderTemp, $prefAgeMinTemp, $prefAgeMaxTemp, $prefCountyIDTemp, $prefInterestIDTemp, $prefSmokesTemp, $prefHeightMinTemp, $prefHeightMaxTemp);
-      while (mysqli_stmt_fetch($stmt)) {
-        $prefGender = $prefGenderTemp;
-        $prefAgeMin = $prefAgeMinTemp;
-        $prefAgeMax = $prefAgeMaxTemp;
-        if($prefCountyIDTemp) {$prefCountyID = $prefCountyIDTemp;};
-        if($prefInterestIDTemp) {$prefInterestID = $prefInterestIDTemp;};
-        if($prefSmokesTemp) {$prefSmokes = $prefSmokesTemp;};
-        $prefHeightMin = $prefHeightMinTemp;
-        $prefHeightMax = $prefHeightMaxTemp;
-      }
-    }
-  } 
-  else {
-    echo "Oops! Something went wrong. Please try again later.";
-  }
-  mysqli_stmt_close($stmt);
-}
+// Get user preferences
+$preferences = getUserPreferences($link, $userID);
+$prefGender = $preferences['prefGender'];
+$prefSmokes = $preferences['prefSmokes'];
+$prefAgeMin = $preferences['prefAgeMin'];
+$prefAgeMax = $preferences['prefAgeMax'];
+$prefHeightMin = $preferences['prefHeightMin'];
+$prefHeightMax = $preferences['prefHeightMax'];
+$prefInterestID = $preferences['prefInterestID'];
+$prefCountyID = $preferences['prefCountyID'];
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -227,9 +210,9 @@ mysqli_close($link);
       <div class="mb-4 form-group">
         <label class="control-label">Minimum Height? (cm)</label>
         <select name="prefHeightMin" class="form-control form-control-sm">
-          <option value=100>None</option>
+          <option value=120>None</option>
           <?php 
-            for ($cm = 100; $cm <= 250; $cm++) {
+            for ($cm = 120; $cm <= 230; $cm++) {
               echo ($cm == $prefHeightMin) ? '<option selected' : '<option';
               echo ' value='.$cm.'>'.$cm.'</option>';
             }
@@ -240,9 +223,9 @@ mysqli_close($link);
       <div class="mb-4 form-group">
         <label class="control-label">Maximum Height? (cm)</label>
         <select name="prefHeightMax" class="form-control form-control-sm">
-          <option value=250>None</option>
+          <option value=230>None</option>
           <?php 
-            for ($cm = 100; $cm <= 250; $cm++) {
+            for ($cm = 120; $cm <= 230; $cm++) {
               echo ($cm == $prefHeightMax) ? '<option selected' : '<option';
               echo ' value='.$cm.'>'.$cm.'</option>';
             }

@@ -247,6 +247,31 @@ INSERT INTO user(firstName, lastName, email, password) VALUES
   ('Michelle', 'Crowe', 'michelle@email.com', 'password'),
   ('Trisha', 'Duggan', 'trisha@email.com', 'password');
 
+INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, smokes, height) VALUES
+  (1, '', 'male', '1990-01-02', 2, 'images/photo1.jpg', 'non-smoker', 176),
+  (2, '', 'male', '1990-04-12', 6, 'images/photo2.jpg', 'non-smoker', 176),
+  (3, "My name is Una and I'm from Armagh!", 'female', '1980-06-20', 2, 'images/photo3.jpg', 'non-smoker', 160),
+  (5, '', 'female', '1994-11-07', 12, 'images/photo5.jpg', 'non-smoker', 167),
+  (6, '', 'male', '1985-04-15', 14, 'images/photo6.jpg', 'smoker', 184),
+  (7, '', 'female', '1982-12-07', 3, 'images/photo7.jpg', 'non-smoker', 169),
+  (8, '', 'female', '1995-04-15', 7, 'images/photo8.jpg', 'non-smoker', 154),
+  (9, '', 'female', '1983-06-12', 3, 'images/photo9.jpg', 'smoker', 170),
+  (10, '', 'female', '1978-07-05', 28, 'images/photo10.jpg', 'non-smoker', 149),
+  (11, '', 'female', '1996-09-10', 25, 'images/photo11.jpg', 'non-smoker', 163);
+
+INSERT INTO preferences(userID, prefGender) VALUES
+  (1, 'female'),
+  (2, 'female'),
+  (3, 'male'),
+  (4, 'female'),
+  (5, 'male'),
+  (6, 'female'),
+  (7, 'male'),
+  (8, 'male'),
+  (9, 'male'),
+  (10, 'male'),
+  (11, 'male');
+
 INSERT INTO interests(userID, interestID) VALUES
   (1, 1),
   (1, 2),
@@ -270,33 +295,6 @@ INSERT INTO interests(userID, interestID) VALUES
   (10, 4),
   (11, 2),
   (11, 5);
-
-INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, smokes, height) VALUES
-  (1, '', 'male', '1990-01-02', 2, 'images/photo1.jpg', 'non-smoker', 176),
-  (2, '', 'male', '1990-04-12', 6, 'images/photo2.jpg', 'non-smoker', 176),
-  (3, "My name is Una and I'm from Armagh!", 'female', '1980-06-20', 2, 'images/photo3.jpg', 'non-smoker', 160),
-  (5, '', 'female', '1994-11-07', 12, 'images/photo5.jpg', 'non-smoker', 167),
-  (6, '', 'male', '1985-04-15', 14, 'images/photo6.jpg', 'smoker', 184),
-  (7, '', 'female', '1982-12-07', 3, 'images/photo7.jpg', 'non-smoker', 169),
-  (8, '', 'female', '1995-04-15', 7, 'images/photo8.jpg', 'non-smoker', 154),
-  (9, '', 'female', '1983-06-12', 3, 'images/photo9.jpg', 'smoker', 170),
-  (10, '', 'female', '1978-07-05', 28, 'images/photo10.jpg', 'non-smoker', 149),
-  (11, '', 'female', '1996-09-10', 25, 'images/photo11.jpg', 'non-smoker', 163);
-
-INSERT INTO preferences(userID, prefGender, prefAgeMin, prefSmokes, prefHeightMax) VALUES
-  (1, 'female', 21, 'non-smoker', 168);
-
-INSERT INTO preferences(userID, prefGender) VALUES
-  (2, 'female'),
-  (3, 'male'),
-  (4, 'female'),
-  (5, 'male'),
-  (6, 'female'),
-  (7, 'male'),
-  (8, 'male'),
-  (9, 'male'),
-  (10, 'male'),
-  (11, 'male');
 
 INSERT INTO pending(pendingUserOne, pendingUserTwo) VALUES
   (1, 3),

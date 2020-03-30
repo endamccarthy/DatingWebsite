@@ -48,7 +48,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   // Prepare a select statement
-  $sql = "SELECT DISTINCT firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
+  $sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
   user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
     SELECT userID FROM profile WHERE userID != $userID
     AND
@@ -92,34 +92,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   );";
 
   // Execute sql statement and save results to a string
-  if($stmt = mysqli_prepare($link, $sql)) {
-    if(mysqli_stmt_execute($stmt)) {
-      mysqli_stmt_store_result($stmt);
-      if(mysqli_stmt_num_rows($stmt) >= 1) { 
-        mysqli_stmt_bind_result($stmt, $firstNameTemp, $lastNameTemp, $countyNameTemp);
-        while (mysqli_stmt_fetch($stmt)) {
-          $searchResults .= '<p><a href="#">'.$firstNameTemp.' '.$lastNameTemp.'</a><br>'.$countyNameTemp.'</p>';
-        } 
-      } 
-      else {
-        $searchResults = "<p>No search results</p>";
-      }
-    } 
-    else {
-      echo "Oops! Something went wrong. Please try again later.";
-    }
-    // Close statement
-    mysqli_stmt_close($stmt);
-  }
+  $searchResults = getProfileResultsString($link, $sql);
 }
 // Close connection
 mysqli_close($link);
 ?>
 
 <?php $title = 'Search'; include("../templates/top.html");?>
-  <div style="text-align: center">
-    <h2>Search - To Do...</h2>
-  </div>
   <div class="wrapper">
     <h3>Enter Search Criteria</h3>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">

@@ -9,11 +9,21 @@ require_once "../../utilities/utility.php";
 require_once "../../utilities/config.php";
 
 // Define variables
-$firstNameTemp = $lastNameTemp = $gender = $dateOfBirth = $countyNameTemp = $smokes = $description = $prefCountyName = $prefInterestName = $prefGender = $prefSmokes = "";
+$firstName = $lastName = $gender = $dateOfBirth = $countyName = $smokes = $description = "";
+$height = 0;
 $interests;
-$height = $prefCountyID = $prefInterestID = $prefAgeMin = $prefAgeMax = $prefHeightMin = $prefHeightMax = 0;
-$userID = $_SESSION["userID"];
+$preferences;
 $profileComplete = $_SESSION["profileComplete"];
+
+// Check existence of id parameter before processing further
+if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
+  $userID = $_GET["userID"];
+  $myProfile = false;
+}
+else {
+  $userID = $_SESSION["userID"];
+  $myProfile = true;
+}
 
 // Get user details
 $sql = "SELECT firstName, lastName, description, gender, dateOfBirth, countyName, smokes, height FROM user 
@@ -60,72 +70,17 @@ if($stmt = mysqli_prepare($link, $sql)) {
 }
 
 // Get user preferences
-$sql = "SELECT prefGender, prefAgeMin, prefAgeMax, prefCountyID, prefInterestID, prefSmokes, prefHeightMin, prefHeightMax FROM preferences 
-WHERE userID = $userID;";
-if($stmt = mysqli_prepare($link, $sql)) {
-  if(mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_store_result($stmt);
-    if(mysqli_stmt_num_rows($stmt) == 1) {
-      mysqli_stmt_bind_result($stmt, $prefGenderTemp, $prefAgeMinTemp, $prefAgeMaxTemp, $prefCountyIDTemp, $prefInterestIDTemp, $prefSmokesTemp, $prefHeightMinTemp, $prefHeightMaxTemp);
-      while (mysqli_stmt_fetch($stmt)) {
-        $prefGender = $prefGenderTemp;
-        $prefAgeMin = $prefAgeMinTemp;
-        $prefAgeMax = $prefAgeMaxTemp;
-        if($prefCountyIDTemp) {$prefCountyID = $prefCountyIDTemp;};
-        if($prefInterestIDTemp) {$prefInterestID = $prefInterestIDTemp;};
-        if($prefSmokesTemp) {$prefSmokes = $prefSmokesTemp;};
-        $prefHeightMin = $prefHeightMinTemp;
-        $prefHeightMax = $prefHeightMaxTemp;
-      }
-    }
-  } 
-  else {
-    echo "Oops! Something went wrong. Please try again later.";
-  }
-  mysqli_stmt_close($stmt);
-}
-
-// If user has a county preference...
-if ($prefCountyID >= 1) {
-  // Get preferred county name
-  $sql = "SELECT countyName FROM countyList WHERE countyID = $prefCountyID;";
-  if($stmt = mysqli_prepare($link, $sql)) {
-    if(mysqli_stmt_execute($stmt)) {
-      mysqli_stmt_store_result($stmt);
-      if(mysqli_stmt_num_rows($stmt) == 1) {
-        mysqli_stmt_bind_result($stmt, $prefCountyNameTemp);
-        while (mysqli_stmt_fetch($stmt)) {
-          $prefCountyName = $prefCountyNameTemp;
-        }
-      }
-    } 
-    else {
-      echo "Oops! Something went wrong. Please try again later.";
-    }
-    mysqli_stmt_close($stmt);
-  }
-}
-
-// If user has an interest preference...
-if ($prefInterestID >= 1) {
-  // Get preferred interest name
-  $sql = "SELECT interestName FROM interestList WHERE interestID = $prefInterestID;";
-  if($stmt = mysqli_prepare($link, $sql)) {
-    if(mysqli_stmt_execute($stmt)) {
-      mysqli_stmt_store_result($stmt);
-      if(mysqli_stmt_num_rows($stmt) == 1) {
-        mysqli_stmt_bind_result($stmt, $prefInterestNameTemp);
-        while (mysqli_stmt_fetch($stmt)) {
-          $prefInterestName = $prefInterestNameTemp;
-        }
-      }
-    } 
-    else {
-      echo "Oops! Something went wrong. Please try again later.";
-    }
-    mysqli_stmt_close($stmt);
-  }
-}
+$preferences = getUserPreferences($link, $userID);
+$prefGender = $preferences['prefGender'];
+$prefSmokes = $preferences['prefSmokes'];
+$prefAgeMin = $preferences['prefAgeMin'];
+$prefAgeMax = $preferences['prefAgeMax'];
+$prefHeightMin = $preferences['prefHeightMin'];
+$prefHeightMax = $preferences['prefHeightMax'];
+$prefInterestID = $preferences['prefInterestID'];
+$prefCountyID = $preferences['prefCountyID'];
+$prefCountyName = getEntryNameGivenID($link, 'countyList', 'countyName', 'countyID', $prefCountyID);
+$prefInterestName = getEntryNameGivenID($link, 'interestList', 'interestName', 'interestID', $prefInterestID);
 
 // Close connection
 mysqli_close($link);
@@ -133,10 +88,10 @@ mysqli_close($link);
 
 <!-- show as my profile or the other person name -->
 
-<?php $title = ($profileComplete) ? 'Edit Profile' : 'Create Profile'; include("../templates/top.html");?>
+<?php $title = ($myProfile) ? 'My Profile' : $firstName.' '.$lastName; include("../templates/top.html");?>
 <div class="wrapper">
   <div class="pb-2 mt-4 mb-4 border-bottom">  
-    <h2>Profile Details</h2>
+    <h2><?php echo ($myProfile) ? 'My Details' : $firstName."'s Details";?></h2>
   </div>
   <div class="pb-2 m-3 mb-4 border-bottom">
     <div>
@@ -187,13 +142,17 @@ mysqli_close($link);
       ?>
     </div>
   </div>
-  <div class="m-3">  
-    <p><a href="edit-profile.php" class="btn btn-secondary btn-sm">Edit</a></p>
-  </div>
+  <?php
+    if($myProfile) {
+      echo '<div class="m-3">';
+      echo '<p><a href="edit-profile.php" class="btn btn-secondary btn-sm">Edit</a></p>';
+      echo '</div>';
+    }
+  ?>
 </div>
 <div class="wrapper">
   <div class="pb-2 mt-4 mb-4 border-bottom">  
-    <h2>Preference Details</h2>
+    <h2><?php echo ($myProfile) ? 'My Preferences' : $firstName."'s Preferences";?></h2>
   </div>
   <div class="pb-2 m-3 mb-4 border-bottom">
     <div>
@@ -227,9 +186,13 @@ mysqli_close($link);
       <h6>Preferred Height: <?php echo $prefHeightMin.' - '.$prefHeightMax.'cm' ?></h6>
     </div>
   </div>
-  <div class="m-3">  
-    <p><a href="edit-preferences.php" class="btn btn-secondary btn-sm">Edit</a></p>
-  </div>
+  <?php
+    if($myProfile) {
+      echo '<div class="m-3">';
+      echo '<p><a href="edit-preferences.php" class="btn btn-secondary btn-sm">Edit</a></p>';
+      echo '</div>';
+    }
+  ?>
 </div> 
 <?php include("../templates/bottom.html");?>
 

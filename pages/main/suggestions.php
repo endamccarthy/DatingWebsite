@@ -12,7 +12,7 @@ $suggestions = "";
 $userID = $_SESSION["userID"];
 
 // Prepare a select statement
-$sql = "SELECT DISTINCT firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
+$sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
 user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
   SELECT userID FROM profile WHERE userID != $userID
   AND
@@ -68,25 +68,8 @@ user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE us
 );";
 
 // Execute sql statement and save results to a string
-if($stmt = mysqli_prepare($link, $sql)) {
-  if(mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_store_result($stmt);
-    if(mysqli_stmt_num_rows($stmt) >= 1) {
-      mysqli_stmt_bind_result($stmt, $firstNameTemp, $lastNameTemp, $countyNameTemp);
-      while (mysqli_stmt_fetch($stmt)) {
-        $suggestions .= '<p><a href="#">'.$firstNameTemp.' '.$lastNameTemp.'</a><br>'.$countyNameTemp.'</p>';
-      } 
-    }
-    else {
-      $suggestions = "<p>Sorry, no suggestions!</p>";
-    }
-  } 
-  else {
-    echo "Oops! Something went wrong. Please try again later.";
-  }
-  // Close statement
-  mysqli_stmt_close($stmt);
-}
+$suggestions = getProfileResultsString($link, $sql);
+
 // Close connection
 mysqli_close($link);
 ?>
