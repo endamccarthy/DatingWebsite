@@ -8,7 +8,7 @@ $_SESSION = array();
 // Destroy the session.
 session_destroy();
  
-// Redirect to login page
-header("location: ../pages/login/login.php");
+// Redirect to landing page
+header("location: ../pages/login/landing-page.php");
 exit;
 ?>

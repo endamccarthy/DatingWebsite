@@ -14,11 +14,17 @@ $height = 0;
 $interests;
 $preferences;
 $profileComplete = $_SESSION["profileComplete"];
+$relationshipStatus = "none";
 
 // Check if profile is user's own or someone elses
 if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
   $userID = $_GET["userID"];
   $myProfile = false;
+  if (checkIfUserPairExists($link, 'pending', 'pendingUserOne', 'pendingUserTwo', $userID, $_SESSION["userID"])) { $relationshipStatus = "youLikeThem"; }
+  else if (checkIfUserPairExists($link, 'pending', 'pendingUserOne', 'pendingUserTwo', $_SESSION["userID"], $userID)) { $relationshipStatus = "theyLikeYou"; }
+  else if (checkIfUserPairExists($link, 'rejections', 'rejectionsUserOne', 'rejectionsUserTwo', $userID, $_SESSION["userID"])) { $relationshipStatus = "youRejectThem"; }
+  else if (checkIfUserPairExists($link, 'rejections', 'rejectionsUserOne', 'rejectionsUserTwo', $_SESSION["userID"], $userID)) { $relationshipStatus = "theyRejectYou"; }
+  else if (checkIfUserPairExistsMatches($link, 'matches', 'matchesUserOne', 'matchesUserTwo', $_SESSION["userID"], $userID)) { $relationshipStatus = "match"; }
 }
 else {
   $userID = $_SESSION["userID"];
@@ -151,7 +157,29 @@ if(isset($_SESSION["searchApplied"]) && !$myProfile) {
   <?php
     if($myProfile) {
       echo '<div class="m-3">';
-      echo '<p><a href="edit-profile.php" class="btn btn-secondary btn-sm">Edit</a></p>';
+      echo '<a href="edit-profile.php" class="btn btn-secondary btn-sm m-1">Edit</a>';
+      echo '</div>';
+    }
+    else {
+      echo '<div class="m-3">';
+      if($relationshipStatus == "none" || $relationshipStatus == "theyLikeYou") {
+        echo '<a href="../../utilities/like.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Like</a>';
+        echo '<a href="../../utilities/reject.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Reject</a>';
+        echo '<a href="../../utilities/report.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
+      }
+      else if($relationshipStatus == "youLikeThem") {
+        echo '<a href="../../utilities/unlike.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Like</a>';
+      }
+      else if($relationshipStatus == "youRejectThem") {
+        echo '<a href="../../utilities/unreject.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Reject</a>';
+        echo '<a href="../../utilities/report.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
+      }
+      else if($relationshipStatus == "theyRejectYou") {
+        header("location: javascript:history.back()");
+      }
+      else if($relationshipStatus == "match") {
+        echo '<a href="../../utilities/unmatch.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Match</a>';
+      }
       echo '</div>';
     }
   ?>

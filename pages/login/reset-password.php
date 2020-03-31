@@ -46,7 +46,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       if(mysqli_stmt_execute($stmt)) {
         // Password updated successfully. Destroy the session, and redirect to login page
         session_destroy();
-        header("location: login.php");
+        header("location: landing-page.php");
         exit();
       } 
       else {

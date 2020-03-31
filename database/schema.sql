@@ -259,10 +259,8 @@ INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, s
   (10, '', 'female', '1978-07-05', 28, 'images/photo10.jpg', 'non-smoker', 149),
   (11, '', 'female', '1996-09-10', 25, 'images/photo11.jpg', 'non-smoker', 163);
 
-INSERT INTO preferences(userID, prefGender, prefAgeMin, prefAgeMax, prefCountyID, prefInterestID, prefSmokes, prefHeightMin, prefHeightMax) VALUES
-  (1, 'female', 20, 35, 5, 3, 'non-smoker', 150, 180);
-
 INSERT INTO preferences(userID, prefGender) VALUES
+  (1, 'female'),
   (2, 'female'),
   (3, 'male'),
   (4, 'female'),
@@ -302,15 +300,14 @@ INSERT INTO pending(pendingUserOne, pendingUserTwo) VALUES
   (1, 3),
   (2, 3),
   (3, 6),
+  (11, 1),
   (7, 1);
 
 INSERT INTO matches(matchesUserOne, matchesUserTwo) VALUES
-  (5, 1),
   (4, 5),
   (6, 7);
 
 INSERT INTO rejections(rejectionsUserOne, rejectionsUserTwo) VALUES
-  (1, 10),
   (7, 2),
   (6, 5);
 

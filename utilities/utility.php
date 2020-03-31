@@ -116,7 +116,7 @@ function getEntryNameGivenID($link, $table, $entryName, $entryID, $givenID) {
   }
 }
 
-// Function to get results from suggestions, matches, search, etc.
+// Function to get results from suggestions, matches, waiting for you
 function getProfileResultsString($link, $sql) {
   if($stmt = mysqli_prepare($link, $sql)) {
     if(mysqli_stmt_execute($stmt)) {
@@ -140,7 +140,7 @@ function getProfileResultsString($link, $sql) {
   }
 }
 
-// Function to get results from suggestions, matches, search, etc.
+// Function to get results from search
 function getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters) {
   $sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
   user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
@@ -187,12 +187,44 @@ function getSearchResultsString($link, $userID, $searchText, $countyFilters, $in
   return getProfileResultsString($link, $sql);
 }
 
-// If user is not already on the login or register page...
-if (!endsWith($currentPage, 'login.php') && !endsWith($currentPage, 'register.php')) {
+// Function to check if a user pair exists in either pending or rejections tables
+function checkIfUserPairExists($link, $table, $fieldOne, $fieldTwo, $userOne, $userTwo) {
+  $exists = false;
+  $sql = "SELECT * FROM $table WHERE $fieldOne = $userTwo AND $fieldTwo = $userOne";
+  if($stmt = mysqli_prepare($link, $sql)) {
+    if(mysqli_stmt_execute($stmt)) {
+      mysqli_stmt_store_result($stmt);
+      if(mysqli_stmt_num_rows($stmt) >= 1) {
+        $exists = true;
+      }
+    } 
+    mysqli_stmt_close($stmt);
+  }
+  return $exists;
+}
+
+// Function to check if a user pair exists in matches tables
+function checkIfUserPairExistsMatches($link, $table, $fieldOne, $fieldTwo, $userOne, $userTwo) {
+  $exists = false;
+  $sql = "SELECT * FROM $table WHERE ($fieldOne = $userTwo AND $fieldTwo = $userOne) OR ($fieldOne = $userOne AND $fieldTwo = $userTwo)";
+  if($stmt = mysqli_prepare($link, $sql)) {
+    if(mysqli_stmt_execute($stmt)) {
+      mysqli_stmt_store_result($stmt);
+      if(mysqli_stmt_num_rows($stmt) >= 1) {
+        $exists = true;
+      }
+    } 
+    mysqli_stmt_close($stmt);
+  }
+  return $exists;
+}
+
+// If user is not already on the landing page...
+if (!endsWith($currentPage, 'landing-page.php')) {
   // And they are logged out...
   if(!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-    // Redirect them to login page
-    header("location: ../login/login.php");
+    // Redirect them to landing page
+    header("location: ../login/landing-page.php");
     exit;
   }
   // If user is not already on the edit profile page...
@@ -205,11 +237,11 @@ if (!endsWith($currentPage, 'login.php') && !endsWith($currentPage, 'register.ph
     }
   }
 }
-// Else if user is on the login or register page...
+// Else if user is on the landing page...
 else {
   // And they are already logged in...
   if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
-    // Redirect to landing page
+    // Redirect to home page
     header("location: ../main/welcome.php");
     exit;
   }

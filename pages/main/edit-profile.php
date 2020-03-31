@@ -284,7 +284,14 @@ mysqli_close($link);
 
       <div class="mb-4 form-group">
         <input type="submit" class="btn btn-primary" value="Save">
-        <?php if($profileComplete) { echo '<a href="javascript:history.back()" class="btn btn-default">Cancel</a>';} ?>
+        <?php 
+          if($profileComplete) { 
+            echo '<a href="javascript:history.back()" class="btn btn-default">Cancel</a>';
+          }
+          else {
+            echo '<a href="../../utilities/logout.php" class="btn btn-default">Cancel</a>';
+          } 
+        ?>
       </div>
 
     </form>

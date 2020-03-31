@@ -69,8 +69,8 @@ mysqli_close($link);
 
 <?php $title = 'Search'; include("../templates/top.html"); ?>
 <div class="wrapper">
-  <h3>Search All Available Profiles</h3>
-  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
+  <h3 class="pb-2 mt-4 mb-4 border-bottom">Search All Available Profiles</h3>
+  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get" class="pb-2 mt-4 mb-4 border-bottom">
 
     <div class="form-group">
       <input type="text" name="searchText" class="form-control" placeholder="Filter by name..." value="<?php echo $searchText; ?>">
@@ -110,7 +110,9 @@ mysqli_close($link);
     </div>
 
   </form>
-  <h3><?php echo ($searchText == "" && $countyFilters == "''" && $interestFilters == "''") ? 'Showing All Profiles' : 'Showing Filtered Results' ?></h3>
+  <h3 class="pb-2 mt-4 mb-4">
+    <?php echo ($searchText == "" && $countyFilters == "''" && $interestFilters == "''") ? 'Showing All Profiles' : 'Showing Filtered Results' ?>
+  </h3>
   <div>
     <?php echo $searchResults; ?>
   </div>
