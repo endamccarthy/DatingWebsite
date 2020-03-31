@@ -105,16 +105,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql .= "UPDATE preferences SET prefHeightMax = $prefHeightMax WHERE userID = $userID;";
   }
   // Execute multi query sql statement
-  if(mysqli_multi_query($link, $sql)) {
-    header("location: ../main/profile.php");
+  if(!mysqli_multi_query($link, $sql)) {
+    echo "Something went wrong. Please try again later.";
   }
+  header("location: ../main/profile.php");
 }
 // Close connection
 mysqli_close($link);
 ?>
 
 
-<?php $title = 'Edit Preferences'; include("../templates/top.html");?>
+<?php $title = 'Edit Preferences'; include("../templates/top.html"); ?>
   <div class="wrapper">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
       <h2>Edit Preferences</h2>
@@ -235,6 +236,7 @@ mysqli_close($link);
 
       <div class="mb-4 form-group">
         <input type="submit" class="btn btn-primary" value="Save">
+        <a href="javascript:history.back()" class="btn btn-default">Cancel</a>
       </div>
 
     </form>

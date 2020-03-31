@@ -8,7 +8,7 @@ require_once "../../utilities/utility.php";
 require_once "../../utilities/config.php";
 ?>
 
-<?php $title = 'Admin | Home'; include("../templates/top.html");?>
+<?php $title = 'Admin | Home'; include("../templates/top.html"); ?>
     <div class="wrapper wrapper-wide">
         <div class="container-fluid">
             <div class="row">

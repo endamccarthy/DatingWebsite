@@ -46,7 +46,7 @@ else {
 }
 ?>
 
-<?php $title = 'Admin | View'; include("../templates/top.html");?>
+<?php $title = 'Admin | View'; include("../templates/top.html"); ?>
     <div class="wrapper">
         <div class="container-fluid">
             <div class="row">

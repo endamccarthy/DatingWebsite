@@ -15,7 +15,7 @@ $interests;
 $preferences;
 $profileComplete = $_SESSION["profileComplete"];
 
-// Check existence of id parameter before processing further
+// Check if profile is user's own or someone elses
 if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
   $userID = $_GET["userID"];
   $myProfile = false;
@@ -86,9 +86,15 @@ $prefInterestName = getEntryNameGivenID($link, 'interestList', 'interestName', '
 mysqli_close($link);
 ?>
 
-<!-- show as my profile or the other person name -->
-
-<?php $title = ($myProfile) ? 'My Profile' : $firstName.' '.$lastName; include("../templates/top.html");?>
+<?php $title = ($myProfile) ? 'My Profile' : $firstName.' '.$lastName; include("../templates/top.html"); ?>
+<?php
+if(isset($_SESSION["searchApplied"]) && !$myProfile) {
+  echo '<div class="wrapper">';
+  echo '<a href="javascript:history.back()" class="btn btn-secondary m-1">Back To Search Results</a>';
+  echo '</div>';
+  unset($_SESSION["searchApplied"]);
+}
+?>
 <div class="wrapper">
   <div class="pb-2 mt-4 mb-4 border-bottom">  
     <h2><?php echo ($myProfile) ? 'My Details' : $firstName."'s Details";?></h2>

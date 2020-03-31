@@ -61,7 +61,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 mysqli_close($link);
 ?>
  
-<?php $title = 'Reset Password'; include("../templates/top.html");?>
+<?php $title = 'Reset Password'; include("../templates/top.html"); ?>
   <div class="wrapper">
     <h2>Reset Password</h2>
     <p>Please fill out this form to reset your password.</p>
@@ -79,7 +79,7 @@ mysqli_close($link);
       </div>
       <div class="form-group">
         <input type="submit" class="btn btn-primary" value="Submit">
-        <a class="btn btn-link" href="../main/welcome.php">Cancel</a>
+        <a href="javascript:history.back()" class="btn btn-default">Cancel</a>
       </div>
     </form>
 

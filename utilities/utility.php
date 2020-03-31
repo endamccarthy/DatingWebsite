@@ -140,6 +140,53 @@ function getProfileResultsString($link, $sql) {
   }
 }
 
+// Function to get results from suggestions, matches, search, etc.
+function getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters) {
+  $sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
+  user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
+    SELECT userID FROM profile WHERE userID != $userID
+    AND
+    userID NOT IN (
+      SELECT pendingUserTwo FROM pending WHERE pendingUserOne = $userID
+      UNION ALL
+      SELECT matchesUserTwo FROM matches WHERE matchesUserOne = $userID
+      UNION ALL
+      SELECT matchesUserOne FROM matches WHERE matchesUserTwo = $userID
+      UNION ALL
+      SELECT rejectionsUserTwo FROM rejections WHERE rejectionsUserOne = $userID
+      UNION ALL
+      SELECT rejectionsUserOne FROM rejections WHERE rejectionsUserTwo = $userID
+    )
+    AND
+    gender = (
+      SELECT prefGender FROM preferences WHERE userID = $userID
+    )
+    AND
+    userID IN (
+      SELECT userID FROM user WHERE CONCAT(firstName, ' ', lastName) LIKE '%$searchText%'
+    )
+    AND 
+    countyID IN (
+      SELECT countyID FROM countyList WHERE countyID IN ($countyFilters)
+      UNION ALL 
+      SELECT countyID FROM countyList WHERE NOT EXISTS (
+        SELECT countyID FROM countyList WHERE countyID IN ($countyFilters) AND countyID IS NOT NULL
+      )
+    )
+    AND
+    userID IN (
+      SELECT userID FROM interests WHERE interestID IN (
+        SELECT interestID FROM interestList WHERE interestID IN ($interestFilters)
+      )
+      UNION ALL
+      SELECT userID FROM user WHERE NOT EXISTS (
+        SELECT interestID FROM interestList WHERE interestID IN ($interestFilters) AND interestID IS NOT NULL
+      )
+    )
+  );";
+  return getProfileResultsString($link, $sql);
+}
+
 // If user is not already on the login or register page...
 if (!endsWith($currentPage, 'login.php') && !endsWith($currentPage, 'register.php')) {
   // And they are logged out...
@@ -168,5 +215,11 @@ else {
   }
 }
 
+// Check if the 'Back To Search Results' button should be displayed
+if ((strpos($currentPage, '/profile.php') === false) || (endsWith($currentPage, '/profile.php'))) {
+  if(isset($_SESSION["searchApplied"])) {
+    unset($_SESSION["searchApplied"]);
+  }
+}
 
 ?>

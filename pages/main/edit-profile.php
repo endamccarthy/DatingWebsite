@@ -161,9 +161,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         }
       }
       // Execute multi query sql statement
-      if(mysqli_multi_query($link, $sql)) {
-        header("location: ../main/profile.php");
+      if(!mysqli_multi_query($link, $sql)) {
+        echo "Something went wrong. Please try again later.";
       }
+      header("location: ../main/profile.php");
     }
   }
 }
@@ -172,7 +173,7 @@ mysqli_close($link);
 ?>
 
 
-<?php $title = ($profileComplete) ? 'Edit Profile' : 'Create Profile'; include("../templates/top.html");?>
+<?php $title = ($profileComplete) ? 'Edit Profile' : 'Create Profile'; include("../templates/top.html"); ?>
   <div class="wrapper">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
       <h2><?php echo ($profileComplete) ? 'Edit Profile' : 'Create Profile'; ?></h2>
@@ -192,26 +193,26 @@ mysqli_close($link);
       </div>
 
       <?php
-      // Only show preferred gender option if new profile is being created, it will be in the edit PREFERENCES form otherwise
-      if(!$profileComplete) {
-        echo '<div class="mb-4 form-row required">';
-        echo '<div class="col-md-6">';
-        echo '<label class="control-label">I am seeking...</label>';
-        echo '</div>';
-        echo '<div class="col-md-2 custom-control custom-radio custom-control-inline">';
-        echo '<input type="radio" name="prefGender" class="form-control custom-control-input" id="prefGenderMale" value="male" ';
-        echo ($prefGender == 'male') ? 'checked ' : '';
-        echo 'required>';
-        echo '<label class="custom-control-label" for="prefGenderMale">Male</label>';
-        echo '</div>';
-        echo '<div class="col-md-2 custom-control custom-radio custom-control-inline">';
-        echo '<input type="radio" name="prefGender" class="form-control custom-control-input" id="prefGenderFemale" value="female" ';
-        echo ($prefGender == 'female') ? 'checked ' : '';
-        echo 'required>';
-        echo '<label class="custom-control-label" for="prefGenderFemale">Female</label>';
-        echo '</div>';
-        echo '</div>';
-      }
+        // Only show preferred gender option if new profile is being created, it will be in the edit PREFERENCES form otherwise
+        if(!$profileComplete) {
+          echo '<div class="mb-4 form-row required">';
+          echo '<div class="col-md-6">';
+          echo '<label class="control-label">I am seeking...</label>';
+          echo '</div>';
+          echo '<div class="col-md-2 custom-control custom-radio custom-control-inline">';
+          echo '<input type="radio" name="prefGender" class="form-control custom-control-input" id="prefGenderMale" value="male" ';
+          echo ($prefGender == 'male') ? 'checked ' : '';
+          echo 'required>';
+          echo '<label class="custom-control-label" for="prefGenderMale">Male</label>';
+          echo '</div>';
+          echo '<div class="col-md-2 custom-control custom-radio custom-control-inline">';
+          echo '<input type="radio" name="prefGender" class="form-control custom-control-input" id="prefGenderFemale" value="female" ';
+          echo ($prefGender == 'female') ? 'checked ' : '';
+          echo 'required>';
+          echo '<label class="custom-control-label" for="prefGenderFemale">Female</label>';
+          echo '</div>';
+          echo '</div>';
+        }
       ?>
 
       <div class="mb-4 form-group required">
@@ -283,7 +284,7 @@ mysqli_close($link);
 
       <div class="mb-4 form-group">
         <input type="submit" class="btn btn-primary" value="Save">
-        <input type="reset" class="btn btn-default" value="Reset">
+        <?php if($profileComplete) { echo '<a href="javascript:history.back()" class="btn btn-default">Cancel</a>';} ?>
       </div>
 
     </form>
