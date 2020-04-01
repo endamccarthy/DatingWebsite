@@ -41,9 +41,9 @@ else {
     else {
       echo "Oops! Something went wrong. Please try again later.";
     }
+  }
   // Close statement
   mysqli_stmt_close($stmt);
-  }
 }
 
 // Check input errors before inserting in database

@@ -215,8 +215,12 @@ mysqli_close($link);
 
 
 <?php $title = 'Foxy Farmers'; include("../templates/top.html");?>
-
 <div class="container">
+  <div class="row">
+    <div class="wrapper wrapper-wide site-motto">
+      <h2><i>Find Your Foxy Farmer!</i></h2>
+    </div>
+  </div>
   <div class="row">
 
     <div class="col-sm-4 wrapper">
@@ -238,6 +242,11 @@ mysqli_close($link);
           <input type="submit" class="btn btn-primary" value="Login">
         </div>
       </form>
+      <div class="p-3 mt-4 border-top" style="text-align: center;">
+        <p>“Sometimes I think I’d be less lonely living in an enclosed convent than in small town Ireland.”</p>
+        <p><i>The Irish Times, Aine Ryan, 25 June 2019</i></p><br>
+        <h5><b>Foxy Farmers</b> is a dating site for people living or wanting to live in a rural farming community in Ireland.</h5>
+      </div>
     </div> 
 
     <div class="col-sm-4 wrapper">

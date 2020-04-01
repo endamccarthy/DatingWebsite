@@ -16,6 +16,11 @@ body {
 
 .navbar .navbar-brand {
   color: rgb(252, 191, 134);
+  font-size: 23px;
+}
+
+.navbar .nav-item {
+  font-size: 18px;
 }
 
 .wrapper { 
@@ -27,6 +32,11 @@ body {
 
 .wrapper-wide { 
   width: 55%;
+}
+
+.site-motto {
+  text-align: center;
+  margin-bottom: 0%;
 }
 
 /* ********************** */

@@ -25,7 +25,7 @@ if(isset($_POST["interestID"]) && !empty($_POST["interestID"])){
     // Check input errors before updating database
     if(empty($interestName_err)){
         // Prepare an update statement
-        $sql = "UPDATE interestlist SET interestName=? WHERE interestID=?";
+        $sql = "UPDATE interestList SET interestName=? WHERE interestID=?";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters

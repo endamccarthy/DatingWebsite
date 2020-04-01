@@ -10,6 +10,8 @@ require_once "../../utilities/config.php";
 // Define variables
 $suggestions = "";
 $userID = $_SESSION["userID"];
+$prefGender = "";
+$prefGender = getEntryNameGivenID($link, 'preferences', 'prefGender', 'userID', $userID);
 
 // Prepare a select statement
 $sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
@@ -30,7 +32,11 @@ user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE us
   AND
   gender = (
     SELECT prefGender FROM preferences WHERE userID = $userID
-  ) 
+  )
+  AND
+  userID IN (
+    SELECT userID FROM preferences WHERE prefGender != '$prefGender'
+  )
   AND 
   TIMESTAMPDIFF(YEAR, dateOfBirth, NOW()) BETWEEN 
     (SELECT prefAgeMin FROM preferences WHERE userID = $userID) AND 

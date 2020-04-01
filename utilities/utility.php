@@ -142,6 +142,7 @@ function getProfileResultsString($link, $sql) {
 
 // Function to get results from search
 function getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters) {
+  $prefGender = getEntryNameGivenID($link, 'preferences', 'prefGender', 'userID', $userID);
   $sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
   user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
     SELECT userID FROM profile WHERE userID != $userID
@@ -160,6 +161,10 @@ function getSearchResultsString($link, $userID, $searchText, $countyFilters, $in
     AND
     gender = (
       SELECT prefGender FROM preferences WHERE userID = $userID
+    )
+    AND
+    userID IN (
+      SELECT userID FROM preferences WHERE prefGender != '$prefGender'
     )
     AND
     userID IN (
