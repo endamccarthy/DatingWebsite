@@ -48,15 +48,30 @@
 
   </head>
   <body>
-    <?php
-      if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == true && isset($_SESSION["profileComplete"]) && $_SESSION["profileComplete"] == true) {
-        echo '<div style="text-align: center"><p>';
-        echo '<a href="../admin/admin-home.php" class="btn btn-secondary m-1">Admin</a>';
-        echo '<a href="../login/reset-password.php" class="btn btn-warning m-1">Reset Password</a>';
-        echo '<a href="../../utilities/logout.php" class="btn btn-danger m-1">Sign Out</a>';
-        echo '<a href="../main/suggestions.php" class="btn btn-info m-1">Home</a>';
-        echo '<a href="../main/search.php" class="btn btn-info m-1">Search</a>';
-        echo '<a href="../main/profile.php" class="btn btn-info m-1">My Profile</a>';
-        echo '</p></div>';
-      }
-    ?>
+    <nav class="navbar navbar-expand-md navbar-dark">
+      <a href="#" class="navbar-brand">Foxy Farmers</a>
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <?php
+          if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == true && isset($_SESSION["profileComplete"]) && $_SESSION["profileComplete"] == true) {
+            echo '<div class="navbar-nav">';
+            echo '<a href="../admin/admin-home.php" class="nav-item nav-link">Admin</a>';
+            echo '<a href="../main/suggestions.php" class="nav-item nav-link">Home</a>';
+            echo '<a href="../main/search.php" class="nav-item nav-link">Search</a>';
+            echo '<a href="../main/profile.php" class="nav-item nav-link">My Profile</a></div>';
+            echo '<div class="navbar-nav ml-auto">';
+            echo '<a href="../login/reset-password.php" class="nav-item nav-link">Reset Password</a>';
+            echo '<a href="../../utilities/logout.php" class="nav-item nav-link">Sign Out</a>';
+            echo '</div>';
+          }
+          else {
+            echo '<div class="navbar-nav ml-4">';
+            echo '<a href="#" class="navbar-brand"><i>Find Your Foxy Farmer</i></a>';
+            echo '</div>';
+          }
+        ?>
+      </div>
+    </nav>

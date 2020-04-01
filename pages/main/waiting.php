@@ -25,10 +25,10 @@ mysqli_close($link);
 ?>
  
 <?php $title = 'Waiting For You'; include("../templates/top.html"); ?>
-<div style="text-align: center">
-  <a href="../main/suggestions.php" class="btn btn-dark m-1">Suggestions</a>
-  <a href="../main/matches.php" class="btn btn-dark m-1">Matches</a>
-  <a href="../main/waiting.php" class="btn btn-dark m-1">Waiting For You</a>
+<div class="mt-3" style="text-align: center">
+  <a href="../main/suggestions.php" class="btn btn-secondary m-1">Suggestions</a>
+  <a href="../main/matches.php" class="btn btn-secondary m-1">Matches</a>
+  <a href="../main/waiting.php" class="btn btn-secondary m-1">Waiting For You</a>
   <div class="wrapper">
     <h2>Waiting For You</h2>
     <div>

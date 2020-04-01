@@ -10,17 +10,24 @@ body {
   font: 14px sans-serif;
 }
 
+.navbar {
+  background-color: hsl(130, 29%, 41%);
+}
+
+.navbar .navbar-brand {
+  color: rgb(252, 191, 134);
+}
+
 .wrapper { 
   width: 30%; 
   padding: 1%; 
   margin: 2% auto;
-  background-color: rgb(197, 224, 224);
+  background-color: rgb(252, 191, 134);
 }
 
 .wrapper-wide { 
   width: 55%;
 }
-
 
 /* ********************** */
 /* FORM REQUIREMENTS */
@@ -38,5 +45,28 @@ body {
 }
 table tr td:last-child a {
   margin-right: 10%;
+}
+/* ********************** */
+
+
+/* ********************** */
+/* Font-Awesome Icon Colors */
+.fa-eye {
+  color: blue;  
+}
+.fa-pencil {
+  color: blue;  
+}
+.fa-trash-o {
+  color: blue;  
+}
+.fa-heart {
+  color: red;  
+}
+.fa-thumbs-up {
+  color: #ffdbac;  
+}
+.fa-thumbs-down {
+  color: #ffdbac;  
 }
 /* ********************** */

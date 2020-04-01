@@ -216,79 +216,81 @@ mysqli_close($link);
 
 <?php $title = 'Foxy Farmers'; include("../templates/top.html");?>
 
-  <div class="wrapper">
-    <h2>Login</h2>
-    <p>Please fill in your credentials to login.</p>
-    
-    <form name="loginForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="emailLogin" class="form-control <?php echo (!empty($emailErrLogin)) ? 'is-invalid' : ''; ?>" value="<?php echo $emailLogin; ?>" required>
-        <span class="invalid-feedback"><?php echo $emailErrLogin; ?></span>
-      </div>   
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="passwordLogin" class="form-control <?php echo (!empty($passwordErrLogin)) ? 'is-invalid' : ''; ?>" value="<?php echo $passwordLogin; ?>">
-        <span class="invalid-feedback"><?php echo $passwordErrLogin; ?></span>
-      </div>
-      <div class="form-group">
-        <input type="hidden" name="action" value="login">
-        <input type="submit" class="btn btn-primary" value="Login">
-      </div>
-    </form>
+<div class="container">
+  <div class="row">
 
-  </div> 
-
-
-  <div class="wrapper">
-    <h2>Register</h2>
-    <p>Please fill in this form to create an account.</p>
-
-    <form name="registerForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-      <div class="form-row">
-        <div class="col-md-6 mb-3">
-          <label>First name</label>
-          <input type="text" name="firstName" class="form-control" value="<?php echo $firstName; ?>" required>
+    <div class="col-sm-4 wrapper">
+      <h2>Login</h2>
+      <p>Please fill in your credentials to login.</p>
+      <form name="loginForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="emailLogin" class="form-control <?php echo (!empty($emailErrLogin)) ? 'is-invalid' : ''; ?>" value="<?php echo $emailLogin; ?>" required>
+          <span class="invalid-feedback"><?php echo $emailErrLogin; ?></span>
+        </div>   
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="passwordLogin" class="form-control <?php echo (!empty($passwordErrLogin)) ? 'is-invalid' : ''; ?>" value="<?php echo $passwordLogin; ?>">
+          <span class="invalid-feedback"><?php echo $passwordErrLogin; ?></span>
         </div>
-        <div class="col-md-6 mb-3">
-          <label>Last name</label>
-          <input type="text" name="lastName" class="form-control" value="<?php echo $lastName; ?>" required>
+        <div class="form-group">
+          <input type="hidden" name="action" value="login">
+          <input type="submit" class="btn btn-primary" value="Login">
         </div>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="emailRegister" class="form-control <?php echo (!empty($emailErrRegister)) ? 'is-invalid' : ''; ?>" value="<?php echo $emailRegister; ?>" required>
-        <span class="invalid-feedback"><?php echo $emailErrRegister; ?></span>
-      </div>    
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="passwordRegister" class="form-control <?php echo (!empty($passwordErrRegister)) ? 'is-invalid' : ''; ?>" value="<?php echo $passwordRegister; ?>" required>
-        <span class="invalid-feedback"><?php echo $passwordErrRegister; ?></span>
-      </div>
-      <div class="form-group">
-        <label>Confirm Password</label>
-        <input type="password" name="confirmPassword" class="form-control <?php echo (!empty($confirmPasswordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirmPassword; ?>" required>
-        <span class="invalid-feedback"><?php echo $confirmPasswordErr; ?></span>
-      </div>
-      <div class="form-group">
-        <div class="form-check">
-          <input type="checkbox" name="tAndC" class="form-check-input <?php echo (!empty($tAndCErr)) ? 'is-invalid' : ''; ?>">
-          <label class="form-check-label">Agree to terms and conditions</label>
-          <span class="invalid-feedback"><?php echo $tAndCErr; ?></span>
-        </div>
-      </div>
-      <div class="form-group">  
-        <div class="form-check">
-          <input type="checkbox" name="over18" class="form-check-input <?php echo (!empty($over18Err)) ? 'is-invalid' : ''; ?>">
-          <label class="form-check-label">I am over 18</label>
-          <span class="invalid-feedback"><?php echo $over18Err; ?></span>
-        </div>
-      </div>
-      <div class="form-group">
-        <input type="hidden" name="action" value="register">
-        <input type="submit" class="btn btn-primary" value="Submit">
-      </div>
-    </form>
+      </form>
+    </div> 
 
-  </div>    
+    <div class="col-sm-4 wrapper">
+      <h2>Register</h2>
+      <p>Please fill in this form to create an account.</p>
+      <form name="registerForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <div class="form-row">
+          <div class="col-md-6 mb-3">
+            <label>First name</label>
+            <input type="text" name="firstName" class="form-control" value="<?php echo $firstName; ?>" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Last name</label>
+            <input type="text" name="lastName" class="form-control" value="<?php echo $lastName; ?>" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="emailRegister" class="form-control <?php echo (!empty($emailErrRegister)) ? 'is-invalid' : ''; ?>" value="<?php echo $emailRegister; ?>" required>
+          <span class="invalid-feedback"><?php echo $emailErrRegister; ?></span>
+        </div>    
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="passwordRegister" class="form-control <?php echo (!empty($passwordErrRegister)) ? 'is-invalid' : ''; ?>" value="<?php echo $passwordRegister; ?>" required>
+          <span class="invalid-feedback"><?php echo $passwordErrRegister; ?></span>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" name="confirmPassword" class="form-control <?php echo (!empty($confirmPasswordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirmPassword; ?>" required>
+          <span class="invalid-feedback"><?php echo $confirmPasswordErr; ?></span>
+        </div>
+        <div class="form-group">
+          <div class="form-check">
+            <input type="checkbox" name="tAndC" class="form-check-input <?php echo (!empty($tAndCErr)) ? 'is-invalid' : ''; ?>">
+            <label class="form-check-label">Agree to terms and conditions</label>
+            <span class="invalid-feedback"><?php echo $tAndCErr; ?></span>
+          </div>
+        </div>
+        <div class="form-group">  
+          <div class="form-check">
+            <input type="checkbox" name="over18" class="form-check-input <?php echo (!empty($over18Err)) ? 'is-invalid' : ''; ?>">
+            <label class="form-check-label">I am over 18</label>
+            <span class="invalid-feedback"><?php echo $over18Err; ?></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="hidden" name="action" value="register">
+          <input type="submit" class="btn btn-primary" value="Submit">
+        </div>
+      </form>
+    </div> 
+
+  </div>
+</div>
+
 <?php include("../templates/bottom.html");?>
