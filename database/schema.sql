@@ -15,9 +15,7 @@ drop table if exists pending;
 drop table if exists preferences;
 drop table if exists profile;
 drop table if exists rejections;
-drop table if exists employees;
 SET FOREIGN_KEY_CHECKS = 1;
-
 
 /********************************************************************/
 /*
@@ -96,13 +94,6 @@ CREATE TABLE events (
   eventName VARCHAR(128) NOT NULL,
   eventDate DATETIME, 
   eventWebsite VARCHAR(128) NULL DEFAULT ""
-);
-
-CREATE TABLE employees (
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    address VARCHAR(255) NOT NULL,
-    salary INT(10) NOT NULL
 );
 
 /********************************************************************/
