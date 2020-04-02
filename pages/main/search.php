@@ -30,6 +30,8 @@ if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["clearFilters"])) {
 // If search is clicked...
 if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["search"])) {
 
+  $_SESSION["search"] = $currentPage;
+
   // Save search text to variable if entered
   if(isset($_GET["searchText"])) {
     $searchText = trim($_GET["searchText"]);

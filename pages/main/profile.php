@@ -9,17 +9,18 @@ require_once "../../utilities/utility.php";
 require_once "../../utilities/config.php";
 
 // Define variables
-$firstName = $lastName = $gender = $dateOfBirth = $countyName = $smokes = $description = "";
+$firstName = $lastName = $gender = $dateOfBirth = $countyName = $smokes = $description = $email = $accessLevel = "";
 $height = 0;
 $interests;
 $preferences;
 $profileComplete = $_SESSION["profileComplete"];
 $relationshipStatus = "none";
+$myProfile = false;
 
 // Check if profile is user's own or someone elses
 if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
   $userID = $_GET["userID"];
-  $myProfile = false;
+  // Get relationship status with other user
   if (checkIfUserPairExists($link, 'pending', 'pendingUserOne', 'pendingUserTwo', $userID, $_SESSION["userID"])) { $relationshipStatus = "youLikeThem"; }
   else if (checkIfUserPairExists($link, 'pending', 'pendingUserOne', 'pendingUserTwo', $_SESSION["userID"], $userID)) { $relationshipStatus = "theyLikeYou"; }
   else if (checkIfUserPairExists($link, 'rejections', 'rejectionsUserOne', 'rejectionsUserTwo', $userID, $_SESSION["userID"])) { $relationshipStatus = "youRejectThem"; }
@@ -32,16 +33,18 @@ else {
 }
 
 // Get user details
-$sql = "SELECT firstName, lastName, description, gender, dateOfBirth, countyName, smokes, height FROM user 
+$sql = "SELECT firstName, lastName, email, accessLevel, description, gender, dateOfBirth, countyName, smokes, height FROM user 
 JOIN profile JOIN countyList ON user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID = $userID;";
 if($stmt = mysqli_prepare($link, $sql)) {
   if(mysqli_stmt_execute($stmt)) {
     mysqli_stmt_store_result($stmt);
     if(mysqli_stmt_num_rows($stmt) == 1) {
-      mysqli_stmt_bind_result($stmt, $firstNameTemp, $lastNameTemp, $descriptionTemp, $genderTemp, $dateOfBirthTemp, $countyNameTemp, $smokesTemp, $heightTemp);
+      mysqli_stmt_bind_result($stmt, $firstNameTemp, $lastNameTemp, $emailTemp, $accessLevelTemp, $descriptionTemp, $genderTemp, $dateOfBirthTemp, $countyNameTemp, $smokesTemp, $heightTemp);
       while (mysqli_stmt_fetch($stmt)) {
         $firstName = $firstNameTemp;
         $lastName = $lastNameTemp;
+        $email = $emailTemp;
+        $accessLevel = $accessLevelTemp;
         if($descriptionTemp) {$description = $descriptionTemp;};
         $gender = $genderTemp;
         $dateOfBirth = $dateOfBirthTemp;
@@ -98,13 +101,30 @@ mysqli_close($link);
   <div class="row">
     <div class="col-sm-4 wrapper">
       <?php
-        if(isset($_SESSION["searchApplied"]) && !$myProfile) {
-          echo '<a href="javascript:history.back()" class="btn btn-secondary m-1">Back To Search Results</a>';
-          unset($_SESSION["searchApplied"]);
+        if(isset($_SESSION["search"]) && !$myProfile) {
+          echo '<a href="'.$_SESSION["search"].'" class="btn btn-secondary m-1">Back To Search Results</a>';
         }
       ?>
+      <?php
+          if($myProfile) {
+            if($accessLevel == 'regular') {
+              //echo '<a href="../../utilities/action.php?action=upgrade" class="btn btn-light btn-sm m-1">Upgrade to Premium</a>';
+              echo '<button type="button" data-target="#upgradeConfirm" data-toggle="modal" class="btn btn-light btn-sm m-1">Upgrade to Premium</button>';
+            }
+          }
+        ?>
       <div class="pb-2 mt-4 mb-4 border-bottom">  
         <h2><?php echo ($myProfile) ? 'My Details' : $firstName."'s Details";?></h2>
+        <?php
+          if($myProfile) {
+            if ($accessLevel == 'admin') {
+              echo '<p><b><i>Administrator</i></b></p>';
+            }
+            else if($accessLevel == 'premium') {
+              echo '<p><b><i>Premium Member</i></b></p>';
+            }
+          }
+        ?>
       </div>
       <div class="pb-2 m-3 mb-4 border-bottom">
         <div>
@@ -156,6 +176,14 @@ mysqli_close($link);
         </div>
       </div>
       <?php
+        if(!$myProfile && $relationshipStatus == 'match') {
+          echo '<div class="pb-2 m-3 mb-4 border-bottom">';
+          echo '<h6>Contact '.$firstName.': </h6>';
+          echo '<a href="mailto:'.$email.'?Subject=Hello%20Foxy!" target="_top">'.$email.'</a>';
+          echo '</div>';
+        }
+      ?>
+      <?php
         if($myProfile) {
           echo '<div class="m-3">';
           echo '<a href="edit-profile.php" class="btn btn-secondary btn-sm m-1">Edit</a>';
@@ -164,22 +192,22 @@ mysqli_close($link);
         else {
           echo '<div class="m-3">';
           if($relationshipStatus == "none" || $relationshipStatus == "theyLikeYou") {
-            echo '<a href="../../utilities/like.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Like</a>';
-            echo '<a href="../../utilities/reject.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Reject</a>';
-            echo '<a href="../../utilities/report.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
+            echo '<a href="../../utilities/action.php?action=like&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Like</a>';
+            echo '<a href="../../utilities/action.php?action=reject&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Reject</a>';
+            echo '<a href="../../utilities/action.php?action=report&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
           }
           else if($relationshipStatus == "youLikeThem") {
-            echo '<a href="../../utilities/unlike.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Like</a>';
+            echo '<a href="../../utilities/undo-action.php?action=unlike&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Like</a>';
           }
           else if($relationshipStatus == "youRejectThem") {
-            echo '<a href="../../utilities/unreject.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Reject</a>';
-            echo '<a href="../../utilities/report.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
+            echo '<a href="../../utilities/undo-action.php?action=unreject&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Reject</a>';
+            echo '<a href="../../utilities/action.php?action=report&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
           }
           else if($relationshipStatus == "theyRejectYou") {
             header("location: javascript:history.back()");
           }
           else if($relationshipStatus == "match") {
-            echo '<a href="../../utilities/unmatch.php?userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Match</a>';
+            echo '<a href="../../utilities/undo-action.php?action=unmatch&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Match</a>';
           }
           echo '</div>';
         }
@@ -231,5 +259,26 @@ mysqli_close($link);
     </div>
   </div>
 </div>
-<?php include("../templates/bottom.html");?>
 
+<!-- Upgrade to Premium Modal -->
+<div class="modal fade" id="upgradeConfirm" tabindex="-1" role="dialog" aria-labelledby="upgradeConfirmLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="upgradeConfirmLabel">Upgrade to Premium</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to upgrade to premium?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <a href="../../utilities/action.php?action=upgrade" class="btn btn-primary">Yes, I'm sure</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php include("../templates/bottom.html");?>

@@ -10,6 +10,7 @@ require_once "../../utilities/config.php";
 // Define variables
 $matches = "";
 $userID = $_SESSION["userID"];
+$accessLevel = getEntryNameGivenID($link, 'user', 'accessLevel', 'userID', $userID);
 
 // Prepare a select statement
 $sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
@@ -30,7 +31,9 @@ mysqli_close($link);
 <div class="mt-3" style="text-align: center">
   <a href="../main/suggestions.php" class="btn btn-secondary m-1">Suggestions</a>
   <a href="../main/matches.php" class="btn btn-secondary m-1">Matches</a>
-  <a href="../main/waiting.php" class="btn btn-secondary m-1">Waiting For You</a>
+  <div class="tooltip-wrapper" title='Upgrade to premium in your profile page for access' data-toggle='tooltip' style="display:inline-block;">
+    <a href="../main/waiting.php" class="btn btn-secondary m-1 <?php echo ($accessLevel == "regular") ? "disabled" : "" ?>" id="waitingForYou">Waiting For You</a>
+  </div>
   <div class="wrapper">
     <h2>Matches</h2>
     <div>
@@ -39,3 +42,12 @@ mysqli_close($link);
   </div>
 </div>
 <?php include("../templates/bottom.html");?>
+
+<script type="text/javascript">
+// Show tooltip if Waiting For You section is disabled
+$(document).ready(function(){
+  if(document.getElementById("waitingForYou").classList.contains('disabled')) {
+    $('[data-toggle="tooltip"]').tooltip();   
+  }
+});
+</script>

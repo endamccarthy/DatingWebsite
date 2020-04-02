@@ -253,9 +253,11 @@ else {
 }
 
 // Check if the 'Back To Search Results' button should be displayed
-if ((strpos($currentPage, '/profile.php') === false) || (endsWith($currentPage, '/profile.php'))) {
-  if(isset($_SESSION["searchApplied"])) {
-    unset($_SESSION["searchApplied"]);
+if(isset($_SESSION["search"])) {
+  if((strpos($currentPage, '/profile.php') === false) || (endsWith($currentPage, '/profile.php'))) {
+    if(strpos($currentPage, 'action.php') === false) {
+      unset($_SESSION["search"]);
+    }
   }
 }
 
