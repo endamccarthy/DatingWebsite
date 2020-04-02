@@ -11,6 +11,16 @@ require_once "../../utilities/config.php";
 $matches = "";
 $userID = $_SESSION["userID"];
 $accessLevel = getEntryNameGivenID($link, 'user', 'accessLevel', 'userID', $userID);
+$notifications = getEntryNameGivenID($link, 'user', 'notifications', 'userID', $userID);
+
+// Reset notifications
+$sql = "UPDATE user SET notifications = 0 WHERE userID = $userID;";
+if($stmt = mysqli_prepare($link, $sql)) {
+  if(!mysqli_stmt_execute($stmt)) {
+    echo "Something went wrong. Please try again later.";
+  }
+  mysqli_stmt_close($stmt);
+}
 
 // Prepare a select statement
 $sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
@@ -30,7 +40,7 @@ mysqli_close($link);
 <?php $title = 'Matches'; include("../templates/top.html"); ?>
 <div class="mt-3" style="text-align: center">
   <a href="../main/suggestions.php" class="btn btn-secondary m-1">Suggestions</a>
-  <a href="../main/matches.php" class="btn btn-secondary m-1">Matches</a>
+  <a href="../main/matches.php" class="btn btn-secondary m-1">Matches<?php echo ($notifications > 0) ? '<span style="color: darkred;"> ('.$notifications.' new)</span>' : ''?></a>
   <div class="tooltip-wrapper" title='Upgrade to premium in your profile page for access' data-toggle='tooltip' style="display:inline-block;">
     <a href="../main/waiting.php" class="btn btn-secondary m-1 <?php echo ($accessLevel == "regular") ? "disabled" : "" ?>" id="waitingForYou">Waiting For You</a>
   </div>

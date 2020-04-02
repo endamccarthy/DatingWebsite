@@ -42,7 +42,9 @@ if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
       // If they have already liked you, add entry to matches and remove from pending
       if($relationshipStatus == "theyLikeYou") {
         $sql = "INSERT INTO matches (matchesUserOne, matchesUserTwo) VALUES ($userTwo, $userOne);
-        DELETE FROM pending WHERE pendingUserOne = $userTwo AND pendingUserTwo = $userOne;";
+        DELETE FROM pending WHERE pendingUserOne = $userTwo AND pendingUserTwo = $userOne;
+        UPDATE user SET notifications = notifications + 1 WHERE userID = $userOne;
+        UPDATE user SET notifications = notifications + 1 WHERE userID = $userTwo;";
         if(!mysqli_multi_query($link, $sql)) {
           echo "Something went wrong. Please try again later.";
         }

@@ -11,6 +11,7 @@ require_once "../../utilities/config.php";
 $pending = "";
 $userID = $_SESSION["userID"];
 $accessLevel = getEntryNameGivenID($link, 'user', 'accessLevel', 'userID', $userID);
+$notifications = getEntryNameGivenID($link, 'user', 'notifications', 'userID', $userID);
 
 // Only premium or admin allowed access to this page
 if($accessLevel == 'regular') {
@@ -34,7 +35,7 @@ mysqli_close($link);
 <?php $title = 'Waiting For You'; include("../templates/top.html"); ?>
 <div class="mt-3" style="text-align: center">
   <a href="../main/suggestions.php" class="btn btn-secondary m-1">Suggestions</a>
-  <a href="../main/matches.php" class="btn btn-secondary m-1">Matches</a>
+  <a href="../main/matches.php" class="btn btn-secondary m-1">Matches<?php echo ($notifications > 0) ? '<span style="color: darkred;"> ('.$notifications.' new)</span>' : ''?></a>
   <div class="tooltip-wrapper" title='Upgrade to premium in your profile page for access' data-toggle='tooltip' style="display:inline-block;">
     <a href="../main/waiting.php" class="btn btn-secondary m-1 <?php echo ($accessLevel == "regular") ? "disabled" : "" ?>" id="waitingForYou">Waiting For You</a>
   </div>

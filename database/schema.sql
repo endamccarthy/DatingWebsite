@@ -303,7 +303,8 @@ INSERT INTO user(firstName, lastName, email, password) VALUES
   ('Michael', 'Wade', '12345724@student.ul.ie', 'password58'),
   ('Finbarr', 'Hughes', '12345725@student.ul.ie', 'password59'),
   ('Darragh', 'Shannon', '12345726@student.ul.ie', 'password60'),
-  ('Richard', 'Young', '12345727@student.ul.ie', 'password61');
+  ('Richard', 'Young', '12345727@student.ul.ie', 'password61'),
+  ('test2', 'user', 'test2@email.com', '$2y$10$Pbnnd7yvpbt/FDWpLSirVuEW9rgq7VlpULrNCN44G/LsJWzkGdQr2');
 
 INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, smokes, height) VALUES
   (1, '', 'male', '1990-01-02', 2, 'images/photo1.jpg', 'non-smoker', 176),
@@ -365,7 +366,8 @@ INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, s
   (58, "Taking care of others, helping people, and making people smile. Yes, I know that sounds cheesy but I try really hard to brighten the day of everyone I meet, even if it's just by asking a cashier how they are or holding the door open for someone. I try to always think about that quote by the Dalai Lama: 'Be kind whenever possible. It is always possible.", 'male', '1968-09-06', 21, 'images/photo58.jpg', 'smoker', 167),
   (59, "The aforementioned haircut. Hairstylist of said haircut. Shampoo. Conditioner. Hat (we all have off days).", 'male', '1976-12-01', 4, 'images/photo59.jpg', 'smoker', 191),
   (60, "Wait, I feel like we've covered this one already. Other than my lustrous mane, I'm most passionate about fish and chip night at my local, ruining'Frozen'for my niece, and my workout playlist.", 'male', '1971-11-29', 6, 'images/photo60.jpg', 'smoker', 205),
-  (61, "When I'm not rescuing kittens from trees and singing show tunes to old ladies (I'm a selfless guy), I'm catching up with friends, listening to symphonies (yes, I promise), and pretending to be Jamie Oliver.", 'male', '1944-01-01', 17, 'images/photo61.jpg', 'smoker', 172);
+  (61, "When I'm not rescuing kittens from trees and singing show tunes to old ladies (I'm a selfless guy), I'm catching up with friends, listening to symphonies (yes, I promise), and pretending to be Jamie Oliver.", 'male', '1944-01-01', 17, 'images/photo61.jpg', 'smoker', 172),
+  (62, '', 'female', '1990-01-02', 2, 'images/photo62.jpg', 'non-smoker', 176);
 
 INSERT INTO preferences(userID, prefGender) VALUES
   (1, 'female'),
@@ -428,7 +430,8 @@ INSERT INTO preferences(userID, prefGender) VALUES
   (58, 'female'),
   (59, 'female'),
   (60, 'female'),
-  (61, 'female');
+  (61, 'female'),
+  (62, 'male');
 
 INSERT INTO interests(userID, interestID) VALUES
   (1, 1),
@@ -559,7 +562,8 @@ INSERT INTO pending(pendingUserOne, pendingUserTwo) VALUES
   (2, 3),
   (3, 6),
   (11, 1),
-  (7, 1);
+  (7, 1),
+  (62, 1);
 
 INSERT INTO matches(matchesUserOne, matchesUserTwo) VALUES
   (4, 5),
