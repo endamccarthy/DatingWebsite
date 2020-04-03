@@ -116,7 +116,8 @@ mysqli_close($link);
 
 
 <?php $title = 'Edit Preferences'; include("../templates/top.html"); ?>
-  <div class="wrapper">
+<div class="container">
+  <div class="container-item">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
       <h2>Edit Preferences</h2>
 
@@ -241,4 +242,5 @@ mysqli_close($link);
 
     </form>
   </div>
+</div>
 <?php include("../templates/bottom.html");?>

@@ -113,151 +113,25 @@ mysqli_close($link);
       }
     ?>
     <div class="mt-1 mb-2 border-bottom"> 
-      <h2><?php echo $firstName.' '.$lastName ?></h2>
-      <?php
-        if($myProfile) {
-          if ($accessLevel == 'admin') {
-            echo '<p><b><i>Administrator</i></b></p>';
-          }
-          else if($accessLevel == 'premium') {
-            echo '<p><b><i>Premium Member</i></b></p>';
-          }
-        }
-      ?>
+      <h2><?php echo ($myProfile) ? 'My Profile' : $firstName.' '.$lastName ?></h2>
     </div>
     <div class="pb-2 mt-2 mb-4 border-bottom">
       <img src="<?php echo $photoAddress ?>" alt="Avatar"> 
     </div>
-    <div>
+    <div class="pb-2 m-3 mb-4 border-bottom">
       <div>
-        <?php
-          if (!empty($description)) {
-            echo '<h6>Description: '.$description.'</h6>';
-          }
-        ?>
+        <h6>Gender: <?php echo $gender ?></h6>
       </div>
     </div>
-    <?php
-      if(!$myProfile && $relationshipStatus == 'match') {
-        echo '<div class="pb-2 m-3 mb-4 border-bottom">';
-        echo '<h6>Contact '.$firstName.': </h6>';
-        echo '<a href="mailto:'.$email.'?Subject=Hello%20Foxy!" target="_top">'.$email.'</a>';
-        echo '</div>';
-      }
-    ?>
-    <?php
-      if(!$myProfile) {
-        echo '<div class="m-3">';
-        if($relationshipStatus == "none" || $relationshipStatus == "theyLikeYou") {
-          echo '<a href="../../utilities/action.php?action=like&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Like</a>';
-          echo '<a href="../../utilities/action.php?action=reject&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Reject</a>';
-          echo '<a href="../../utilities/action.php?action=report&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
-        }
-        else if($relationshipStatus == "youLikeThem") {
-          echo '<a href="../../utilities/undo-action.php?action=unlike&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Like</a>';
-        }
-        else if($relationshipStatus == "youRejectThem") {
-          echo '<a href="../../utilities/undo-action.php?action=unreject&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Reject</a>';
-          echo '<a href="../../utilities/action.php?action=report&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
-        }
-        else if($relationshipStatus == "theyRejectYou") {
-          header("location: javascript:history.back()");
-        }
-        else if($relationshipStatus == "match") {
-          echo '<a href="../../utilities/undo-action.php?action=unmatch&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Match</a>';
-        }
-        echo '</div>';
-      }
-    ?>
   </div>
-  <div class="container-item container-item-stack"">
-
+  <div class="container-item container-item-stack">
     <div class="container-item container-item-inside-stack">
-      <div class="pb-2 mt-4 mb-4 border-bottom">  
-        <h2><?php echo ($myProfile) ? 'My Details' : $firstName."'s Details";?></h2>
-      </div>
-      <div class="pb-2 m-3 mb-4 border-bottom">
-        <div>
-          <h6>Gender: <?php echo $gender ?></h6>
-        </div>
-        <div>
-          <h6> Age: 
-          <?php
-            $dateOfBirth = explode("-", $dateOfBirth);
-            $age = (date("md", date("U", mktime(0, 0, 0, $dateOfBirth[2], $dateOfBirth[1], $dateOfBirth[0]))) > date("md")
-              ? ((date("Y") - $dateOfBirth[0]) - 1)
-              : (date("Y") - $dateOfBirth[0]));
-            echo $age.' years old';
-          ?>
-          </h6>
-        </div>
-        <div>
-          <h6>County: <?php echo $countyName ?></h6>
-        </div>
-        <div>
-          <?php
-            if (isset($interests)) {
-              echo '<h6>Interests: ';
-              $str = "";
-              foreach ($interests as $interestName) {
-                $str .= $interestName.', ';
-              }
-              $str = rtrim($str, ', ');
-              echo $str;
-              echo '</h6>';
-            }
-          ?>
-        </div>
-        <div>
-          <h6>Height: <?php echo $height.'cm' ?></h6>
-        </div>
-        <div>
-          <h6>Smokes? <?php echo $smokes ?></h6>
-        </div>
-      </div>
-      <?php
-        if($myProfile) {
-          echo '<div class="m-3">';
-          echo '<a href="edit-profile.php" class="btn btn-secondary btn-sm m-1">Edit</a>';
-          echo '</div>';
-        }
-      ?>
-    </div>
-
-    <div class="container-item container-item-inside-stack">
-      <div class="pb-2 mt-4 mb-4 border-bottom">  
+      <div class="mt-1 mb-2 border-bottom">  
         <h2><?php echo ($myProfile) ? 'My Preferences' : $firstName."'s Preferences";?></h2>
       </div>
       <div class="pb-2 m-3 mb-4 border-bottom">
         <div>
           <h6>Preferred Gender: <?php echo $prefGender ?></h6>
-        </div>
-        <div>
-          <h6>Preferred Age: <?php echo $prefAgeMin.' - '.$prefAgeMax.' year olds' ?></h6>
-        </div>
-        <div>
-          <?php
-            if (!empty($prefCountyName)) {
-              echo '<h6>Preferred County: '.$prefCountyName.'</h6>';
-            }
-          ?>
-        </div>
-        <div>
-          <?php
-            if (!empty($prefInterestName)) {
-              echo '<h6>Preferred Interest: '.$prefInterestName.'</h6>';
-            }
-          ?>
-        </div>
-        <div>
-          <?php
-            if (!empty($prefSmokes)) {
-              echo '<h6>Preferred Smokes? '.$prefSmokes.'</h6>';
-            }
-          ?>
-        </div>
-        <div>
-          <h6>Preferred Height: <?php echo $prefHeightMin.' - '.$prefHeightMax.'cm' ?></h6>
         </div>
       </div>
       <?php
@@ -268,9 +142,24 @@ mysqli_close($link);
         }
       ?>
     </div>
-
+    <div class="container-item container-item-inside-stack">
+      <div class="mt-1 mb-2 border-bottom">  
+        <h2><?php echo ($myProfile) ? 'My Preferences' : $firstName."'s Preferences";?></h2>
+      </div>
+      <div class="pb-2 m-3 mb-4 border-bottom">
+        <div>
+          <h6>Preferred Gender: <?php echo $prefGender ?></h6>
+        </div>
+      </div>
+      <?php
+        if($myProfile) {
+          echo '<div class="m-3">';
+          echo '<p><a href="edit-preferences.php" class="btn btn-secondary btn-sm">Edit</a></p>';
+          echo '</div>';
+        }
+      ?>
+    </div>
   </div>
-  
 </div>
 
 <!-- Upgrade to Premium Modal -->

@@ -44,9 +44,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       $paramPassword = password_hash($newPassword, PASSWORD_DEFAULT);
       $paramUserID = $_SESSION["userID"];
       if(mysqli_stmt_execute($stmt)) {
-        // Password updated successfully. Destroy the session, and redirect to login page
-        session_destroy();
-        header("location: landing-page.php");
+        // Password updated successfully.
+        header("location: ../main/suggestions.php");
         exit();
       } 
       else {
@@ -62,26 +61,27 @@ mysqli_close($link);
 ?>
  
 <?php $title = 'Reset Password'; include("../templates/top.html"); ?>
-  <div class="wrapper">
-    <h2>Reset Password</h2>
-    <p>Please fill out this form to reset your password.</p>
+  <div class="container">
+    <div class="container-item">
+      <h2>Reset Password</h2>
+      <p>Please fill out this form to reset your password.</p>
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
-      <div class="form-group">
-        <label>New Password</label>
-        <input type="password" name="newPassword" class="form-control <?php echo (!empty($newPasswordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $newPassword; ?>">
-        <span class="invalid-feedback"><?php echo $newPasswordErr; ?></span>
-      </div>
-      <div class="form-group">
-        <label>Confirm Password</label>
-        <input type="password" name="confirmPassword" class="form-control <?php echo (!empty($confirmPasswordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirmPassword; ?>">
-        <span class="invalid-feedback"><?php echo $confirmPasswordErr; ?></span>
-      </div>
-      <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Submit">
-        <a href="javascript:history.back()" class="btn btn-default">Cancel</a>
-      </div>
-    </form>
-
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" name="newPassword" class="form-control <?php echo (!empty($newPasswordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $newPassword; ?>">
+          <span class="invalid-feedback"><?php echo $newPasswordErr; ?></span>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" name="confirmPassword" class="form-control <?php echo (!empty($confirmPasswordErr)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirmPassword; ?>">
+          <span class="invalid-feedback"><?php echo $confirmPasswordErr; ?></span>
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btn btn-primary" value="Submit">
+          <a href="javascript:history.back()" class="btn btn-default">Cancel</a>
+        </div>
+      </form>
+    </div>
   </div>    
 <?php include("../templates/bottom.html");?>

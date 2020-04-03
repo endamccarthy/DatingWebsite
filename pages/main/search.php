@@ -70,53 +70,57 @@ mysqli_close($link);
 ?>
 
 <?php $title = 'Search'; include("../templates/top.html"); ?>
-<div class="wrapper">
-  <h3 class="pb-2 mt-4 mb-4 border-bottom">Search All Available Profiles</h3>
-  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get" class="pb-2 mt-4 mb-4 border-bottom">
+<div class="container">
+  <div class="container-item">
+    <h3 class="pb-2 mt-4 mb-4 border-bottom">Search All Available Profiles</h3>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
 
-    <div class="form-group">
-      <input type="text" name="searchText" class="form-control" placeholder="Filter by name..." value="<?php echo $searchText; ?>">
-    </div> 
+      <div class="form-group">
+        <input type="text" name="searchText" class="form-control" placeholder="Filter by name..." value="<?php echo $searchText; ?>">
+      </div> 
 
-    <div class="form-group">
-      <select name="countyFilters[]" class="form-control" id="countyFilters" multiple>
-        <?php 
-          if(isset($counties)) {
-            $tempCounties = explode("'", $countyFilters);
-            foreach($counties as $id => $name){
-              echo (in_array($id, $tempCounties)) ? '<option selected' : '<option';
-              echo ' value='.$id.'>'.$name.'</option>';
+      <div class="form-group">
+        <select name="countyFilters[]" class="form-control" id="countyFilters" multiple>
+          <?php 
+            if(isset($counties)) {
+              $tempCounties = explode("'", $countyFilters);
+              foreach($counties as $id => $name){
+                echo (in_array($id, $tempCounties)) ? '<option selected' : '<option';
+                echo ' value='.$id.'>'.$name.'</option>';
+              }
             }
-          }
-        ?>
-      </select>
-    </div>
+          ?>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <select name="interestFilters[]" class="form-control" id="interestFilters" multiple>
-        <?php 
-          if(isset($interests)) {
-            $tempInterests = explode("'", $interestFilters);
-            foreach($interests as $id => $name){
-              echo (in_array($id, $tempInterests)) ? '<option selected' : '<option';
-              echo ' value='.$id.'>'.$name.'</option>';
+      <div class="form-group">
+        <select name="interestFilters[]" class="form-control" id="interestFilters" multiple>
+          <?php 
+            if(isset($interests)) {
+              $tempInterests = explode("'", $interestFilters);
+              foreach($interests as $id => $name){
+                echo (in_array($id, $tempInterests)) ? '<option selected' : '<option';
+                echo ' value='.$id.'>'.$name.'</option>';
+              }
             }
-          }
-        ?>
-      </select>
-    </div>
+          ?>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <input name="search" type="submit" class="btn btn-secondary" value="Search">
-      <input name="clearFilters" type="submit" class="btn btn-default" value="Clear Filters">
-    </div>
+      <div class="form-group">
+        <input name="search" type="submit" class="btn btn-secondary" value="Search">
+        <input name="clearFilters" type="submit" class="btn btn-default" value="Clear Filters">
+      </div>
 
-  </form>
-  <h3 class="pb-2 mt-4 mb-4">
-    <?php echo ($searchText == "" && $countyFilters == "''" && $interestFilters == "''") ? 'Showing All Profiles' : 'Showing Filtered Results' ?>
-  </h3>
-  <div>
-    <?php echo $searchResults; ?>
+    </form>
+  </div>
+  <div class="container-item">
+    <h3 class="pb-2 mt-4 mb-4">
+      <?php echo ($searchText == "" && $countyFilters == "''" && $interestFilters == "''") ? 'Showing All Profiles' : 'Showing Filtered Results' ?>
+    </h3>
+    <div>
+      <?php echo $searchResults; ?>
+    </div>
   </div>
 </div>
 <?php include("../templates/bottom.html");?>

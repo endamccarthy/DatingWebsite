@@ -23,6 +23,15 @@ body {
   font-size: 17px;
 }
 
+img {
+  border-radius: 1%;
+  width: 350px;
+  height: 350px;
+  display: block;
+  margin: 0 auto;
+  object-fit: cover;
+}
+
 .wrapper { 
   width: 30%; 
   padding: 1%; 
@@ -34,16 +43,42 @@ body {
   width: 55%;
 }
 
-.site-motto {
-  text-align: center;
-  margin-bottom: 0%;
-}
-
 /* ********************** */
 /* FORM REQUIREMENTS */
 .form-group.required .control-label:after, .form-row.required .control-label:after { 
   content:"*";
   color:red;
+}
+/* ********************** */
+
+
+/* ********************** */
+/* CONTAINERS / FLEXBOX */
+@media(min-width:900px) {
+  .container {
+    display: flex;  
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: space-around
+  }
+}
+.container-item {
+  flex-basis: 40%;
+  padding: 10px; 
+  margin: 15px auto;
+  background-color: rgb(252, 191, 134);
+  border-radius: 12px;
+}
+.container-item-stack {
+  padding: 0px; 
+  background-color: rgba(255, 255, 255, 0);
+}
+.container-item-inside-stack {
+  margin: 0px auto 15px;
+}
+.container-item-center-text {
+  flex-basis: 45%;
+  text-align: center;
 }
 /* ********************** */
 

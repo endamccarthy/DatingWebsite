@@ -37,15 +37,10 @@ $matches = getProfileResultsString($link, $sql);
 mysqli_close($link);
 ?>
  
-<?php $title = 'Matches'; include("../templates/top.html"); ?>
-<div class="mt-3" style="text-align: center">
-  <a href="../main/suggestions.php" class="btn btn-secondary m-1">Suggestions</a>
-  <a href="../main/matches.php" class="btn btn-secondary m-1">Matches<?php echo ($notifications > 0) ? '<span style="color: darkred;"> ('.$notifications.' new)</span>' : ''?></a>
-  <div class="tooltip-wrapper" title='Upgrade to premium in your profile page for access' data-toggle='tooltip' style="display:inline-block;">
-    <a href="../main/waiting.php" class="btn btn-secondary m-1 <?php echo ($accessLevel == "regular") ? "disabled" : "" ?>" id="waitingForYou">Waiting For You</a>
-  </div>
-  <div class="wrapper">
-    <h2>Matches</h2>
+<?php $title = 'Matches'; include("../templates/top.html"); include("../templates/sub-navbar.html");?>
+<div class="container">
+  <div class="container-item container-item-center-text">
+    <h2 class="pb-2 mt-2 mb-4 border-bottom">Matches</h2>
     <div>
       <?php echo $matches; ?>
     </div>

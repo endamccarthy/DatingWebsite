@@ -9,11 +9,12 @@ require_once "../../utilities/utility.php";
 require_once "../../utilities/config.php";
 
 // Define variables
-$gender = $prefGender = $dateOfBirth = $smokes = $description = $dateOfBirthErr ="";
+$gender = $prefGender = $dateOfBirth = $smokes = $description = $dateOfBirthErr = $photoErr = "";
 $height = $countyID = $interestID = 0;
-$interestIDs;
+$interestIDs = array();
 $userID = $_SESSION["userID"];
 $profileComplete = $_SESSION["profileComplete"];
+$photoAddress = '../../images/profile-photos/'.'user'.$userID.'-photo.jpg';
 // YYYY-MM-DD
 $pattern = "/^((((19|[2-9]\d)\d{2})\-(0[13578]|1[02])\-(0[1-9]|[12]\d|3[01]))|".
 "(((19|[2-9]\d)\d{2})\-(0[13456789]|1[012])\-(0[1-9]|[12]\d|30))|(((19|[2-9]\d)".
@@ -68,10 +69,27 @@ if($profileComplete) {
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
+  
+  // If a photo is posted check if it's valid
+  if(isset($_FILES['image']) && isset($_POST['image'])) {
+    $file_size = $_FILES['image']['size'];
+    $exploded = explode('.',$_FILES['image']['name']);
+    $file_ext = strtolower(end($exploded));
+    $extensions = array("jpeg","jpg","png");
+    if(in_array($file_ext, $extensions) === false) {
+      $photoErr .= "Extension not allowed, please choose a JPEG or PNG file.";
+    }
+    if($file_size > 2097152) {
+      $photoErr .= "File size must be less than 2 MB";
+    }
+  }
+
+  // If date of birth is invalid...
   if((!preg_match($pattern, $_POST["dateOfBirth"]))) {
     $dateOfBirthErr = "Incorrect Date of Birth Format";
   }
-  else {
+  // Else if photo is valid...
+  else if($photoErr == "") {
     // If profile is being created...
     if(!$profileComplete) {
       // Save values passed from form to local variables 
@@ -87,13 +105,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       if(isset($_POST["interestIDs"])) {
         $interestIDs = $_POST["interestIDs"];
       }
-
+  
       // Add new entry into profile table
       $sql = "INSERT INTO profile (userID, description, gender, dateOfBirth, countyID, photo, smokes, height) 
-      VALUES ($userID, '$description', '$gender', '$dateOfBirth', $countyID, 'photoXX.jpg', '$smokes', $height);";
+      VALUES ($userID, '$description', '$gender', '$dateOfBirth', $countyID, '$photoAddress', '$smokes', $height);";
       if($stmt = mysqli_prepare($link, $sql)) {
         if(!mysqli_stmt_execute($stmt)) {
-          echo "Something went wrong. Please try again later.";
+          echo "Something went wrong. Please try again later.1";
         }
         mysqli_stmt_close($stmt);
       }
@@ -102,7 +120,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       $sql = "INSERT INTO preferences (userID, prefGender) VALUES ($userID, '$prefGender');";
       if($stmt = mysqli_prepare($link, $sql)) {
         if(!mysqli_stmt_execute($stmt)) {
-          echo "Something went wrong. Please try again later.";
+          echo "Something went wrong. Please try again later.2";
         }
         mysqli_stmt_close($stmt);
       }
@@ -112,12 +130,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       foreach ($interestIDs as $key => $value) {
         $sql .= "INSERT INTO interests (userID, interestID) VALUES ($userID, $value);";
       }
-      if(!mysqli_multi_query($link, $sql)) {
-        echo "Something went wrong. Please try again later.";
+      if($sql != "") {
+        if(!mysqli_multi_query($link, $sql)) {
+          echo "Something went wrong. Please try again later3";
+        }
+      }
+
+      // If photo is posted, save it to images folder
+      if(isset($_FILES['image']) && isset($_POST['image'])) {
+        move_uploaded_file($_FILES['image']['tmp_name'], $photoAddress);
+      }
+      // Else assign the user the default photo
+      else {
+        if($gender == 'male') {
+          copy("../../images/profile-photos/00default-male.jpg", $photoAddress);
+        }
+        else if ($gender == 'female') {
+          copy("../../images/profile-photos/00default-female.jpg", $photoAddress);
+        }
       }
 
       $_SESSION["profileComplete"] = true;
       header("location: ../main/suggestions.php");
+
     }
     // Else, if profile is being edited...
     else {
@@ -153,7 +188,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql .= "UPDATE profile SET height = $height WHERE userID = $userID;";
       }
       // Check if interests were changed
-      if($_POST["interestIDs"] != $interestIDs) {
+      if((isset($_POST["interestIDs"])) && ($_POST["interestIDs"] != $interestIDs)) {
         $interestIDs = $_POST["interestIDs"];
         $sql .= "DELETE FROM interests WHERE userID = $userID;";
         foreach ($interestIDs as $row) {
@@ -161,9 +196,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         }
       }
       // Execute multi query sql statement
-      if(!mysqli_multi_query($link, $sql)) {
+      if(!mysqli_multi_query($link, $sql) && $sql != "") {
         echo "Something went wrong. Please try again later.";
       }
+
+      // If photo is uploaded then overwrite existing one in images folder
+      if(isset($_FILES['image'])) {
+        move_uploaded_file($_FILES['image']['tmp_name'], $photoAddress);
+      }
+
       header("location: ../main/profile.php");
     }
   }
@@ -174,8 +215,9 @@ mysqli_close($link);
 
 
 <?php $title = ($profileComplete) ? 'Edit Profile' : 'Create Profile'; include("../templates/top.html"); ?>
-  <div class="wrapper">
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+<div class="container">
+  <div class="container-item">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
       <h2><?php echo ($profileComplete) ? 'Edit Profile' : 'Create Profile'; ?></h2>
 
       <div class="mb-4 form-row required">
@@ -283,6 +325,12 @@ mysqli_close($link);
       </div>
 
       <div class="mb-4 form-group">
+        <label class="control-label">Upload Photo:</label><br>
+        <input type="file" name="image" class="<?php echo (!empty($photoErr)) ? 'is-invalid' : ''; ?>">
+        <span class="invalid-feedback"><?php echo $photoErr; ?></span>
+      </div>
+      
+      <div class="mb-4 form-group">
         <input type="submit" class="btn btn-primary" value="Save">
         <?php 
           if($profileComplete) { 
@@ -295,7 +343,8 @@ mysqli_close($link);
       </div>
 
     </form>
-  </div>    
+  </div>   
+</div> 
 <?php include("../templates/bottom.html");?>
 
 
