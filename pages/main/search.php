@@ -115,7 +115,7 @@ mysqli_close($link);
     </form>
   </div>
   <div class="container-item">
-    <h3 class="pb-2 mt-4 mb-4">
+    <h3 class="pb-2 mt-4 mb-4 border-bottom">
       <?php echo ($searchText == "" && $countyFilters == "''" && $interestFilters == "''") ? 'Showing All Profiles' : 'Showing Filtered Results' ?>
     </h3>
     <div>

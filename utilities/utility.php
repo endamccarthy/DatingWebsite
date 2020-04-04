@@ -123,9 +123,17 @@ function getProfileResultsString($link, $sql) {
       mysqli_stmt_store_result($stmt);
       if(mysqli_stmt_num_rows($stmt) >= 1) {
         $resultsString = "";
-        mysqli_stmt_bind_result($stmt, $userIDTemp, $firstNameTemp, $lastNameTemp, $countyNameTemp);
+        mysqli_stmt_bind_result($stmt, $userIDTemp, $firstNameTemp, $lastNameTemp, $dateOfBirthTemp, $photoTemp, $countyNameTemp);
         while (mysqli_stmt_fetch($stmt)) {
-          $resultsString .= '<p><a href="profile.php?userID='.$userIDTemp.'">'.$firstNameTemp.' '.$lastNameTemp.'</a><br>'.$countyNameTemp.'</p>';
+
+          $dateOfBirthTemp = explode("-", $dateOfBirthTemp);
+          $age = (date("md", date("U", mktime(0, 0, 0, $dateOfBirthTemp[2], $dateOfBirthTemp[1], $dateOfBirthTemp[0]))) > date("md")
+            ? ((date("Y") - $dateOfBirthTemp[0]) - 1)
+            : (date("Y") - $dateOfBirthTemp[0]));
+
+          // $resultsString .= '<p><a href="profile.php?userID='.$userIDTemp.'">'.$firstNameTemp.' '.$lastNameTemp.'</a><br>'.$countyNameTemp.'</p>';
+          $resultsString .= '<div class="profile-card"><a href="profile.php?userID='.$userIDTemp.'"><img class="profile-card-img" src="'.$photoTemp.'" alt="Profile Photo"></a>';
+          $resultsString .= '<div class="profile-card-text"><h6>'.$firstNameTemp.' '.$lastNameTemp.'<br>'.$countyNameTemp.'<br>'.$age.'</h6></div></div>';
         } 
       }
       else {
@@ -143,7 +151,7 @@ function getProfileResultsString($link, $sql) {
 // Function to get results from search
 function getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters) {
   $prefGender = getEntryNameGivenID($link, 'preferences', 'prefGender', 'userID', $userID);
-  $sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
+  $sql = "SELECT DISTINCT user.userID, firstName, lastName, dateOfBirth, photo, countyName FROM user JOIN profile JOIN countyList ON 
   user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
     SELECT userID FROM profile WHERE userID != $userID
     AND
@@ -247,7 +255,7 @@ else {
   // And they are already logged in...
   if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] === true) {
     // Redirect to home page
-    header("location: ../main/welcome.php");
+    header("location: ../main/suggestions.php");
     exit;
   }
 }

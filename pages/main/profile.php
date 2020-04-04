@@ -126,7 +126,7 @@ mysqli_close($link);
       ?>
     </div>
     <div class="pb-2 mt-2 mb-4 border-bottom">
-      <img src="<?php echo $photoAddress ?>" alt="Avatar"> 
+      <img src="<?php echo $photoAddress ?>" alt="Profile Photo"> 
     </div>
     <div>
       <div>

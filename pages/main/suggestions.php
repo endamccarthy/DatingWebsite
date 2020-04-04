@@ -16,7 +16,7 @@ $accessLevel = getEntryNameGivenID($link, 'user', 'accessLevel', 'userID', $user
 $notifications = getEntryNameGivenID($link, 'user', 'notifications', 'userID', $userID);
 
 // Prepare a select statement
-$sql = "SELECT DISTINCT user.userID, firstName, lastName, countyName FROM user JOIN profile JOIN countyList ON 
+$sql = "SELECT DISTINCT user.userID, firstName, lastName, dateOfBirth, photo, countyName FROM user JOIN profile JOIN countyList ON 
 user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
   SELECT userID FROM profile WHERE userID != $userID
   AND

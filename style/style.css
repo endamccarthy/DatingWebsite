@@ -10,28 +10,6 @@ body {
   font: 14px sans-serif;
 }
 
-.navbar {
-  background-color: hsl(130, 29%, 41%);
-}
-
-.navbar .navbar-brand {
-  color: rgb(252, 191, 134);
-  font-size: 23px;
-}
-
-.navbar .nav-item {
-  font-size: 17px;
-}
-
-img {
-  border-radius: 1%;
-  width: 350px;
-  height: 350px;
-  display: block;
-  margin: 0 auto;
-  object-fit: cover;
-}
-
 .wrapper { 
   width: 30%; 
   padding: 1%; 
@@ -42,6 +20,50 @@ img {
 .wrapper-wide { 
   width: 55%;
 }
+
+/* ********************** */
+/* NAVBAR */
+.navbar {
+  background-color: hsl(130, 29%, 41%);
+}
+.navbar .navbar-brand {
+  color: rgb(252, 191, 134);
+  font-size: 23px;
+}
+.navbar .nav-item {
+  font-size: 17px;
+}
+/* ********************** */
+
+
+/* ********************** */
+/* PROFILE PHOTOS */
+img {
+  border-radius: 1%;
+  width: 350px;
+  height: 350px;
+  display: block;
+  margin: 0 auto;
+  object-fit: cover;
+}
+.profile-card {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.profile-card-img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  float: left;
+  margin: 5px 20px;
+}
+.profile-card-text {
+  min-height: 100%;
+  text-align: left;
+}
+/* ********************** */
+
 
 /* ********************** */
 /* FORM REQUIREMENTS */

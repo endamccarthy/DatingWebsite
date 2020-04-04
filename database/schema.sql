@@ -309,7 +309,7 @@ INSERT INTO user(firstName, lastName, email, password) VALUES
 INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, smokes, height) VALUES
   (1, '', 'male', '1990-01-02', 2, '../../images/profile-photos/user1-photo.jpg', 'non-smoker', 176),
   (2, '', 'male', '1990-04-12', 6, '../../images/profile-photos/user2-photo.jpg', 'non-smoker', 176),
-  (3, "My name is Una and I'm from Armagh!", 'female', '1980-06-20', 2, '../../images/profile-photos/user3photo.jpg', 'non-smoker', 160),
+  (3, "My name is Una and I'm from Armagh!", 'female', '1980-06-20', 2, '../../images/profile-photos/user3-photo.jpg', 'non-smoker', 160),
   (4, '', 'male', '1994-04-15', 14, '../../images/profile-photos/user4-photo.jpg', 'smoker', 169),
   (5, '', 'female', '1994-11-07', 12, '../../images/profile-photos/user5-photo.jpg', 'non-smoker', 167),
   (6, '', 'male', '1985-04-15', 14, '../../images/profile-photos/user6-photo.jpg', 'smoker', 184),

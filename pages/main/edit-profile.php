@@ -14,7 +14,7 @@ $height = $countyID = $interestID = 0;
 $interestIDs = array();
 $userID = $_SESSION["userID"];
 $profileComplete = $_SESSION["profileComplete"];
-$photoAddress = '../../images/profile-photos/'.'user'.$userID.'-photo.jpg';
+$photoAddress = '../../images/profile-photos/user'.$userID.'-photo.jpg';
 // YYYY-MM-DD
 $pattern = "/^((((19|[2-9]\d)\d{2})\-(0[13578]|1[02])\-(0[1-9]|[12]\d|3[01]))|".
 "(((19|[2-9]\d)\d{2})\-(0[13456789]|1[012])\-(0[1-9]|[12]\d|30))|(((19|[2-9]\d)".
@@ -71,7 +71,7 @@ if($profileComplete) {
 if($_SERVER["REQUEST_METHOD"] == "POST") {
   
   // If a photo is posted check if it's valid
-  if(isset($_FILES['image']) && isset($_POST['image'])) {
+  if(isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
     $file_size = $_FILES['image']['size'];
     $exploded = explode('.',$_FILES['image']['name']);
     $file_ext = strtolower(end($exploded));
@@ -137,7 +137,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       }
 
       // If photo is posted, save it to images folder
-      if(isset($_FILES['image']) && isset($_POST['image'])) {
+      if(isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
         move_uploaded_file($_FILES['image']['tmp_name'], $photoAddress);
       }
       // Else assign the user the default photo
@@ -201,7 +201,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       }
 
       // If photo is uploaded then overwrite existing one in images folder
-      if(isset($_FILES['image'])) {
+      if(isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
         move_uploaded_file($_FILES['image']['tmp_name'], $photoAddress);
       }
 
