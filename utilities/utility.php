@@ -123,7 +123,7 @@ function getProfileResultsString($link, $sql) {
       mysqli_stmt_store_result($stmt);
       if(mysqli_stmt_num_rows($stmt) >= 1) {
         $resultsString = "";
-        mysqli_stmt_bind_result($stmt, $userIDTemp, $firstNameTemp, $lastNameTemp, $dateOfBirthTemp, $photoTemp, $countyNameTemp);
+        mysqli_stmt_bind_result($stmt, $userIDTemp, $firstNameTemp, $lastNameTemp, $statusTemp, $dateOfBirthTemp, $photoTemp, $countyNameTemp);
         while (mysqli_stmt_fetch($stmt)) {
 
           $dateOfBirthTemp = explode("-", $dateOfBirthTemp);
@@ -151,7 +151,7 @@ function getProfileResultsString($link, $sql) {
 // Function to get results from search
 function getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters) {
   $prefGender = getEntryNameGivenID($link, 'preferences', 'prefGender', 'userID', $userID);
-  $sql = "SELECT DISTINCT user.userID, firstName, lastName, dateOfBirth, photo, countyName FROM user JOIN profile JOIN countyList ON 
+  $sql = "SELECT DISTINCT user.userID, firstName, lastName, status, dateOfBirth, photo, countyName FROM user JOIN profile JOIN countyList ON 
   user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
     SELECT userID FROM profile WHERE userID != $userID
     AND
@@ -166,6 +166,8 @@ function getSearchResultsString($link, $userID, $searchText, $countyFilters, $in
       UNION ALL
       SELECT rejectionsUserOne FROM rejections WHERE rejectionsUserTwo = $userID
     )
+    AND
+    status = 'active'
     AND
     gender = (
       SELECT prefGender FROM preferences WHERE userID = $userID

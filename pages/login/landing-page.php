@@ -38,24 +38,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       // Validate credentials
       if(empty($emailErrLogin) && empty($passwordErrLogin)) {
         // Prepare a select statement
-        $sql = "SELECT userID, email, password FROM user WHERE email = '$emailLogin';";
+        $sql = "SELECT userID, email, password, status FROM user WHERE email = '$emailLogin';";
         if($stmt = mysqli_prepare($link, $sql)) {
           if(mysqli_stmt_execute($stmt)) {
             mysqli_stmt_store_result($stmt);
             // Check if email exists, if yes then verify password
             if(mysqli_stmt_num_rows($stmt) == 1) {
-              mysqli_stmt_bind_result($stmt, $userIDTemp, $emailTemp, $hashedPasswordTemp);
+              mysqli_stmt_bind_result($stmt, $userIDTemp, $emailTemp, $hashedPasswordTemp, $statusTemp);
               if(mysqli_stmt_fetch($stmt)) {
-                if(password_verify($passwordLogin, $hashedPasswordTemp)) {
-                  // Password is correct, so start a new session
-                  session_start();
-                  // Store data in session variables
-                  $_SESSION["loggedIn"] = true;
-                  $_SESSION["userID"] = $userIDTemp;
-                  $_SESSION["email"] = $emailTemp;
-                } 
+                if($statusTemp == "suspended") {
+                  $passwordErrLogin = "Sorry this account is temporarily suspended.";
+                }
+                else if($statusTemp == "banned") {
+                  $passwordErrLogin = "This account has been banned.";
+                }
                 else {
-                  $passwordErrLogin = "The password you entered was not valid.";
+                  if(password_verify($passwordLogin, $hashedPasswordTemp)) {
+                    // Password is correct, so start a new session
+                    session_start();
+                    // Store data in session variables
+                    $_SESSION["loggedIn"] = true;
+                    $_SESSION["userID"] = $userIDTemp;
+                    $_SESSION["email"] = $emailTemp;
+                  } 
+                  else {
+                    $passwordErrLogin = "The password you entered was not valid.";
+                  }
                 }
               }
             } 
