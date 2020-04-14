@@ -130,8 +130,7 @@ function getProfileResultsString($link, $sql) {
           $age = (date("md", date("U", mktime(0, 0, 0, $dateOfBirthTemp[2], $dateOfBirthTemp[1], $dateOfBirthTemp[0]))) > date("md")
             ? ((date("Y") - $dateOfBirthTemp[0]) - 1)
             : (date("Y") - $dateOfBirthTemp[0]));
-
-          // $resultsString .= '<p><a href="profile.php?userID='.$userIDTemp.'">'.$firstNameTemp.' '.$lastNameTemp.'</a><br>'.$countyNameTemp.'</p>';
+            
           $resultsString .= '<div class="profile-card"><a href="profile.php?userID='.$userIDTemp.'"><img class="profile-card-img" src="'.$photoTemp.'" alt="Profile Photo"></a>';
           $resultsString .= '<div class="profile-card-text"><h6>'.$firstNameTemp.' '.$lastNameTemp.'<br>'.$countyNameTemp.'<br>'.$age.'</h6></div></div>';
         } 

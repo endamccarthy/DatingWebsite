@@ -10,69 +10,68 @@ require_once "../../utilities/config.php";
 // Define variables and initialize with empty values
 $interestName = "";
 $interestName_err = "";
-$interestID; 
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
+ 
+    // Check if countyName is empty
+    if((trim($_POST["interestName"]))) {
+         $interestName = "Please enter an interestName.";
+	}		
+		
+	// Check interestlist table for interestName
+	$sql = "SELECT interestName FROM interestlist WHERE interestName = '$interestName';";
+	
+	if($stmt = mysqli_prepare($link, $sql)) {
+		if(mysqli_stmt_execute($stmt)) {
+			mysqli_stmt_store_result($stmt);
+			if(mysqli_stmt_num_rows($stmt) == 1) {
+				$interestName_err = "This interestName already exists";
+				echo $interestName_err;
+			} 
+			else {
+				$interestName = trim($_POST["interestName"]);
+			}
+		} 
+		else {
+			echo "Oops! Something went wrong. Please try again later.";
+		}
+		// Close statement
+		mysqli_stmt_close($stmt);
+	}
+	
+	// Check input errors before inserting in database
 
-// Validate interestName name
-if(trim($_POST["interestName"])) {
-  $interestName = trim($_POST["interestName"]);
-}
-else {
-  // Check interestList table for interestList name
-  $sql = "SELECT interestID FROM interestList WHERE interestName = '$interestName';";
-  if($stmt = mysqli_prepare($link, $sql)) {
-    // Attempt to execute the prepared statement
-    if(mysqli_stmt_execute($stmt)) {
-      /* store result */
-      mysqli_stmt_store_result($stmt);
-      if(mysqli_stmt_num_rows($stmt) == 1) {
-        mysqli_stmt_bind_result($stmt, $interestID);
-        while (mysqli_stmt_fetch($stmt)) {
-          // Store data in session variables
-          $_SESSION["loggedIn"] = true;
-          $_SESSION["userID"] = $userID;
-          $_SESSION["interestID"] = $interestID;
-          header("location: ../admin/interestList-home.php");
-        }
-      }
-    } 
-    else {
-      echo "Oops! Something went wrong. Please try again later.";
+	if(empty($interestName_err)) {
+        $sql = "INSERT INTO interestlist (interestName) VALUES(?);";
+		
+		echo $sql;
+		
+        if($stmt = mysqli_prepare($link, $sql)) {
+			mysqli_stmt_bind_param($stmt, "s", $paramInterestName);
+			$paramInterestName = $interestName;
+			
+			// Attempt to execute the prepared statement
+			if(mysqli_stmt_execute($stmt)){
+				// Records created successfully. Redirect to landing page
+				header("location: interestList-home.php");
+				exit();
+			} else{
+			    // interestName already exists
+				// URL doesn't contain userID parameter. Redirect to error page
+				header("location: interest-error.php");
+				exit();
+				echo "Something went wrong. Please try again later.<br>";
+				echo "Possible Duplicate interestName: $interestName <br>";
+			}
+		}
+		// Close statement
+		//mysqli_stmt_close($stmt);
     }
-  }
-  // Close statement
-  mysqli_stmt_close($stmt);
+	// Close connection
+	mysqli_close($link);
 }
 
-// Check input errors before inserting in database
-if(empty($interestName_err) ) {
-  // Add entry to interestList table
-  $sql = "INSERT INTO interestList (interestName, ?);";
-  if($stmt = mysqli_prepare($link, $sql)) {
-    // Bind variables to the prepared statement as parameters
-    mysqli_stmt_bind_param($stmt, "s", $paramInterestName);
-    // Set parameters
-    $paramInterestName = $interestName;
-
-    // Attempt to execute the prepared statement
-    if(mysqli_stmt_execute($stmt)){
-            // Records created successfully. Redirect to landing page
-            header("location: interestList-home.php");
-            exit();
-        } else{
-            echo "Something went wrong. Please try again later.";
-        }
-    }
-      
-    // Close statement
-    mysqli_stmt_close($stmt);
-}
-
-// Close connection
-mysqli_close($link);
-}
 ?>
 
 <?php $title = 'Admin | interestList | Create'; include("../templates/top.html");?>
@@ -83,14 +82,14 @@ mysqli_close($link);
                     <div class="pb-2 mt-4 mb-4 border-bottom">  
                       <h2>Create Interest</h2>
                     </div>
-                    <p>Please fill this form and submit to add a User record to the database.</p>
+                    <p>Please enter a new Interest to the database.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 					
-					              <div class="form-group <?php echo (!empty($interestList_err)) ? 'has-error' : ''; ?>">
+					    <div class="form-group <?php echo (!empty($interestName_err)) ? 'has-error' : ''; ?>">
                             <label>Interest Name</label>
                             <input type="text" name="interestName" class="form-control" value="<?php echo $interestName; ?>" required>
                             <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="user-home.php" class="btn btn-default">Cancel</a>
+                        <a href="interestList-home.php" class="btn btn-default">Cancel</a>
                     </form>
                 </div>
             </div>        

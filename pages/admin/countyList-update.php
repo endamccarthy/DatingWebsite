@@ -10,14 +10,15 @@ require_once "../../utilities/config.php";
 // Define variables and initialize with empty values
 $countyName = "";
 $countyName_err = "";
-$countyID; 
+
  
 // Processing form data when form is submitted
 if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
     // Get hidden input value
     $countyID = $_POST["countyID"];
-    
-	// Validate interestName 
+    $countyName = $_POST["countyName"];
+	
+	// Validate countyName
 	if(trim($_POST["countyName"])) {
 		$countyName = trim($_POST["countyName"]);
 	}
@@ -51,8 +52,9 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
     
     // Close connection
     mysqli_close($link);
+	
 } else{
-    // Check existence of interestID parameter before processing further
+    // Check existence of countyID parameter before processing further
     if(isset($_GET["countyID"]) && !empty(trim($_GET["countyID"]))){
         // Get URL parameter
         $countyID =  trim($_GET["countyID"]);
@@ -100,7 +102,7 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
 }
 ?>
  
- <?php $title = 'Admin | Interest | Update'; include("../templates/top.html");?>
+ <?php $title = 'Admin | County | Update'; include("../templates/top.html");?>
     <div class="wrapper wrapper-admin-narrow">
         <div class="container-fluid">
             <div class="row">
@@ -115,9 +117,9 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
                             <input type="text" name="countyName" class="form-control" value="<?php echo $countyName; ?>" required>
                         </div>
                        
-						<input type="hidden" name="interestID" value="<?php echo $interestID; ?>"/>
+						<input type="hidden" name="countyID" value="<?php echo $countyID; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="interestList-home.php" class="btn btn-default">Cancel</a>
+                        <a href="countyList-home.php" class="btn btn-default">Cancel</a>
                     </form>
                 </div>
             </div>        

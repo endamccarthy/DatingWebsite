@@ -10,47 +10,42 @@ require_once "../../utilities/config.php";
 // Define variables and initialize with empty values
 $interestName = "";
 $interestName_err = "";
-$interestID; 
  
 // Processing form data when form is submitted
 if(isset($_POST["interestID"]) && !empty($_POST["interestID"])){
     // Get hidden input value
     $interestID = $_POST["interestID"];
+	$interestName = $_POST["interestName"];
     
 	// Validate interestName 
 	if(trim($_POST["interestName"])) {
 		$interestName = trim($_POST["interestName"]);
 	}
    
-    // Check input errors before updating database
-    if(empty($interestName_err)){
-        // Prepare an update statement
-        $sql = "UPDATE interestList SET interestName=? WHERE interestID=?";
-         
-        if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "si", $param_interestName, $param_interestID);
-
-            // Set parameters
-            $param_interestName = $interestName;
-            $param_interestID = $interestID;
-            
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                // Records updated successfully. Redirect to landing page
-                header("location: interestList-home.php");
-                exit();
-            } else{
-                echo "Something went wrong. Please try again later.";
-            }
-        }
-         
-        // Close statement
-        mysqli_stmt_close($stmt);
-    }
     
-    // Close connection
-    mysqli_close($link);
+	// Check input errors before inserting in database
+	if(empty($countyName_err)) {
+		$sql = "UPDATE interestlist SET interestName=? WHERE interestID=?";
+		
+        if($stmt = mysqli_prepare($link, $sql)) {
+			mysqli_stmt_bind_param($stmt, "si", $paramInterestName, $param_interestID);
+			$paramInterestName = $interestName;
+			$param_interestID = $interestID;
+			// Attempt to execute the prepared statement
+			if(mysqli_stmt_execute($stmt)){
+				// Records updated successfully. Redirect to landing page
+				header("location: interestList-home.php");
+				exit();
+				echo "Something went wrong. Please try again later.<br>";
+			}
+		}
+		// Close statement
+		//mysqli_stmt_close($stmt);
+    }
+	// Close connection
+	mysqli_close($link);
+	
+	
 } else{
     // Check existence of interestID parameter before processing further
     if(isset($_GET["interestID"]) && !empty(trim($_GET["interestID"]))){
@@ -98,6 +93,9 @@ if(isset($_POST["interestID"]) && !empty($_POST["interestID"])){
         exit();
     }
 }
+
+
+ 
 ?>
  
  <?php $title = 'Admin | Interest | Update'; include("../templates/top.html");?>
@@ -108,10 +106,10 @@ if(isset($_POST["interestID"]) && !empty($_POST["interestID"])){
                     <div class="pb-2 mt-4 mb-4 border-bottom">  
                         <h2>Update Interest</h2>
                     </div>
-                    <p>Please edit the input values and submit to update the record.</p>
+                    <p>Please edit the Interest and submit to update the record.</p>
                     <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
 						<div class="form-group <?php echo (!empty($interestName_err)) ? 'has-error' : ''; ?>">
-                            <label>Interest</label>
+                            <label><b>Interest Name</b></label>
                             <input type="text" name="interestName" class="form-control" value="<?php echo $interestName; ?>" required>
                         </div>
                        

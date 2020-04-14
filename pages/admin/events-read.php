@@ -86,7 +86,7 @@ if(isset($_GET["eventID"]) && !empty(trim($_GET["eventID"]))){
                         <p class="form-control-static"><?php echo '<b>' . $row["eventWebsite"] . '</b>' ; ?></p>
                     </div>
 
-                    <p><a href="countyList-home.php" class="btn btn-primary">Back</a></p>
+                    <p><a href="events-home.php" class="btn btn-primary">Back</a></p>
                 </div>
             </div>        
         </div>

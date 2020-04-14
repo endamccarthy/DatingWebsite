@@ -15,7 +15,7 @@ require_once "../../utilities/config.php";
                 <div class="col-md-12">
                     <div class="pb-2 mt-4 mb-4 border-bottom clearfix">  
                         <h2 class="float-left">User Details</h2>
-                        <a href="user-create.php" class="btn btn-success float-center">Add New User</a>
+                        <a href="user-create.php" class="btn btn-success float-right">Add New User</a>
                         <a href="admin-home.php" class="btn btn-warning float-right">Back</a>
                     </div>
                     <?php
@@ -35,7 +35,7 @@ require_once "../../utilities/config.php";
                                         echo "<th>dateJoined</th>";
                                         echo "<th>level</th>";
 										echo "<th>status</th>";
-                                        echo "<th>Notifications</th>";
+                                        echo "<th>Notif.</th>";
                                         echo "<th>Action</th>";
                                     echo "</tr>";
                                 echo "</thead>";
@@ -56,9 +56,6 @@ require_once "../../utilities/config.php";
                                             echo "<a href='../admin/user-read.php?userID=". $row['userID'] ."' title='View User' data-toggle='tooltip'><i class='fa fa-eye' aria-hidden='true'></i></a>";
                                             echo "<a href='../admin/user-update.php?userID=". $row['userID'] ."' title='Update User' data-toggle='tooltip'><i class='fa fa-pencil' aria-hidden='true'></i></a>";
                                             echo "<a href='../admin/user-delete.php?userID=". $row['userID'] ."' title='Delete User' data-toggle='tooltip'><i class='fa fa-trash-o' aria-hidden='true'></i></a>";
-                                            echo "<a href='../admin/user-read.php?userID=". $row['userID'] ."' title='Love User' data-toggle='tooltip'><i class='fa fa-heart' aria-hidden='true'></i></a>";
-                                            echo "<a href='../admin/user-read.php?userID=". $row['userID'] ."' title='Like User' data-toggle='tooltip'><i class='fa fa-thumbs-up' aria-hidden='true'></i></a>";
-                                            echo "<a href='../admin/user-read.php?userID=". $row['userID'] ."' title='Dislike User' data-toggle='tooltip'><i class='fa fa-thumbs-down' aria-hidden='true'></i></a>";
                                         echo "</td>";
                                     echo "</tr>";
                                 }

@@ -14,37 +14,62 @@ $countyName_err = "";
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST") {
  
-  // Validate interestName name
-  if(trim($_POST["countyName"])) {
-    $countyName = trim($_POST["countyName"]);
-  }
-
-  
-  // Check input errors before inserting in database
-  if(empty($countyName_err) ) {
-    // Add entry to interestList table
-    $sql = "INSERT INTO countylist (countyName, ?);";
-    if($stmt = mysqli_prepare($link, $sql)) {
-      // Bind variables to the prepared statement as parameters
-      mysqli_stmt_bind_param($stmt, "s", $paramCountyName);
-      // Set parameters
-      $paramCountyName = $countyName;
-      // Attempt to execute the prepared statement
-      if(mysqli_stmt_execute($stmt)){
-              // Records created successfully. Redirect to landing page
-              header("location: countyList-home.php");
-              exit();
-          } else{
-              echo "Something went wrong. Please try again later.";
-          }
-      }
-       
-      // Close statement
-      mysqli_stmt_close($stmt);
-  }
-  // Close connection
-  mysqli_close($link);
-}
+    // Check if countyName is empty
+    if((trim($_POST["countyName"]))) {
+         $countyName = "Please enter a countyName.";
+	}		
+		
+	// Check countyList table for countyName
+	$sql = "SELECT countyName FROM countylist WHERE countyName = '$countyName';";
+	
+	//echo $sql;
+		
+	if($stmt = mysqli_prepare($link, $sql)) {
+		if(mysqli_stmt_execute($stmt)) {
+			mysqli_stmt_store_result($stmt);
+			if(mysqli_stmt_num_rows($stmt) == 1) {
+				$countyName_err = "This countyName already exists";
+				echo $countyName_err;
+			} 
+			else {
+				$countyName = trim($_POST["countyName"]);
+			}
+		} 
+		else {
+			echo "Oops! Something went wrong. Please try again later.";
+		}
+		// Close statement
+		mysqli_stmt_close($stmt);
+	}
+	
+	// Check input errors before inserting in database
+	if(empty($countyName_err)) {
+        $sql = "INSERT INTO countylist (countyName) VALUES(?);";
+		
+        if($stmt = mysqli_prepare($link, $sql)) {
+			mysqli_stmt_bind_param($stmt, "s", $paramCountyName);
+			$paramCountyName = $countyName;
+			
+			// Attempt to execute the prepared statement
+			if(mysqli_stmt_execute($stmt)){
+				// Records created successfully. Redirect to landing page
+				header("location: countyList-home.php");
+				exit();
+			} else{
+				// countyName already exists
+				// URL doesn't contain userID parameter. Redirect to error page
+				header("location: county-error.php");
+				exit();
+				echo "Something went wrong. Please try again later.<br>";
+				echo "Possible Duplicate countyName: $countyName <br>";
+			}
+		}
+		// Close statement
+		//mysqli_stmt_close($stmt);
+    }
+	// Close connection
+	mysqli_close($link);
+}	
 ?>
  
 <?php $title = 'Admin | County | Create'; include("../templates/top.html");?>
@@ -58,11 +83,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p>Please fill this form and submit to add a County record to the database.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 					
-					              <div class="form-group <?php echo (!empty($countyList_err)) ? 'has-error' : ''; ?>">
+					              <div class="form-group <?php echo (!empty($countyName_err)) ? 'has-error' : ''; ?>">
                             <label>County Name</label>
                             <input type="text" name="countyName" class="form-control" value="<?php echo $countyName; ?>" required>
                             <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="user-home.php" class="btn btn-default">Cancel</a>
+                        <a href="countyList-home.php" class="btn btn-default">Cancel</a>
                     </form>
                 </div>
             </div>        

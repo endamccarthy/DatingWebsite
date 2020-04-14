@@ -150,29 +150,29 @@ ALTER TABLE events
 /********************************************************************/
 
 ALTER TABLE interests
-  ADD CONSTRAINT interests_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID),
+  ADD CONSTRAINT interests_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE,
   ADD CONSTRAINT interests_ibfk_2 FOREIGN KEY (interestID) REFERENCES interestList (interestID);
 
 ALTER TABLE preferences
-  ADD CONSTRAINT preferences_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID),
+  ADD CONSTRAINT preferences_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE,
   ADD CONSTRAINT preferences_ibfk_2 FOREIGN KEY (prefCountyID) REFERENCES countyList (countyID),
   ADD CONSTRAINT preferences_ibfk_3 FOREIGN KEY (prefInterestID) REFERENCES interestList (interestID);
   
 ALTER TABLE profile
-  ADD CONSTRAINT profile_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID),
+  ADD CONSTRAINT profile_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE,
   ADD CONSTRAINT profile_ibfk_2 FOREIGN KEY (countyID) REFERENCES countyList (countyID);
 	
 ALTER TABLE pending
-  ADD CONSTRAINT pending_ibfk_1 FOREIGN KEY (pendingUserOne) REFERENCES user (userID),
-  ADD CONSTRAINT pending_ibfk_2 FOREIGN KEY (pendingUserTwo) REFERENCES user (userID);
+  ADD CONSTRAINT pending_ibfk_1 FOREIGN KEY (pendingUserOne) REFERENCES user (userID) ON DELETE CASCADE,
+  ADD CONSTRAINT pending_ibfk_2 FOREIGN KEY (pendingUserTwo) REFERENCES user (userID) ON DELETE CASCADE;
 
 ALTER TABLE matches
-  ADD CONSTRAINT matches_ibfk_1 FOREIGN KEY (matchesUserOne) REFERENCES user (userID),
-  ADD CONSTRAINT matches_ibfk_2 FOREIGN KEY (matchesUserTwo) REFERENCES user (userID);
+  ADD CONSTRAINT matches_ibfk_1 FOREIGN KEY (matchesUserOne) REFERENCES user (userID) ON DELETE CASCADE,
+  ADD CONSTRAINT matches_ibfk_2 FOREIGN KEY (matchesUserTwo) REFERENCES user (userID) ON DELETE CASCADE;
   
 ALTER TABLE rejections
-  ADD CONSTRAINT rejections_ibfk_1 FOREIGN KEY (rejectionsUserOne) REFERENCES user (userID),
-  ADD CONSTRAINT rejections_ibfk_2 FOREIGN KEY (rejectionsUserTwo) REFERENCES user (userID);
+  ADD CONSTRAINT rejections_ibfk_1 FOREIGN KEY (rejectionsUserOne) REFERENCES user (userID) ON DELETE CASCADE,
+  ADD CONSTRAINT rejections_ibfk_2 FOREIGN KEY (rejectionsUserTwo) REFERENCES user (userID)  ON DELETE CASCADE;
 
 ALTER TABLE events
   ADD CONSTRAINT events_ibfk_1 FOREIGN KEY (eventCountyID) REFERENCES countyList (CountyID);
@@ -345,7 +345,7 @@ INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, s
   (36, "Writing a profile can be annoying at first, but use a few of these tricks, see what works for you, and go for it. Bottom line is that people want to get to know you, and your profile is one tool you have to show them who you are. Tell a joke, quote a favorite author, cite that obscure music lyric almost nobody has heard or, or list out your favorite things. The people who are your kind of people will be into it, and you'll have a lot of fun enjoying yourself and meeting new people.", 'female', '1975-05-01', 9, '../../images/profile-photos/user36-photo.jpg', 'smoker', 170),
   (37, "I don't want a partner in crime", 'male', '1964-06-20', 24, '../../images/profile-photos/user37-photo.jpg', 'smoker', 153),
   (38, "I floss. That's how responsible I am.", 'male', '1976-03-07', 27, '../../images/profile-photos/user38-photo.jpg', 'smoker', 209),
-  (39, "I commit all my crimes on my own. I would never drag you into that.", 'male', '1972-01-22', 10, '../../images/profile-photos/user39photo.jpg', 'smoker', 169),
+  (39, "I commit all my crimes on my own. I would never drag you into that.", 'male', '1972-01-22', 10, '../../images/profile-photos/user39-photo.jpg', 'smoker', 169),
   (40, "I'm a superhero and in my spare time a god", 'male', '1976-07-07', 21, '../../images/profile-photos/user40-photo.jpg', 'smoker', 156),
   (41, "What can I say? I just love ducks", 'male', '1975-02-10', 8, '../../images/profile-photos/user41-photo.jpg', 'smoker', 188),
   (42, "Cool water is always better than cold", 'male', '1974-02-08', 7, '../../images/profile-photos/user42-photo.jpg', 'smoker', 161),
@@ -575,4 +575,9 @@ INSERT INTO rejections(rejectionsUserOne, rejectionsUserTwo) VALUES
   (6, 5);
 
 INSERT INTO events(eventCountyID, eventName, eventDate) VALUES
-  (3, 'An Event', '2020-04-10');
+  (3, 'Carlow Event Description', '2020-05-10'),
+  (8, 'Donegal Event Description', '2020-06-20'),
+  (10, 'Dublin Description', '2020-05-10'),
+  (20, 'Louth Description', '2020-06-20'),
+  (25, 'Roscommon Description', '2020-05-10'),
+  (32, 'Wicklow Event Description', '2020-06-20');

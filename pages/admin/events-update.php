@@ -8,37 +8,57 @@ require_once "../../utilities/utility.php";
 require_once "../../utilities/config.php";
  
 // Define variables and initialize with empty values
-$countyName = "";
-$countyName_err = "";
-$countyID; 
+$eventCountyID = $eventName = $eventDate = $eventWebsite = "";
+$eventCountyID_err = $eventName_err = $eventDate_err = $eventWebsite_err = "";
  
 // Processing form data when form is submitted
-if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
+if(isset($_POST["eventID"]) && !empty($_POST["eventID"])){
     // Get hidden input value
-    $countyID = $_POST["countyID"];
+    $eventID = $_POST["eventID"];
+	$eventCountyID = $_POST["eventCountyID"];
+	$eventName = $_POST["eventName"];
+	$eventDate = $_POST["eventDate"];
+	$eventID = $_POST["eventID"];
     
-	// Validate interestName 
-	if(trim($_POST["countyName"])) {
-		$countyName = trim($_POST["countyName"]);
+	// Validate eventCountyID 
+	if(trim($_POST["eventCountyID"])) {
+		$eventCountyID = trim($_POST["eventCountyID"]);
+	}
+	
+	// Validate eventName 
+	if(trim($_POST["eventName"])) {
+		$eventName = trim($_POST["eventName"]);
+	}
+   	// Validate eventDate 
+	if(trim($_POST["eventDate"])) {
+		$eventDate = trim($_POST["eventDate"]);
+	}
+	// Validate eventWebsite 
+	if(trim($_POST["eventWebsite"])) {
+		$eventWebsite = trim($_POST["eventWebsite"]);
 	}
    
     // Check input errors before updating database
-    if(empty($countyName_err)){
+    if(empty($eventCountyID_err) && empty($eventName_err) && empty($eventDate_err) && empty($eventWebsite_err)){
         // Prepare an update statement
-        $sql = "UPDATE countylist SET countyName=? WHERE countyID=?";
-         
+        $sql = "UPDATE events SET eventCountyID=?, eventName=?, eventDate=?, eventWebsite=? WHERE eventID=?";
+
+		 
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "si", $param_countyName, $param_countyID);
+            mysqli_stmt_bind_param($stmt, "ssssi", $paramEventCountyID, $paramEventName, $paramEventDate, $paramEventWebsite, $paramEventID);
 
             // Set parameters
-            $param_countyName = $countyName;
-            $param_countyID = $countyID;
+            $paramEventCountyID = $eventCountyID;
+			$paramEventName = $EventName;
+            $paramEventDate = $eventDate;
+			$paramEventWebsite = $eventWebsite;
+            $paramEventID = $eventID;
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 // Records updated successfully. Redirect to landing page
-                header("location: countyList-home.php");
+                header("location: events-home.php");
                 exit();
             } else{
                 echo "Something went wrong. Please try again later.";
@@ -51,20 +71,25 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
     
     // Close connection
     mysqli_close($link);
-} else{
-    // Check existence of interestID parameter before processing further
-    if(isset($_GET["countyID"]) && !empty(trim($_GET["countyID"]))){
+	
+} else {
+    // Check existence of eventID parameter before processing further
+    if(isset($_GET["eventID"]) && !empty(trim($_GET["eventID"]))){
         // Get URL parameter
-        $countyID =  trim($_GET["countyID"]);
+        $eventID =  trim($_GET["eventID"]);
         
         // Prepare a select statement
-        $sql = "SELECT * FROM countylist WHERE countyID = ?";
+        $sql = "SELECT * FROM events WHERE eventID = ?";
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "i", $param_countyID);
+            mysqli_stmt_bind_param($stmt, "i", $paramEventID);
             
             // Set parameters
-            $param_countyID = $countyID;
+            $paramEventID = $EventID;
+			$paramEventCountyID = $eventCountyID;
+			$paramEventName = $EventName;
+            $paramEventDate = $eventDate;
+			$paramEventWebsite = $eventWebsite;
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
@@ -75,10 +100,15 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
                     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
                     
                     // Retrieve individual field value
-					$countyName = $row["countyName"];
+					$EventID = $row["EventID"];
+					$eventCountyID = $row["eventWebsite"];
+					$EventName = $row["EventName"];
+					$eventDate = $row["eventDate"];
+					$eventWebsite = $row["eventWebsite"];
                 } else{
-                    // URL doesn't contain valid countyID. Redirect to error page
-                    header("location: admin-error.php");
+                    // URL doesn't contain valid eventID. Redirect to error page
+					echo "This ERROR ONE <br>"; 
+                    header("location: events-error.php");
                     exit();
                 }
                 
@@ -92,9 +122,11 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
         
         // Close connection
         mysqli_close($link);
+		
     }  else{
-        // URL doesn't contain countyID parameter. Redirect to error page
-        header("location: admin-error.php");
+        // URL doesn't contain eventID parameter. Redirect to error page
+		echo "This ERROR TWO <br>"; 
+        header("location: events-error.php");
         exit();
     }
 }
@@ -108,16 +140,28 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
                     <div class="pb-2 mt-4 mb-4 border-bottom">  
                         <h2>Update County</h2>
                     </div>
-                    <p>Please edit the input values and submit to update the record.</p>
+                    <p>Please edit the Event and submit to update the record.</p>
                     <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
-						<div class="form-group <?php echo (!empty($countyName_err)) ? 'has-error' : ''; ?>">
-                            <label>County</label>
-                            <input type="text" name="countyName" class="form-control" value="<?php echo $countyName; ?>" required>
+						<div class="form-group <?php echo (!empty($eventCountyID_err)) ? 'has-error' : ''; ?>">
+                            <label>Event County ID</label>
+                            <input type="text" name="eventCountyID" class="form-control" value="<?php echo $eventCountyID; ?>" required>
+                        </div>						
+						<div class="form-group <?php echo (!empty($EventName_err)) ? 'has-error' : ''; ?>">
+                            <label>Event Name</label>
+                            <input type="text" name="EventName" class="form-control" value="<?php echo $EventName; ?>" required>
                         </div>
+						<div class="form-group <?php echo (!empty($EventDate_err)) ? 'has-error' : ''; ?>">
+                            <label>Event Date</label>
+                            <input type="text" name="EventDate" class="form-control" value="<?php echo $EventDate; ?>" required>
+                        </div>						
+ 						<div class="form-group <?php echo (!empty($EventWebsite_err)) ? 'has-error' : ''; ?>">
+                            <label>Event Website</label>
+                            <input type="text" name="EventWebsite" class="form-control" value="<?php echo $EventWebsite; ?>" required>
+                        </div>                      
                        
-						<input type="hidden" name="interestID" value="<?php echo $interestID; ?>"/>
+						<input type="hidden" name="eventID" value="<?php echo $eventID; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="interestList-home.php" class="btn btn-default">Cancel</a>
+                        <a href="events-home.php" class="btn btn-default">Cancel</a>
                     </form>
                 </div>
             </div>        

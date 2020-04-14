@@ -16,11 +16,12 @@ require_once "../../utilities/config.php";
                     <div class="pb-2 mt-4 mb-4 border-bottom clearfix">  
                         <h2 class="float-left">Interest Details</h2>
                         <a href="interestList-create.php" class="btn btn-success float-right">Add New Interest</a>
+						<a href="admin-home.php" class="btn btn-warning float-right">Back</a>
                     </div>
                     <?php
 
                     // Attempt select query execution
-                    $sql = "SELECT * FROM interestList";
+                    $sql = "SELECT * FROM interestlist";
                     if($result = mysqli_query($link, $sql)){
                         if(mysqli_num_rows($result) > 0){
                             echo "<table class='table table-bordered table-striped table-sm'>";

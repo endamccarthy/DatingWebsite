@@ -15,7 +15,7 @@ require_once "../../utilities/config.php";
                 <div class="col-md-12">
                     <div class="pb-2 mt-4 mb-4 border-bottom clearfix">  
                         <h2 class="float-left">County Details</h2>
-                        <a href="countyList-create.php" class="btn btn-success">Add New County</a>
+                        <a href="countyList-create.php" class="btn btn-success float-right">Add New County</a>
                         <a href="admin-home.php" class="btn btn-warning float-right">Back</a>
 
                     </div>

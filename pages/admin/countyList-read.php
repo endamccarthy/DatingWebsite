@@ -7,7 +7,7 @@ require_once "../../utilities/utility.php";
 // Include config file
 require_once "../../utilities/config.php";
 
-// Check existence of interestID parameter before processing further
+// Check existence of countyID parameter before processing further
 if(isset($_GET["countyID"]) && !empty(trim($_GET["countyID"]))){
     
     // Prepare a select statement
@@ -32,7 +32,7 @@ if(isset($_GET["countyID"]) && !empty(trim($_GET["countyID"]))){
                 $countyID = $row["countyID"];
                 $countyName = $row["countyName"];
             } else{
-                // URL doesn't contain valid interestID parameter. Redirect to error page
+                // URL doesn't contain valid countyID parameter. Redirect to error page
                 header("location: admin-error.php");
                 exit();
             }

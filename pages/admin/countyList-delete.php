@@ -23,7 +23,7 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
 
         if(mysqli_stmt_execute($stmt)){
             // Records deleted successfully. Redirect to landing page
-            header("location: countyList-home.php");
+            header("location: countylist-home.php");
             exit();
         } else{
             echo "Oops! Something went wrong. Please try again later.";
@@ -56,10 +56,16 @@ if(isset($_POST["countyID"]) && !empty($_POST["countyID"])){
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="alert alert-danger" role="alert">
                             <input type="hidden" name="countyID" value="<?php echo trim($_GET["countyID"]); ?>"/>
-                            <p>Are you sure you want to delete this County?</p><br>
-                            <p>
+							<h6><b>Are you sure you want to delete this County?</b></h6><br>
+							<input type="submit" value="Warning" class="btn btn-danger">
+							<p><b>CASCADE DELETE has been setup on the Database Tables<br><br>
+							Proceeding with Yes (below) will physically delete this county from ALL tables in the Database<br>
+							Tables affected are:  countylist, profile, preferences and events <br><br>
+							ALL county history and activity/interations will disappear from the Database<br><br>
+							A Database Restore will be required to retreive a county record and any associated user history and activity</b></p><br><p>
+							<p>
                                 <input type="submit" value="Yes" class="btn btn-danger">
-                                <a href="countyList-home.php" class="btn btn-default">No</a>
+                                <a href="countyList-home.php" class="btn btn-warning">No</a>
                             </p>
                         </div>
                     </form>
