@@ -11,6 +11,7 @@ require_once "../../utilities/config.php";
 $searchText = $searchResults = "";
 $countyFilters = $interestFilters = "''";
 $userID = $_SESSION["userID"];
+$gender = getEntryNameGivenID($link, 'profile', 'gender', 'userID', $userID);
 
 // Get list of counties for dropdown menu
 $counties = getCountiesList($link);
@@ -18,13 +19,13 @@ $counties = getCountiesList($link);
 $interests = getInterestsList($link);
 
 // Show un-filtered profiles by default
-$searchResults = getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters);
+$searchResults = getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters, $gender);
 
 // If clear filters is clicked...
 if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["clearFilters"])) {
   $searchText = $searchResults = "";
   $countyFilters = $interestFilters = "''";
-  $searchResults = getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters);
+  $searchResults = getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters, $gender);
 }
 
 // If search is clicked...
@@ -60,7 +61,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["search"])) {
   }
 
   // Execute sql statement and save results to a string
-  $searchResults = getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters);
+  $searchResults = getSearchResultsString($link, $userID, $searchText, $countyFilters, $interestFilters, $gender);
 
   // This will be used to show a 'Back To Search Results' button if a profile is clicked on
   $_SESSION["searchApplied"] = true;

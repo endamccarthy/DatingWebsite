@@ -20,7 +20,7 @@ if($accessLevel == 'regular') {
 }
 
 // Prepare a select statement
-$sql = "SELECT DISTINCT user.userID, firstName, lastName, status, dateOfBirth, photo, countyName FROM user JOIN profile JOIN countyList ON 
+$sql = "SELECT DISTINCT user.userID, firstName, lastName, dateOfBirth, photo, countyName FROM user JOIN profile JOIN countyList ON 
 user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
   SELECT pendingUserOne FROM pending WHERE pendingUserTwo = $userID
 );";

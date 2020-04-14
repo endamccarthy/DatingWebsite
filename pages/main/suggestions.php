@@ -11,12 +11,13 @@ require_once "../../utilities/config.php";
 $suggestions = "";
 $userID = $_SESSION["userID"];
 $prefGender = "";
+$gender = getEntryNameGivenID($link, 'profile', 'gender', 'userID', $userID);
 $prefGender = getEntryNameGivenID($link, 'preferences', 'prefGender', 'userID', $userID);
 $accessLevel = getEntryNameGivenID($link, 'user', 'accessLevel', 'userID', $userID);
 $notifications = getEntryNameGivenID($link, 'user', 'notifications', 'userID', $userID);
 
 // Prepare a select statement
-$sql = "SELECT DISTINCT user.userID, firstName, lastName, status, dateOfBirth, photo, countyName FROM user JOIN profile JOIN countyList ON 
+$sql = "SELECT DISTINCT user.userID, firstName, lastName, dateOfBirth, photo, countyName FROM user JOIN profile JOIN countyList ON 
 user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE user.userID IN (
   SELECT userID FROM profile WHERE userID != $userID
   AND
@@ -39,7 +40,7 @@ user.userID = profile.userID AND profile.countyID = countyList.countyID WHERE us
   )
   AND
   userID IN (
-    SELECT userID FROM preferences WHERE prefGender != '$prefGender'
+    SELECT userID FROM preferences WHERE prefGender = '$gender'
   )
   AND 
   TIMESTAMPDIFF(YEAR, dateOfBirth, NOW()) BETWEEN 
