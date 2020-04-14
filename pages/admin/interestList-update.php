@@ -25,7 +25,7 @@ if(isset($_POST["interestID"]) && !empty($_POST["interestID"])){
     
 	// Check input errors before inserting in database
 	if(empty($countyName_err)) {
-		$sql = "UPDATE interestlist SET interestName=? WHERE interestID=?";
+		$sql = "UPDATE interestList SET interestName=? WHERE interestID=?";
 		
         if($stmt = mysqli_prepare($link, $sql)) {
 			mysqli_stmt_bind_param($stmt, "si", $paramInterestName, $param_interestID);
@@ -53,7 +53,7 @@ if(isset($_POST["interestID"]) && !empty($_POST["interestID"])){
         $interestID =  trim($_GET["interestID"]);
         
         // Prepare a select statement
-        $sql = "SELECT * FROM interestlist WHERE interestID = ?";
+        $sql = "SELECT * FROM interestList WHERE interestID = ?";
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "i", $param_interestID);

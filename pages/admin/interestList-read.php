@@ -11,7 +11,7 @@ require_once "../../utilities/config.php";
 if(isset($_GET["interestID"]) && !empty(trim($_GET["interestID"]))){
     
     // Prepare a select statement
-    $sql = "SELECT * FROM interestlist WHERE interestID = ?";
+    $sql = "SELECT * FROM interestList WHERE interestID = ?";
     
     if($stmt = mysqli_prepare($link, $sql)){
         // Bind variables to the prepared statement as parameters

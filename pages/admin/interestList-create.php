@@ -20,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	}		
 		
 	// Check interestlist table for interestName
-	$sql = "SELECT interestName FROM interestlist WHERE interestName = '$interestName';";
+	$sql = "SELECT interestName FROM interestList WHERE interestName = '$interestName';";
 	
 	if($stmt = mysqli_prepare($link, $sql)) {
 		if(mysqli_stmt_execute($stmt)) {
@@ -43,7 +43,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	// Check input errors before inserting in database
 
 	if(empty($interestName_err)) {
-        $sql = "INSERT INTO interestlist (interestName) VALUES(?);";
+        $sql = "INSERT INTO interestList (interestName) VALUES(?);";
 		
 		echo $sql;
 		
