@@ -224,12 +224,12 @@ mysqli_close($link);
 
 <?php $title = 'Foxy Farmers'; include("../templates/top.html");?>
 <div class="container">
-  <div class="container-item container-item-center-text">
+  <div class="container-item container-item-center-text container-item-shadow">
     <h2><i>Find Your Foxy Farmer!</i></h2>
   </div>
 </div>
 <div class="container">
-  <div class="container-item">
+  <div class="container-item container-item-shadow">
     <h2>Login</h2>
     <p>Please fill in your credentials to login.</p>
     <form name="loginForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
@@ -255,7 +255,7 @@ mysqli_close($link);
     </div>
   </div> 
 
-  <div class="container-item">
+  <div class="container-item container-item-shadow">
     <h2>Register</h2>
     <p>Please fill in this form to create an account.</p>
     <form name="registerForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">

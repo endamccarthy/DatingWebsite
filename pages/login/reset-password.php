@@ -62,7 +62,7 @@ mysqli_close($link);
  
 <?php $title = 'Reset Password'; include("../templates/top.html"); ?>
   <div class="container">
-    <div class="container-item">
+    <div class="container-item container-item-shadow">
       <h2>Reset Password</h2>
       <p>Please fill out this form to reset your password.</p>
 

@@ -100,9 +100,15 @@ if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
 
     // If the action is a report...
     if($_GET["action"] == 'report') {
-      // Check to see if you have already rejected the other person
-      if (checkIfUserPairExists($link, 'rejections', 'rejectionsUserOne', 'rejectionsUserTwo', $userTwo, $userOne)) { $relationshipStatus = "youRejectedThem"; }
 
+      // Insert new entry into reported
+      $sql = "INSERT INTO reported (reportedUserOne, reportedUserTwo) VALUES ($userOne, $userTwo);";
+      if($stmt = mysqli_prepare($link, $sql)) {
+        if(!mysqli_stmt_execute($stmt)) {
+          echo "Something went wrong. Please try again later.";
+        }
+        
+      }
       // If they have already liked you, add entry to rejections and remove from pending
       if($relationshipStatus == "theyLikeYou") {
         $sql = "INSERT INTO rejections (rejectionsUserOne, rejectionsUserTwo) VALUES ($userOne, $userTwo);
@@ -118,10 +124,9 @@ if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
           if(!mysqli_stmt_execute($stmt)) {
             echo "Something went wrong. Please try again later.";
           }
-          mysqli_stmt_close($stmt);
         }
       }
-      // TODO: send notice to admin to suspend the reported users account....
+      mysqli_stmt_close($stmt);
     }
 
   }

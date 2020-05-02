@@ -23,6 +23,8 @@ if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
   // Get relationship status with other user
   if (checkIfUserPairExists($link, 'pending', 'pendingUserOne', 'pendingUserTwo', $userID, $_SESSION["userID"])) { $relationshipStatus = "youLikeThem"; }
   else if (checkIfUserPairExists($link, 'pending', 'pendingUserOne', 'pendingUserTwo', $_SESSION["userID"], $userID)) { $relationshipStatus = "theyLikeYou"; }
+  else if (checkIfUserPairExists($link, 'reported', 'reportedUserOne', 'reportedUserTwo', $userID, $_SESSION["userID"])) { $relationshipStatus = "youReportedThem"; }
+  else if (checkIfUserPairExists($link, 'reported', 'reportedUserOne', 'reportedUserTwo', $_SESSION["userID"], $userID)) { $relationshipStatus = "theyReportedYou"; }
   else if (checkIfUserPairExists($link, 'rejections', 'rejectionsUserOne', 'rejectionsUserTwo', $userID, $_SESSION["userID"])) { $relationshipStatus = "youRejectThem"; }
   else if (checkIfUserPairExists($link, 'rejections', 'rejectionsUserOne', 'rejectionsUserTwo', $_SESSION["userID"], $userID)) { $relationshipStatus = "theyRejectYou"; }
   else if (checkIfUserPairExistsMatches($link, 'matches', 'matchesUserOne', 'matchesUserTwo', $_SESSION["userID"], $userID)) { $relationshipStatus = "match"; }
@@ -99,7 +101,7 @@ mysqli_close($link);
 <?php $title = ($myProfile) ? 'My Profile' : $firstName.' '.$lastName; include("../templates/top.html"); ?>
 
 <div class="container">
-  <div class="container-item">
+  <div class="container-item container-item-shadow">
     <?php
       if(isset($_SESSION["search"]) && !$myProfile) {
         echo '<a href="'.$_SESSION["search"].'" class="btn btn-secondary m-1">Back To Search Results</a>';
@@ -156,6 +158,12 @@ mysqli_close($link);
         else if($relationshipStatus == "youLikeThem") {
           echo '<a href="../../utilities/undo-action.php?action=unlike&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Like</a>';
         }
+        else if($relationshipStatus == "youReportedThem") {
+          echo '<a href="../../utilities/undo-action.php?action=unreport&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Report</a>';
+        }
+        else if($relationshipStatus == "theyReportedYou") {
+          header("location: javascript:history.back()");
+        }
         else if($relationshipStatus == "youRejectThem") {
           echo '<a href="../../utilities/undo-action.php?action=unreject&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Un-Reject</a>';
           echo '<a href="../../utilities/action.php?action=report&userID='.$userID.'" class="btn btn-secondary btn-sm m-1">Report</a>';
@@ -172,7 +180,7 @@ mysqli_close($link);
   </div>
   <div class="container-item container-item-stack"">
 
-    <div class="container-item container-item-inside-stack">
+    <div class="container-item container-item-inside-stack container-item-shadow">
       <div class="pb-2 mt-4 mb-4 border-bottom">  
         <h2><?php echo ($myProfile) ? 'My Details' : $firstName."'s Details";?></h2>
       </div>
@@ -224,7 +232,7 @@ mysqli_close($link);
       ?>
     </div>
 
-    <div class="container-item container-item-inside-stack">
+    <div class="container-item container-item-inside-stack container-item-shadow">
       <div class="pb-2 mt-4 mb-4 border-bottom">  
         <h2><?php echo ($myProfile) ? 'My Preferences' : $firstName."'s Preferences";?></h2>
       </div>

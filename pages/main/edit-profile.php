@@ -216,7 +216,7 @@ mysqli_close($link);
 
 <?php $title = ($profileComplete) ? 'Edit Profile' : 'Create Profile'; include("../templates/top.html"); ?>
 <div class="container">
-  <div class="container-item">
+  <div class="container-item container-item-shadow">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
       <h2><?php echo ($profileComplete) ? 'Edit Profile' : 'Create Profile'; ?></h2>
 

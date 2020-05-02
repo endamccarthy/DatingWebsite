@@ -87,7 +87,7 @@ mysqli_close($link);
  
 <?php $title = 'Suggestions'; include("../templates/top.html"); include("../templates/sub-navbar.html");?>
 <div class="container">
-  <div class="container-item container-item-center-text">
+  <div class="container-item container-item-center-text container-item-shadow">
     <h2 class="pb-2 mt-2 mb-4 border-bottom">Suggestions</h2>
     <div>
       <?php echo $suggestions; ?>

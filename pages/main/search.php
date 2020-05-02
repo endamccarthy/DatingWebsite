@@ -72,7 +72,7 @@ mysqli_close($link);
 
 <?php $title = 'Search'; include("../templates/top.html"); ?>
 <div class="container">
-  <div class="container-item">
+  <div class="container-item container-item-shadow">
     <h3 class="pb-2 mt-4 mb-4 border-bottom">Search All Available Profiles</h3>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get">
 
@@ -115,7 +115,7 @@ mysqli_close($link);
 
     </form>
   </div>
-  <div class="container-item">
+  <div class="container-item container-item-shadow">
     <h3 class="pb-2 mt-4 mb-4 border-bottom">
       <?php echo ($searchText == "" && $countyFilters == "''" && $interestFilters == "''") ? 'Showing All Profiles' : 'Showing Filtered Results' ?>
     </h3>

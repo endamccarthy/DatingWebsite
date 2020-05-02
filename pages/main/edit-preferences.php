@@ -117,7 +117,7 @@ mysqli_close($link);
 
 <?php $title = 'Edit Preferences'; include("../templates/top.html"); ?>
 <div class="container">
-  <div class="container-item">
+  <div class="container-item container-item-shadow">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
       <h2>Edit Preferences</h2>
 

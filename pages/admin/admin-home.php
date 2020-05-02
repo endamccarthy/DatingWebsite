@@ -11,6 +11,51 @@ require_once "../../utilities/config.php";
 <?php $title = 'Admin | Home'; include("../templates/top.html");?>
     <div class="wrapper wrapper-wide">
         <div class="container-fluid">
+            <div class="row border-bottom">
+                <div class="col-md-12">
+                    <div class="pb-2 mt-4 mb-4 clearfix">  
+                        <h2 class="float-left">Reported Users</h2>
+                    </div>
+                    <?php
+
+                    // Attempt select query execution
+                    $sql = "SELECT * FROM reported";
+                    if($result = mysqli_query($link, $sql)){
+                        if(mysqli_num_rows($result) > 0){
+                            echo "<table class='table table-bordered table-striped table-sm'>";
+                                echo "<thead>";
+                                    echo "<tr>";
+                                        echo "<th>User Who Filed Report</th>";
+                                        echo "<th>Reported User</th>";
+                                        echo "<th>Action</th>";
+                                    echo "</tr>";
+                                echo "</thead>";
+                                echo "<tbody>";
+                                while($row = mysqli_fetch_array($result)){
+                                    echo "<tr>";
+                                        echo "<td>" . $row['reportedUserOne'] . "</td>";
+                                        echo "<td>" . $row['reportedUserTwo'] . "</td>";
+                                        echo "<td>";
+                                            echo "<a href='../admin/user-suspend.php?userID=". $row['reportedUserTwo'] ."' title='Suspend Reported User' data-toggle='tooltip'>Suspend</a>";
+                                        echo "</td>";
+                                    echo "</tr>";
+                                }
+                                echo "</tbody>";                            
+                            echo "</table>";
+                            // Free result set
+                            mysqli_free_result($result);
+                        } else{
+                            echo "<p class='lead'><em>No records were found.</em></p>";
+                        }
+                    } else{
+                        echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
+                    }
+ 
+                    // Close connection
+                    mysqli_close($link);
+                    ?>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="pb-2 mt-4 mb-4 border-bottom clearfix">  

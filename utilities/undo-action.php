@@ -51,6 +51,16 @@ if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))) {
       }
     }
 
+    // If the action is an unreport...
+    if($_GET["action"] == 'unreport') {
+      $sql = "DELETE FROM reported WHERE reportedUserOne = $userOne AND reportedUserTwo = $userTwo;";
+      if($stmt = mysqli_prepare($link, $sql)) {
+        if(!mysqli_stmt_execute($stmt)) {
+          echo "Something went wrong. Please try again later.";
+        }
+        mysqli_stmt_close($stmt);
+      }
+    }
   }
   header("location: ../pages/main/profile.php?userID=".$userTwo);
   exit;

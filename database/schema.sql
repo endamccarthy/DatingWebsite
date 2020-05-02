@@ -15,6 +15,7 @@ drop table if exists pending;
 drop table if exists preferences;
 drop table if exists profile;
 drop table if exists rejections;
+drop table if exists reported;
 SET FOREIGN_KEY_CHECKS = 1;
 
 /********************************************************************/
@@ -93,7 +94,13 @@ CREATE TABLE events (
   eventCountyID INT NOT NULL,
   eventName VARCHAR(128) NOT NULL,
   eventDate DATETIME, 
-  eventWebsite VARCHAR(128) NULL DEFAULT ""
+  eventWebsite VARCHAR(128) NULL DEFAULT "",
+  eventPhoto VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE reported (
+  reportedUserOne INT NOT NULL,
+  reportedUserTwo INT NOT NULL
 );
 
 /********************************************************************/
@@ -142,6 +149,11 @@ ALTER TABLE rejections
   
 ALTER TABLE events
   CHANGE eventID eventID INT NOT NULL PRIMARY KEY AUTO_INCREMENT;
+
+ALTER TABLE reported
+  ADD PRIMARY KEY (reportedUserOne, reportedUserTwo),
+  ADD KEY reportedUserOne (reportedUserOne),
+  ADD KEY reportedUserTwo (reportedUserTwo);
   
 /********************************************************************/
 /*
@@ -176,6 +188,10 @@ ALTER TABLE rejections
 
 ALTER TABLE events
   ADD CONSTRAINT events_ibfk_1 FOREIGN KEY (eventCountyID) REFERENCES countyList (CountyID);
+
+ALTER TABLE reported
+  ADD CONSTRAINT reported_ibfk_1 FOREIGN KEY (reportedUserOne) REFERENCES user (userID) ON DELETE CASCADE,
+  ADD CONSTRAINT reported_ibfk_2 FOREIGN KEY (reportedUserTwo) REFERENCES user (userID)  ON DELETE CASCADE;
 
 /********************************************************************/
 /*
@@ -574,10 +590,14 @@ INSERT INTO rejections(rejectionsUserOne, rejectionsUserTwo) VALUES
   (7, 2),
   (6, 5);
 
-INSERT INTO events(eventCountyID, eventName, eventDate) VALUES
-  (3, 'Carlow Event Description', '2020-05-10'),
-  (8, 'Donegal Event Description', '2020-06-20'),
-  (10, 'Dublin Description', '2020-05-10'),
-  (20, 'Louth Description', '2020-06-20'),
-  (25, 'Roscommon Description', '2020-05-10'),
-  (32, 'Wicklow Event Description', '2020-06-20');
+INSERT INTO events(eventCountyID, eventName, eventDate, eventWebsite, eventPhoto) VALUES
+  (3, 'Carlow Event Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event1-photo.jpg'),
+  (8, 'Donegal Event Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event2-photo.jpg'),
+  (10, 'Dublin Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event3-photo.jpg'),
+  (20, 'Louth Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event4-photo.jpg'),
+  (25, 'Roscommon Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event5-photo.jpg'),
+  (32, 'Wicklow Event Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event6-photo.jpg'),
+  (10, 'Dublin Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event7-photo.jpg'),
+  (20, 'Louth Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event8-photo.jpg'),
+  (25, 'Roscommon Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event9-photo.jpg'),
+  (32, 'Wicklow Event Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event10-photo.jpg');
