@@ -387,7 +387,8 @@ INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, s
   (59, "The aforementioned haircut. Hairstylist of said haircut. Shampoo. Conditioner. Hat (we all have off days).", 'male', '1976-12-01', 4, '../../images/profile-photos/user59-photo.jpg', 'smoker', 191),
   (60, "Wait, I feel like we've covered this one already. Other than my lustrous mane, I'm most passionate about fish and chip night at my local, ruining'Frozen'for my niece, and my workout playlist.", 'male', '1971-11-29', 6, '../../images/profile-photos/user60-photo.jpg', 'smoker', 205),
   (61, "When I'm not rescuing kittens from trees and singing show tunes to old ladies (I'm a selfless guy), I'm catching up with friends, listening to symphonies (yes, I promise), and pretending to be Jamie Oliver.", 'male', '1944-01-01', 17, '../../images/profile-photos/user61-photo.jpg', 'smoker', 172),
-  (62, '', 'female', '1990-01-02', 2, '../../images/profile-photos/user62-photo.jpg', 'non-smoker', 176);
+  (62, '', 'female', '1990-01-02', 2, '../../images/profile-photos/user62-photo.jpg', 'non-smoker', 176),
+  (63, '', 'male', '1990-01-01', 1, '../../images/profile-photos/user63-photo.jpg', 'non-smoker', 170);
 
 INSERT INTO preferences(userID, prefGender) VALUES
   (1, 'female'),
@@ -451,7 +452,8 @@ INSERT INTO preferences(userID, prefGender) VALUES
   (59, 'female'),
   (60, 'female'),
   (61, 'female'),
-  (62, 'male');
+  (62, 'male'),
+  (63, 'female');
 
 INSERT INTO interests(userID, interestID) VALUES
   (1, 1),
