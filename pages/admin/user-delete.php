@@ -57,12 +57,7 @@ if(isset($_POST["userID"]) && !empty($_POST["userID"])){
                         <div class="alert alert-danger" role="alert">
                             <input type="hidden" name="userID" value="<?php echo trim($_GET["userID"]); ?>"/>
                             <h5><b>Are you sure you want to delete this User?</b></h5><br>
-							<input type="submit" value="Warning" class="btn btn-danger">
-							<p><b>CASCADE DELETE has been setup on the Database Tables<br><br>
-							Proceeding with Yes (below) will physically delete this user from ALL tables in the Database<br>
-							Tables affected are:  user, profile, preferences, interests, matches, pending and rejections <br><br>
-							ALL user history and activity/interations will disappear from the Database<br><br>
-							A Database Restore will be required to retreive a user account and associated history and activity/interations </b></p><br><p>
+                            <p>
                                 <input type="submit" value="Yes" class="btn btn-danger">
                                 <a href="user-home.php" class="btn btn-warning">No</a>
                             </p>

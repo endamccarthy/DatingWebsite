@@ -57,15 +57,6 @@ if(isset($_POST["interestID"]) && !empty($_POST["interestID"])){
                         <div class="alert alert-danger" role="alert">
                             <input type="hidden" name="interestID" value="<?php echo trim($_GET["interestID"]); ?>"/>
 							<h6><b>Are you sure you want to delete this Interest?</b></h6><br>
-							<input type="submit" value="Warning" class="btn btn-danger">
-							<p><b>CASCADE DELETE has been setup on the Database Tables<br><br>
-							Proceeding with Yes (below) will physically delete this interest from ALL tables in the Database<br>
-							Tables affected are:  interestlist, interests and preferences<br><br>
-							ALL interest history and activity/interations will disappear from the Database<br><br>
-							A Database Restore will be required to restore an interest record and associated history activity/interations </b></p><br><p>
-							<p>
-							
-							
                             <p>
                                 <input type="submit" value="Yes" class="btn btn-danger">
                                 <a href="interestList-home.php" class="btn btn-warning">No</a>

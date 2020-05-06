@@ -38,13 +38,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       // Validate credentials
       if(empty($emailErrLogin) && empty($passwordErrLogin)) {
         // Prepare a select statement
-        $sql = "SELECT userID, email, password, status FROM user WHERE email = '$emailLogin';";
+        $sql = "SELECT userID, email, password, status, accessLevel FROM user WHERE email = '$emailLogin';";
         if($stmt = mysqli_prepare($link, $sql)) {
           if(mysqli_stmt_execute($stmt)) {
             mysqli_stmt_store_result($stmt);
             // Check if email exists, if yes then verify password
             if(mysqli_stmt_num_rows($stmt) == 1) {
-              mysqli_stmt_bind_result($stmt, $userIDTemp, $emailTemp, $hashedPasswordTemp, $statusTemp);
+              mysqli_stmt_bind_result($stmt, $userIDTemp, $emailTemp, $hashedPasswordTemp, $statusTemp, $accessLevelTemp);
               if(mysqli_stmt_fetch($stmt)) {
                 if($statusTemp == "suspended") {
                   $passwordErrLogin = "Sorry this account is temporarily suspended.";
@@ -60,6 +60,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION["loggedIn"] = true;
                     $_SESSION["userID"] = $userIDTemp;
                     $_SESSION["email"] = $emailTemp;
+                    $_SESSION["accessLevel"] = $accessLevelTemp;
                   } 
                   else {
                     $passwordErrLogin = "The password you entered was not valid.";

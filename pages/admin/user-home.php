@@ -15,7 +15,6 @@ require_once "../../utilities/config.php";
                 <div class="col-md-12">
                     <div class="pb-2 mt-4 mb-4 border-bottom clearfix">  
                         <h2 class="float-left">User Details</h2>
-                        <a href="user-create.php" class="btn btn-success float-right">Add New User</a>
                         <a href="admin-home.php" class="btn btn-warning float-right">Back</a>
                     </div>
                     <?php

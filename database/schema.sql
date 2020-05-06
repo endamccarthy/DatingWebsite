@@ -163,12 +163,12 @@ ALTER TABLE reported
 
 ALTER TABLE interests
   ADD CONSTRAINT interests_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE,
-  ADD CONSTRAINT interests_ibfk_2 FOREIGN KEY (interestID) REFERENCES interestList (interestID);
+  ADD CONSTRAINT interests_ibfk_2 FOREIGN KEY (interestID) REFERENCES interestList (interestID) ON DELETE CASCADE;
 
 ALTER TABLE preferences
   ADD CONSTRAINT preferences_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE,
   ADD CONSTRAINT preferences_ibfk_2 FOREIGN KEY (prefCountyID) REFERENCES countyList (countyID),
-  ADD CONSTRAINT preferences_ibfk_3 FOREIGN KEY (prefInterestID) REFERENCES interestList (interestID);
+  ADD CONSTRAINT preferences_ibfk_3 FOREIGN KEY (prefInterestID) REFERENCES interestList (interestID) ON DELETE CASCADE;
   
 ALTER TABLE profile
   ADD CONSTRAINT profile_ibfk_1 FOREIGN KEY (userID) REFERENCES user (userID) ON DELETE CASCADE,
@@ -257,7 +257,6 @@ INSERT INTO countyList(countyName) VALUES
   ('Wexford'),
   ('Wicklow');
 
-/* the unhashed password for the test user is 'password' */
 INSERT INTO user(firstName, lastName, email, password) VALUES
   ('test', 'user', 'test@email.com', '$2y$10$Pbnnd7yvpbt/FDWpLSirVuEW9rgq7VlpULrNCN44G/LsJWzkGdQr2'),
   ('John', 'Smith', 'john@email.com', 'password'),
@@ -321,6 +320,10 @@ INSERT INTO user(firstName, lastName, email, password) VALUES
   ('Darragh', 'Shannon', '12345726@student.ul.ie', 'password60'),
   ('Richard', 'Young', '12345727@student.ul.ie', 'password61'),
   ('test2', 'user', 'test2@email.com', '$2y$10$Pbnnd7yvpbt/FDWpLSirVuEW9rgq7VlpULrNCN44G/LsJWzkGdQr2');
+
+  /* the unhashed password for the test user is 'password' */
+INSERT INTO user(firstName, lastName, email, password, accessLevel) VALUES
+  ('admin', 'user', 'admin@email.com', '$2y$10$Pbnnd7yvpbt/FDWpLSirVuEW9rgq7VlpULrNCN44G/LsJWzkGdQr2', 'admin');
 
 INSERT INTO profile(userID, description, gender, dateOfBirth, countyID, photo, smokes, height) VALUES
   (1, '', 'male', '1990-01-02', 2, '../../images/profile-photos/user1-photo.jpg', 'non-smoker', 176),

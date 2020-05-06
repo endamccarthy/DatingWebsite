@@ -60,6 +60,34 @@ function getInterestsList($link) {
   }
 }
 
+// Function to get user details
+function getUser($link, $userID) {
+  $sql = "SELECT firstName, lastName, email, accessLevel, status FROM user WHERE userID = $userID;";
+  if($stmt = mysqli_prepare($link, $sql)) {
+    if(mysqli_stmt_execute($stmt)) {
+      mysqli_stmt_store_result($stmt);
+      if(mysqli_stmt_num_rows($stmt) == 1) {
+        $user = array();
+        mysqli_stmt_bind_result($stmt, $firstNameTemp, $lastNameTemp, $emailTemp, $accessLevelTemp, $statusTemp);
+        while (mysqli_stmt_fetch($stmt)) {
+          $user['firstName'] = $firstNameTemp;
+          $user['lastName'] = $lastNameTemp;
+          $user['email'] = $emailTemp;
+          $user['accessLevel'] = $accessLevelTemp;
+          $user['status'] = $statusTemp;
+        }
+      }
+    } 
+    else {
+      echo "Oops! Something went wrong. Please try again later.";
+    }
+    mysqli_stmt_close($stmt);
+    if (isset($user)) {
+      return $user;
+    }
+  }
+}
+
 // Function to get user preferences
 function getUserPreferences($link, $userID) {
   $sql = "SELECT prefGender, prefAgeMin, prefAgeMax, prefCountyID, prefInterestID, prefSmokes , prefHeightMin, prefHeightMax FROM preferences WHERE userID = $userID;";
@@ -267,6 +295,12 @@ if(isset($_SESSION["search"])) {
     if(strpos($currentPage, 'action.php') === false) {
       unset($_SESSION["search"]);
     }
+  }
+}
+
+if(isset($_SESSION["accessLevel"]) && $_SESSION["accessLevel"] != 'admin') {
+  if((strpos($currentPage, '/admin/') !== false)) {
+    header("location: ../main/suggestions.php");
   }
 }
 

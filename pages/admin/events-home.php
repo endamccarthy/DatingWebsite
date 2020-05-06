@@ -46,7 +46,6 @@ require_once "../../utilities/config.php";
                                         echo "<td>" . $row['eventWebsite'] . "</td>";
                                         echo "<td>";
                                             echo "<a href='../admin/events-read.php?eventID=". $row['eventID'] ."' title='View Record' data-toggle='tooltip'><i class='fa fa-eye' aria-hidden='true'></i></a>";
-                                            echo "<a href='../admin/events-update.php?eventID=". $row['eventID'] ."' title='Update Record' data-toggle='tooltip'><i class='fa fa-pencil' aria-hidden='true'></i></a>";
                                             echo "<a href='../admin/events-delete.php?eventID=". $row['eventID'] ."' title='Delete Record' data-toggle='tooltip'><i class='fa fa-trash-o' aria-hidden='true'></i></a>";
                                         echo "</td>";
                                     echo "</tr>";

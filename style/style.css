@@ -18,6 +18,7 @@ body {
   background-image: url("../images/site-photos/background.png");
   background-color: white;
   background-attachment: fixed;
+  background-position: 50% 50%;               //  3rdMay2020 Centre Background Image  RM
 }
 
 .wrapper { 

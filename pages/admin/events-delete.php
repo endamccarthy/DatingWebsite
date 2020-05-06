@@ -57,13 +57,6 @@ if(isset($_POST["eventID"]) && !empty($_POST["eventID"])){
                         <div class="alert alert-danger" role="alert">
                             <input type="hidden" name="eventID" value="<?php echo trim($_GET["eventID"]); ?>"/>
                             <p>Are you sure you want to delete this Event?</p><br>
-							<input type="submit" value="Warning" class="btn btn-danger">
-							<p><b>CASCADE DELETE has been setup on the Database Tables<br><br>
-							Proceeding with Yes (below) will physically delete this event from ALL tables in the Database<br>
-							Table(s) affected are:  events<br><br>
-							ALL event history and activity/interations will disappear from the Database<br><br>
-							A Database Restore will be required to retreive an event record and any associated history and activity</b></p><br>
-							<p>
                                 <input type="submit" value="Yes" class="btn btn-danger">
                                 <a href="events-home.php" class="btn btn-warning">No</a>
                             </p>

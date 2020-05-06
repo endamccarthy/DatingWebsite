@@ -15,6 +15,7 @@ require_once "../../utilities/config.php";
                 <div class="col-md-12">
                     <div class="pb-2 mt-4 mb-4 clearfix">  
                         <h2 class="float-left">Reported Users</h2>
+                        <a href="../main/suggestions.php" class="btn btn-warning float-right">Back</a>
                     </div>
                     <?php
 
@@ -58,11 +59,11 @@ require_once "../../utilities/config.php";
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="pb-2 mt-4 mb-4 border-bottom clearfix">  
-                        <a href="countyList-home.php" class="btn btn-success">County List Table</a><br><br>
-                        <a href="events-home.php" class="btn btn-success">Events Table</a><br><br>
-                        <a href="interestList-home.php" class="btn btn-success">Interest List Table</a><br><br>
-                        <a href="user-home.php" class="btn btn-success">User Table</a><br><br>
+                    <div class="pb-2 mt-4 mb-4 border-bottom clearfix"> 
+                        <h6><b>Table Maintenance:</b></h6> 
+                        <a href="events-home.php" class="btn btn-success">Events</a>
+                        <a href="interestList-home.php" class="btn btn-success">Interests</a>
+                        <a href="user-home.php" class="btn btn-success">Users</a>
                 </div>
             </div>        
         </div>

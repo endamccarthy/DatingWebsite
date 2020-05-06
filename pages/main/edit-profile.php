@@ -9,7 +9,7 @@ require_once "../../utilities/utility.php";
 require_once "../../utilities/config.php";
 
 // Define variables
-$gender = $prefGender = $dateOfBirth = $smokes = $description = $dateOfBirthErr = $photoErr = "";
+$gender = $prefGender = $dateOfBirth = $smokes = $description = $countyErr = $dateOfBirthErr = $photoErr = "";
 $height = $countyID = $interestID = 0;
 $interestIDs = array();
 $userID = $_SESSION["userID"];
@@ -87,6 +87,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   // If date of birth is invalid...
   if((!preg_match($pattern, $_POST["dateOfBirth"]))) {
     $dateOfBirthErr = "Incorrect Date of Birth Format";
+  }
+  else if(!isset($_POST["countyID"]) || $_POST["countyID"] < 1 || $_POST["countyID"] > 32 || $_POST["countyID"] == '') {
+    $countyErr = "Incorrect County Format";
   }
   // Else if photo is valid...
   else if($photoErr == "") {
@@ -265,7 +268,7 @@ mysqli_close($link);
 
       <div class="mb-4 form-group required">
         <label class="control-label">County</label>
-        <select name="countyID" class="form-control form-control-sm" required>
+        <select name="countyID" class="form-control form-control-sm <?php echo (!empty($countyErr)) ? 'is-invalid' : ''; ?>" required>
           <option selected disabled>Choose County...</option>
           <?php 
             if(isset($counties)) {
@@ -276,6 +279,7 @@ mysqli_close($link);
             }
           ?>
         </select>
+        <span class="invalid-feedback"><?php echo $countyErr; ?></span>
       </div>
 
       <div class="mb-4 form-row required">
