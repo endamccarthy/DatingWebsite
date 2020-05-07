@@ -55,7 +55,7 @@ if(isset($_GET["interestID"]) && !empty(trim($_GET["interestID"]))){
 ?>
 
 <?php $title = 'Admin | User | View'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper wrapper-admin-narrow admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -70,7 +70,7 @@ if(isset($_GET["interestID"]) && !empty(trim($_GET["interestID"]))){
                         <label>Interest Name</label>
                         <p class="form-control-static"><?php echo '<b>' .  $row["interestName"] . '</b>'; ?></p>
                     </div>
-                    <p><a href="interestList-home.php" class="btn btn-primary">Back</a></p>
+                    <p><a href="interestList-home.php" class="btn btn-info">Back</a></p>
                 </div>
             </div>        
         </div>

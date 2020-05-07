@@ -46,7 +46,7 @@ if(isset($_POST["eventID"]) && !empty($_POST["eventID"])){
 ?>
 
 <?php $title = 'Admin | Event | Delete'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-wide">
+    <div class="wrapper wrapper-admin-wide admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

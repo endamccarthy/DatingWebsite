@@ -11,6 +11,9 @@
   --main-orange-color-inner-shadow: rgba(202, 126, 54, 0.8);
   --main-orange-color-outer-shadow: rgba(0, 0, 0, 0.5);
   --main-green-color: hsl(130, 29%, 41%);
+  --main-admin-color-inner-shadow: rgba(170, 170, 170, 0.8);
+  --main-admin-color-outer-shadow: rgba(255, 255, 255, 0.5);
+  --main-admin-color: hsl(0, 0%, 89%);
 }
 
 body { 
@@ -18,7 +21,7 @@ body {
   background-image: url("../images/site-photos/background.png");
   background-color: white;
   background-attachment: fixed;
-  background-position: 50% 50%;               //  3rdMay2020 Centre Background Image  RM
+  background-position: 50% 50%;
 }
 
 .wrapper { 
@@ -30,6 +33,11 @@ body {
 
 .wrapper-wide { 
   width: 55%;
+}
+
+.admin {
+  background-color: var(--main-admin-color);
+  box-shadow: inset 0px 0px 15px 0px var(--main-admin-color-inner-shadow), 0px 0px 5px 0px var(--main-admin-color-outer-shadow);
 }
 
 /* ********************** */

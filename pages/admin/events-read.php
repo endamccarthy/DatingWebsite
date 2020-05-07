@@ -58,7 +58,7 @@ if(isset($_GET["eventID"]) && !empty(trim($_GET["eventID"]))){
 ?>
 
 <?php $title = 'Admin | Event | View'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper wrapper-admin-narrow admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -86,7 +86,7 @@ if(isset($_GET["eventID"]) && !empty(trim($_GET["eventID"]))){
                         <p class="form-control-static"><?php echo '<b>' . $row["eventWebsite"] . '</b>' ; ?></p>
                     </div>
 
-                    <p><a href="events-home.php" class="btn btn-primary">Back</a></p>
+                    <p><a href="events-home.php" class="btn btn-info">Back</a></p>
                 </div>
             </div>        
         </div>

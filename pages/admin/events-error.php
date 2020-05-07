@@ -9,7 +9,7 @@ require_once "../../utilities/config.php";
 ?>
 
 <?php $title = 'Admin | Events | countyID Error'; include("../templates/top.html");?>
-    <div class="wrapper wrapper">
+    <div class="wrapper wrapper admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

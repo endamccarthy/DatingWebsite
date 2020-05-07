@@ -9,14 +9,14 @@ require_once "../../utilities/config.php";
 ?>
 
 <?php $title = 'Admin | Interests List | Home'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-wide">
+    <div class="wrapper wrapper-wide admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
                     <div class="pb-2 mt-4 mb-4 border-bottom clearfix">  
                         <h2 class="float-left">Interest Details</h2>
                         <a href="interestList-create.php" class="btn btn-success float-right">Add New Interest</a>
-						<a href="admin-home.php" class="btn btn-warning float-right">Back</a>
+						<a href="admin-home.php" class="btn btn-info float-right mr-2">Back</a>
                     </div>
                     <?php
 

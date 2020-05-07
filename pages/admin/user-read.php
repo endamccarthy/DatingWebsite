@@ -62,7 +62,7 @@ if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))){
 ?>
 
 <?php $title = 'Admin | User | View'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper wrapper-admin-narrow admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -77,10 +77,6 @@ if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))){
                         <label>Email</label>
                         <p class="form-control-static"><?php echo '<b>' .  $row["email"] . '</b>'; ?></p>
                     </div>
-                    <!-- <div class="form-group">
-                        <label>Password</label>
-                        <p class="form-control-static"><?php echo '<b>' .  $row["password"] . '</b>'; ?></p>
-                     </div> -->
 					<div class="form-group">
                         <label>First Name</label>
                         <p class="form-control-static"><?php echo '<b>' .  $row["firstName"] . '</b>'; ?></p>
@@ -105,7 +101,7 @@ if(isset($_GET["userID"]) && !empty(trim($_GET["userID"]))){
                         <label>Notifications</label>
                         <p class="form-control-static"><?php echo '<b>' .  $row["notifications"] . '</b>'; ?></p>
                     </div>
-                    <p><a href="user-home.php" class="btn btn-primary">Back</a></p>
+                    <p><a href="user-home.php" class="btn btn-info">Back</a></p>
                 </div>
             </div>        
         </div>

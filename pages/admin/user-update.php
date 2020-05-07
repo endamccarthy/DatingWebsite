@@ -87,7 +87,7 @@ mysqli_close($link);
 ?>
  
  <?php $title = 'Admin | User | Update'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper wrapper-admin-narrow admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -150,7 +150,7 @@ mysqli_close($link);
 
 						<input type="hidden" name="userID" value="<?php echo $userID; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="admin-home.php" class="btn btn-default">Cancel</a>
+                        <a href="user-home.php" class="btn btn-default">Cancel</a>
                     </form>
                 </div>
             </div>        

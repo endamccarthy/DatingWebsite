@@ -108,7 +108,7 @@ mysqli_close($link);
 
 
 <?php $title = 'Admin | Event | Create'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper wrapper-admin-narrow admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

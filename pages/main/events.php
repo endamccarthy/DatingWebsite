@@ -36,7 +36,7 @@ if($stmt = mysqli_prepare($link, $sql)) {
     echo "Oops! Something went wrong. Please try again later.";
   }
   mysqli_stmt_close($stmt);
-  $matches = $resultsString;
+  $events = $resultsString;
 }
 
 // Close connection
@@ -48,7 +48,7 @@ mysqli_close($link);
   <div class="container-item container-item-center-text container-item-shadow">
     <h2 class="pb-2 mt-2 mb-4 border-bottom">Events</h2>
     <div>
-      <?php echo $matches; ?>
+      <?php echo $events; ?>
     </div>
   </div>
 </div>

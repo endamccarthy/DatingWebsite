@@ -75,7 +75,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <?php $title = 'Admin | interestList | Create'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper wrapper-admin-narrow admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -87,7 +87,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 					
 					    <div class="form-group <?php echo (!empty($interestName_err)) ? 'has-error' : ''; ?>">
                             <label>Interest Name</label>
-                            <input type="text" name="interestName" class="form-control" value="<?php echo $interestName; ?>" required>
+                            <input type="text" name="interestName" class="form-control mb-3" value="<?php echo $interestName; ?>" required>
                             <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="interestList-home.php" class="btn btn-default">Cancel</a>
                     </form>

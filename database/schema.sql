@@ -596,13 +596,13 @@ INSERT INTO rejections(rejectionsUserOne, rejectionsUserTwo) VALUES
   (6, 5);
 
 INSERT INTO events(eventCountyID, eventName, eventDate, eventWebsite, eventPhoto) VALUES
-  (3, 'Carlow Event Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event1-photo.jpg'),
-  (8, 'Donegal Event Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event2-photo.jpg'),
-  (10, 'Dublin Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event3-photo.jpg'),
-  (20, 'Louth Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event4-photo.jpg'),
-  (25, 'Roscommon Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event5-photo.jpg'),
-  (32, 'Wicklow Event Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event6-photo.jpg'),
-  (10, 'Dublin Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event7-photo.jpg'),
-  (20, 'Louth Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event8-photo.jpg'),
-  (25, 'Roscommon Description', '2020-05-10', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event9-photo.jpg'),
-  (32, 'Wicklow Event Description', '2020-06-20', 'https://www.eventbrite.ie/d/ireland/events/', '../../images/event-photos/event10-photo.jpg');
+  (18, 'NewcastleWest Show', '2020-06-10', 'https://www.google.com/?query=newcastlewestshow',  '../../images/event-photos/event1-photo.jpg' ),
+  (10, 'Dublin Horse Show', '2020-08-20','https://www.google.com/?query=dublinhorseshow' ,'../../images/event-photos/event2-photo.jpg'),
+  (3, 'National Ploughing Championships', '2020-10-10','https://www.google.com/?query=npa', '../../images/event-photos/event3-photo.jpg'),
+  (6, 'Charleville Show', '2020-07-20', 'https://www.google.com/?query=charlevilleshow','../../images/event-photos/event4-photo.jpg'),
+  (12, 'Galway Races', '2020-08-10', 'https://www.google.com/?query=galwayraces', '../../images/event-photos/event5-photo.jpg'),
+  (21, 'Castlebar Festival', '2020-09-20', 'https://www.google.com/?query=visitcastlebar',  '../../images/event-photos/event6-photo.jpg'),
+  (13, 'Dingle Trad Fest', '2020-07-20', 'https://www.google.com/?query=dingletradfest',  '../../images/event-photos/event7-photo.jpg'),
+  (5, 'Lisdoonvarna Festival', '2020-09-20', 'https://www.google.com/?query=matchmakerireland',  '../../images/event-photos/event8-photo.jpg'),
+  (16, 'Electric Picnic', '2020-09-20', 'https://www.google.com/?query=electricpicnic',  '../../images/event-photos/event9-photo.jpg'),
+  (15, 'Butcher Restaurant', '2020-11-20', 'https://www.google.com/?query=butcherrestaurant',  '../../images/event-photos/event10-photo.jpg');

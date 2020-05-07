@@ -9,13 +9,12 @@ require_once "../../utilities/config.php";
 ?>
 
 <?php $title = 'Admin | Home'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-wide">
+    <div class="wrapper wrapper-wide admin">
         <div class="container-fluid">
             <div class="row border-bottom">
                 <div class="col-md-12">
                     <div class="pb-2 mt-4 mb-4 clearfix">  
                         <h2 class="float-left">Reported Users</h2>
-                        <a href="../main/suggestions.php" class="btn btn-warning float-right">Back</a>
                     </div>
                     <?php
 

@@ -99,7 +99,7 @@ if(isset($_POST["interestID"]) && !empty($_POST["interestID"])){
 ?>
  
  <?php $title = 'Admin | Interest | Update'; include("../templates/top.html");?>
-    <div class="wrapper wrapper-admin-narrow">
+    <div class="wrapper wrapper-admin-narrow admin">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
