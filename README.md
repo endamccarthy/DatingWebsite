@@ -7,7 +7,7 @@ Currently hosted [here](http://hive.csis.ul.ie/cs4116/group17/pages/login/landin
 - **Front-End** - HTML / CSS (Bootstrap) / JavaScript
 - **Back-End** - PHP
 - **Database** - MySQL
-- **IDE** - VSCode
+- **Editor** - VSCode
 - **Development Server** - MAMP
 
 ---
