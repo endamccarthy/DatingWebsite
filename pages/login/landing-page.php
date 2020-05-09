@@ -133,7 +133,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
               } 
               else {
                 $_SESSION["profileComplete"] = true;
-                header("location: ../main/suggestions.php");
+                if($_SESSION["accessLevel"] == "admin") {
+                  header("location: ../admin/admin-home.php");
+                }
+                else {
+                  header("location: ../main/suggestions.php");
+                }
               }
             } 
             else {
@@ -317,7 +322,7 @@ mysqli_close($link);
         <span class="invalid-feedback"><?php echo $emailErrRegister; ?></span>
       </div>    
       <div class="form-group">
-        <label>Password</label>
+        <label>Password (6 characters minimum)</label>
         <input type="password" name="passwordRegister" class="form-control <?php echo (!empty($passwordErrRegister)) ? 'is-invalid' : ''; ?>" value="<?php echo $passwordRegister; ?>" required>
         <span class="invalid-feedback"><?php echo $passwordErrRegister; ?></span>
       </div>
